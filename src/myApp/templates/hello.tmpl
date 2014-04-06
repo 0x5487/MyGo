@@ -1,0 +1,30 @@
+<html>
+	<head>
+	</head>
+	<body>
+		{{ $displayTerm := false}}
+		
+		{{if $displayTerm}}			
+			{{ $displayTerm1 := 0}}
+			{{$displayTerm1}}
+			Hello true <br/>
+		{{else}}
+			{{ $displayTerm := "Jason"}}
+			{{$displayTerm}}
+			Hello false <br/>
+		{{end}}
+		
+		{{range .Collections}}
+			{{if gt .Id 0}}				
+				myid:{{.Id}}<br/>
+			{{end}}
+			collections are existing {{.Id}}<br/>
+		{{else}}
+			collections aren't existing<br/>
+		{{end}}
+		
+
+		
+		
+	</body>
+</html>
