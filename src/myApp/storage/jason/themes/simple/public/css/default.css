@@ -1,0 +1,9 @@
+html, body, form
+{
+    margin: 0px;
+    padding: 0px;
+    font-size: 12px;
+    font-family: Verdana;
+    height: 100%;
+    width: 100%;
+}

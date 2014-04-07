@@ -2,7 +2,7 @@
 	<head>
 	</head>
 	<body>
-		{{ $displayTerm := false}}
+		{{ $displayTerm := true}}
 		
 		{{if $displayTerm}}			
 			{{ $displayTerm1 := 0}}
@@ -14,8 +14,10 @@
 			Hello false <br/>
 		{{end}}
 		
+		{{ .aa := $displayTerm}}
+		
 		{{range .Collections}}
-			{{if gt .Id 0}}				
+			{{if and (gt .Id 0) (eq .Id 1)}}				
 				myid:{{.Id}}<br/>
 			{{end}}
 			collections are existing {{.Id}}<br/>
@@ -25,6 +27,12 @@
 		
 
 		
-		
+		<p>
+			{{template "footer" .}}
+		</p>
 	</body>
 </html>
+
+
+
+
