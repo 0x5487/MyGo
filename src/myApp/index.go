@@ -2,13 +2,13 @@ package main
 
 import (
 	"github.com/go-martini/martini"
-	//"github.com/martini-contrib/render"
+	"github.com/martini-contrib/render"
+	"github.com/martini-contrib/sessions"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
-	//"strings"
 )
 
 type myClassic struct {
@@ -43,16 +43,58 @@ func NewStore(name string) *Store {
 	}
 
 	m := withoutLogging()
-	m.Get("/", func() {
-		println("hello" + name)
-	})
-
 	store := Store{}
 	store.Name = name
 	store.DefaultTheme = "simple"
 	store.DomainNames = []string{domainName}
 	store.App = m
-	store.StorageRoot = filepath.Join(dir, name)
+	store.StorageRoot = filepath.Join(dir, "storage", name)
+
+	//session setup
+	session_store := sessions.NewCookieStore([]byte("secret123"))
+	m.Use(sessions.Sessions("my_session", session_store))
+
+	//setup theme
+	m.Use(func(res http.ResponseWriter, req *http.Request, c martini.Context, sess sessions.Session) {
+		theme := req.URL.Query().Get("theme")
+
+		if len(theme) > 0 {
+			sess.Set("theme", theme)
+		} else {
+			v := sess.Get("theme")
+			if v == nil {
+				sess.Set("theme", store.DefaultTheme)
+			}
+		}
+
+		//templates folder setup
+		templatesPath := filepath.Join(store.StorageRoot, "themes", sess.Get("theme").(string), "templates")
+		renderOption := render.Options{Directory: templatesPath, Extensions: []string{".html"}}
+		handler := render.Renderer(renderOption)
+		c.Invoke(handler)
+		c.Next()
+	})
+
+	//files folder setup
+	filesPath := filepath.Join(store.StorageRoot, "files")
+	filesOption := martini.StaticOptions{Prefix: "/files/"}
+	m.Use(martini.Static(filesPath, filesOption))
+
+	//public folder steup
+	m.Get("/public/.*", func(res http.ResponseWriter, req *http.Request, c martini.Context, sess sessions.Session) {
+		v := sess.Get("theme")
+		publicPath := filepath.Join(store.StorageRoot, "themes", v.(string), "public")
+		publicOption := martini.StaticOptions{Prefix: "/public"}
+		handler := martini.Static(publicPath, publicOption)
+		_, err := c.Invoke(handler)
+		if err != nil {
+			panic(err)
+		}
+	})
+
+	m.Get("/", func(r render.Render) {
+		r.HTML(200, "home", "abc")
+	})
 
 	return &store
 }
@@ -99,8 +141,8 @@ func main() {
 		}
 	})
 
-	m.Get("/", func() {
-		println("hello app")
+	m.Get("/", func() string {
+		return "hello app"
 	})
 
 	m.Run()
