@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessions"
@@ -26,6 +27,13 @@ type Api struct {
 	Version int
 }
 
+type Page struct {
+	Title       string
+	Description string
+	Content     string
+	Template    string
+}
+
 type Store struct {
 	Id           int
 	Name         string
@@ -33,6 +41,24 @@ type Store struct {
 	StorageRoot  string
 	DomainNames  []string
 	App          *myClassic
+}
+
+func displayPage(r render.Render, myStore *Store, pageName string) {
+	pagePath := filepath.Join(myStore.StorageRoot, "pages", pageName+".json")
+	pageFile, err := os.Open(pagePath)
+	if err != nil {
+		println("file not found")
+		return
+	}
+
+	var pageJSON Page
+	jsonParser := json.NewDecoder(pageFile)
+	if err = jsonParser.Decode(&pageJSON); err != nil {
+		println("json file parse error")
+		return
+	}
+
+	r.HTML(200, pageJSON.Template, pageJSON)
 }
 
 func NewStore(name string) *Store {
@@ -84,7 +110,7 @@ func NewStore(name string) *Store {
 	m.Get("/public/.*", func(res http.ResponseWriter, req *http.Request, c martini.Context, sess sessions.Session) {
 		v := sess.Get("theme")
 		publicPath := filepath.Join(store.StorageRoot, "themes", v.(string), "public")
-		publicOption := martini.StaticOptions{Prefix: "/public"}
+		publicOption := martini.StaticOptions{Prefix: "/public", SkipLogging: true}
 		handler := martini.Static(publicPath, publicOption)
 		_, err := c.Invoke(handler)
 		if err != nil {
@@ -93,7 +119,11 @@ func NewStore(name string) *Store {
 	})
 
 	m.Get("/", func(r render.Render) {
-		r.HTML(200, "home", "abc")
+		displayPage(r, &store, "home")
+	})
+
+	m.Get("/pages/:pageName", func(r render.Render, params martini.Params) {
+		displayPage(r, &store, params["pageName"])
 	})
 
 	return &store
@@ -108,7 +138,6 @@ func withoutLogging() *myClassic {
 	r := martini.NewRouter()
 	m := martini.New()
 	m.Use(martini.Recovery())
-	m.Use(martini.Static("public"))
 	m.MapTo(r, (*martini.Routes)(nil))
 	m.Action(r.Handle)
 	return &myClassic{m, r}
@@ -142,7 +171,7 @@ func main() {
 	})
 
 	m.Get("/", func() string {
-		return "hello app"
+		return "hello world"
 	})
 
 	m.Run()
