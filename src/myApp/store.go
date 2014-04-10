@@ -21,16 +21,8 @@ type Store struct {
 	App          *myClassic
 }
 
-func (store Store) New() string {
-	return "NEW Store"
-}
-
 func NewStore(name string) *Store {
 	domainName := name + ".mystore.com"
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	m := withoutLogging()
 	store := Store{}
@@ -38,7 +30,7 @@ func NewStore(name string) *Store {
 	store.DefaultTheme = "simple"
 	store.DomainNames = []string{domainName}
 	store.App = m
-	store.StorageRoot = filepath.Join(dir, "storage", name)
+	store.StorageRoot = filepath.Join(_appDir, "storage", name)
 
 	//session setup
 	session_store := sessions.NewCookieStore([]byte("xyz123"))
@@ -86,8 +78,12 @@ func NewStore(name string) *Store {
 		displayPage(r, &store, "home")
 	})
 
-	m.Get("/admin/", func(r render.Render) {
-		displayPage(r, &store, "admin")
+	m.Get("/admin/main", func() string {
+		return getPage("main")
+	})
+
+	m.Get("/admin", func() string {
+		return getPage("index")
 	})
 
 	m.Get("/api/v1/themes/:themeName/", func(r render.Render, params martini.Params) {
@@ -119,8 +115,6 @@ func NewStore(name string) *Store {
 						Content: content,
 					}
 
-					println(name)
-					println(content)
 					templates = append(templates, template)
 				}
 
@@ -133,7 +127,7 @@ func NewStore(name string) *Store {
 
 	m.Get("/api/v1/pages/", func(req *http.Request, r render.Render, params martini.Params) {
 
-		println("starting api/pages")
+		log.Println("starting api/pages")
 
 		pagesDir := filepath.Join(store.StorageRoot, "pages")
 		pages := []Page{}
@@ -149,7 +143,6 @@ func NewStore(name string) *Store {
 
 				var page Page
 				if err = json.Unmarshal(buf, &page); err != nil {
-					println("json file parse error")
 					return err
 				}
 
@@ -162,7 +155,7 @@ func NewStore(name string) *Store {
 
 		r.JSON(200, pages)
 
-		println("finished api/pages")
+		log.Println("finished api/pages")
 	})
 
 	m.Get("/pages/:pageName", func(r render.Render, params martini.Params) {

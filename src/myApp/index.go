@@ -2,7 +2,10 @@ package main
 
 import (
 	"github.com/go-martini/martini"
+	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"runtime"
 )
 
@@ -18,6 +21,16 @@ func withoutLogging() *myClassic {
 	m.MapTo(r, (*martini.Routes)(nil))
 	m.Action(r.Handle)
 	return &myClassic{m, r}
+}
+
+var _appDir string
+
+func init() {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	_appDir = dir
 }
 
 func main() {
