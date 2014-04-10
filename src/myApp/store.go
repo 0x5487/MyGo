@@ -41,8 +41,8 @@ func NewStore(name string) *Store {
 	store.StorageRoot = filepath.Join(dir, "storage", name)
 
 	//session setup
-	session_store := sessions.NewCookieStore([]byte("secret123"))
-	m.Use(sessions.Sessions("my_session", session_store))
+	session_store := sessions.NewCookieStore([]byte("xyz123"))
+	m.Use(sessions.Sessions("sid", session_store))
 
 	//setup theme
 	m.Use(func(res http.ResponseWriter, req *http.Request, c martini.Context, sess sessions.Session) {
@@ -84,6 +84,10 @@ func NewStore(name string) *Store {
 
 	m.Get("/", func(r render.Render) {
 		displayPage(r, &store, "home")
+	})
+
+	m.Get("/admin/", func(r render.Render) {
+		displayPage(r, &store, "admin")
 	})
 
 	m.Get("/api/v1/themes/:themeName/", func(r render.Render, params martini.Params) {

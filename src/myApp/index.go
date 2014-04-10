@@ -1,45 +1,14 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/go-martini/martini"
-	"github.com/martini-contrib/render"
 	"net/http"
-	"os"
-	"path/filepath"
 	"runtime"
 )
-
-type Api struct {
-	Version int
-}
 
 type myClassic struct {
 	*martini.Martini
 	martini.Router
-}
-
-func displayPage(r render.Render, myStore *Store, pageName string) {
-	pagePath := filepath.Join(myStore.StorageRoot, "pages", pageName+".json")
-	pageFile, err := os.Open(pagePath)
-	if err != nil {
-		println("file not found")
-		return
-	}
-
-	var pageJSON Page
-	jsonParser := json.NewDecoder(pageFile)
-	if err = jsonParser.Decode(&pageJSON); err != nil {
-		println("json file parse error")
-		return
-	}
-
-	r.HTML(200, pageJSON.Template, pageJSON)
-}
-
-func (a Api) Collections() []Collection {
-	result := []Collection{{1, "name1", "desc1"}}
-	return result
 }
 
 func withoutLogging() *myClassic {
@@ -51,22 +20,16 @@ func withoutLogging() *myClassic {
 	return &myClassic{m, r}
 }
 
-func data() string {
-	//api := Api{}
-	//api.Collection = []collection{{1, "name1", "desc1"}}
-	return "abc"
-}
-
-func getAllStores() *[]Store {
-	stores := []Store{{Id: 1, Name: "Jason"}}
-	return &stores
-}
-
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	m := withoutLogging()
 	martini.Env = martini.Dev
+
 	//m.Use(render.Renderer())
+
+	//public folder steup
+	publicOption := martini.StaticOptions{SkipLogging: true}
+	m.Use(martini.Static("public", publicOption))
 
 	jasonStore := NewStore("jason")
 
