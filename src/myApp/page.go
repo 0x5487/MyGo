@@ -10,11 +10,12 @@ import (
 )
 
 type Page struct {
-	Name        string
+	Id          int64
 	Title       string
 	Description string
 	Content     string
 	Template    string
+	StoreId     int64 `xorm:"not null unique" form:"-" json:"-"`
 }
 
 func displayPage(r render.Render, myStore *Store, pageName string) {

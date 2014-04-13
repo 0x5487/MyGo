@@ -2,11 +2,13 @@ package main
 
 import (
 	"github.com/go-martini/martini"
+	"github.com/lunny/xorm"
+	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
-	"runtime"
+	//"runtime"
 )
 
 type myClassic struct {
@@ -24,17 +26,36 @@ func withoutLogging() *myClassic {
 }
 
 var _appDir string
+var _engine *xorm.Engine
 
 func init() {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	var err error
+	_appDir, err = filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
 	}
-	_appDir = dir
+
+	databasePath := "./database/test.db"
+	if _, err := os.Stat(databasePath); err == nil {
+		os.Remove(databasePath)
+		log.Println("database file was removed")
+	}
+
+	_engine, err = xorm.NewEngine("sqlite3", "./database/test.db")
+	//defer _engine.Close()
+
+	_engine.Sync(new(HostTable), new(Store), new(User), new(Theme), new(Template), new(Page))
+
+	store := Store{Name: "jason", DefaultTheme: "simple"}
+	store.Create()
+
+	hostTable := HostTable{Host: "jason.mystore.com:3000", StoreId: store.Id, StoreName: "jason"}
+	hostTable.Create()
+
 }
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
+	//runtime.GOMAXPROCS(runtime.NumCPU())
 	m := withoutLogging()
 	martini.Env = martini.Dev
 
@@ -43,6 +64,14 @@ func main() {
 	//public folder steup
 	publicOption := martini.StaticOptions{SkipLogging: true}
 	m.Use(martini.Static("public", publicOption))
+
+	hostTables := make([]HostTable, 0)
+	err := engine.Find(&hostTables)
+	log.Printf("Host count: %d", len(hostTables))
+
+	stores := make(map[int64]Store)
+	_engine.Find(&stores)
+	log.Printf("Store count: %d", len(stores))
 
 	jasonStore := NewStore("jason")
 

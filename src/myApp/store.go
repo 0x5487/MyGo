@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/go-martini/martini"
+	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessions"
 	"io/ioutil"
@@ -12,23 +13,26 @@ import (
 	"path/filepath"
 )
 
+type HostTable struct {
+	Id        int64
+	Host      string
+	StoreId   int64  `xorm:"index"`
+	StoreName string `xorm:"varchar(25) not null unique"`
+}
+
 type Store struct {
-	Id           int
-	Name         string
+	Id           int64
+	Name         string `xorm:"varchar(25) not null unique"`
 	DefaultTheme string
-	StorageRoot  string
-	DomainNames  []string
-	App          *myClassic
+	StorageRoot  string     `xorm:"-"`
+	App          *myClassic `xorm:"-"`
 }
 
 func NewStore(name string) *Store {
-	domainName := name + ".mystore.com"
-
 	m := withoutLogging()
 	store := Store{}
 	store.Name = name
 	store.DefaultTheme = "simple"
-	store.DomainNames = []string{domainName}
 	store.App = m
 	store.StorageRoot = filepath.Join(_appDir, "storage", name)
 
@@ -86,8 +90,21 @@ func NewStore(name string) *Store {
 		return getPage("index")
 	})
 
-	m.Get("/api/v1/themes/:themeName/", func(r render.Render, params martini.Params) {
+	m.Get("/api/v1/themes/:themeName", func(r render.Render, params martini.Params) {
 
+	})
+
+	m.Get("/api/v1/themes", func(r render.Render) {
+		theme := Theme{Id: 1, Name: "Simple", IsDefault: true}
+		r.JSON(200, theme)
+	})
+
+	m.Post("/api/v1/themes", binding.Json(Theme{}), binding.ErrorHandler, func(theme Theme) string {
+		log.Println(" api/v1/themes ")
+		theme.StoreId = 5
+		theme.Create()
+
+		return theme.Name
 	})
 
 	m.Get("/api/v1/templates/", func(req *http.Request, r render.Render, params martini.Params) {
@@ -146,7 +163,7 @@ func NewStore(name string) *Store {
 					return err
 				}
 
-				page.Name = fileInfo.Name()
+				//page.Title = fileInfo.Name()
 				pages = append(pages, page)
 			}
 
@@ -163,4 +180,24 @@ func NewStore(name string) *Store {
 	})
 
 	return &store
+}
+
+func (store *Store) Create() {
+	log.Println("create Store entity")
+
+	//insert to database
+	_, err := _engine.Insert(store)
+	if err != nil {
+		println(err.Error())
+	}
+}
+
+func (hostTable *HostTable) Create() {
+	log.Println("create HostTable entity")
+
+	//insert to database
+	_, err := _engine.Insert(hostTable)
+	if err != nil {
+		println(err.Error())
+	}
 }
