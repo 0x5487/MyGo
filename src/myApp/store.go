@@ -13,28 +13,18 @@ import (
 	"path/filepath"
 )
 
-type HostTable struct {
-	Id        int64
-	Host      string
-	StoreId   int64  `xorm:"index"`
-	StoreName string `xorm:"varchar(25) not null unique"`
-}
-
 type Store struct {
 	Id           int64
 	Name         string `xorm:"varchar(25) not null unique"`
 	DefaultTheme string
-	StorageRoot  string     `xorm:"-"`
-	App          *myClassic `xorm:"-"`
+	StorageRoot  string `xorm:"-"`
 }
 
-func NewStore(name string) *Store {
+func (store *Store) CreateApp() *myClassic {
+	log.Println("create app entity")
+
 	m := withoutLogging()
-	store := Store{}
-	store.Name = name
-	store.DefaultTheme = "simple"
-	store.App = m
-	store.StorageRoot = filepath.Join(_appDir, "storage", name)
+	store.StorageRoot = filepath.Join(_appDir, "storage", store.Name)
 
 	//session setup
 	session_store := sessions.NewCookieStore([]byte("xyz123"))
@@ -79,7 +69,7 @@ func NewStore(name string) *Store {
 	})
 
 	m.Get("/", func(r render.Render) {
-		displayPage(r, &store, "home")
+		displayPage(r, store, "home")
 	})
 
 	m.Get("/admin/main", func() string {
@@ -176,10 +166,10 @@ func NewStore(name string) *Store {
 	})
 
 	m.Get("/pages/:pageName", func(r render.Render, params martini.Params) {
-		displayPage(r, &store, params["pageName"])
+		displayPage(r, store, params["pageName"])
 	})
 
-	return &store
+	return m
 }
 
 func (store *Store) Create() {

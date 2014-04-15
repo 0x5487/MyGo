@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/go-martini/martini"
-	"github.com/lunny/xorm"
+	"github.com/go-xorm/xorm"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
@@ -29,6 +29,8 @@ var _appDir string
 var _engine *xorm.Engine
 
 func init() {
+	//runtime.GOMAXPROCS(runtime.NumCPU())
+
 	var err error
 	_appDir, err = filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
@@ -49,13 +51,11 @@ func init() {
 	store := Store{Name: "jason", DefaultTheme: "simple"}
 	store.Create()
 
-	hostTable := HostTable{Host: "jason.mystore.com:3000", StoreId: store.Id, StoreName: "jason"}
+	hostTable := HostTable{Host: "jason.mystore.com:3000", StoreId: store.Id}
 	hostTable.Create()
-
 }
 
 func main() {
-	//runtime.GOMAXPROCS(runtime.NumCPU())
 	m := withoutLogging()
 	martini.Env = martini.Dev
 
@@ -65,26 +65,26 @@ func main() {
 	publicOption := martini.StaticOptions{SkipLogging: true}
 	m.Use(martini.Static("public", publicOption))
 
-	hostTables := make([]HostTable, 0)
-	err := engine.Find(&hostTables)
-	log.Printf("Host count: %d", len(hostTables))
-
-	stores := make(map[int64]Store)
-	_engine.Find(&stores)
-	log.Printf("Store count: %d", len(stores))
-
-	jasonStore := NewStore("jason")
-
 	m.Use(func(res http.ResponseWriter, req *http.Request, c martini.Context) {
-		if req.Host == "jason.mystore.com:3000" {
-			jasonStore.App.ServeHTTP(res, req)
-		} else {
+
+		var isHostMatch = false
+
+		for key, value := range GetHostApp() {
+			if req.Host == key {
+				log.Println("Matched: " + req.Host)
+				isHostMatch = true
+				value.ServeHTTP(res, req)
+				break
+			}
+		}
+
+		if isHostMatch == false {
 			c.Next()
 		}
 	})
 
 	m.Get("/", func() string {
-		return "hello world"
+		return "Hello Root!!"
 	})
 
 	m.Run()
