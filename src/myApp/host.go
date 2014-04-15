@@ -13,22 +13,28 @@ type HostTable struct {
 
 var _hostApp map[string]*myClassic
 
-func GetHostApp() map[string]*myClassic {
+func getHostApp() map[string]*myClassic {
 	if _hostApp == nil {
 		log.Println("fill hostApp")
-		UpdateHostApp()
+		updateHostApp()
 	}
 	return _hostApp
 }
 
-func UpdateHostApp() {
+func updateHostApp() {
 	hostTables := make([]HostTable, 0)
-	_engine.Find(&hostTables)
+	err := _engine.Find(&hostTables)
 	log.Printf("Host count: %d", len(hostTables))
+	if err != nil {
+		panic(err)
+	}
 
 	stores := make(map[int64]*Store)
-	_engine.Find(&stores)
+	err = _engine.Find(&stores)
 	log.Printf("Store count: %d", len(stores))
+	if err != nil {
+		panic(err)
+	}
 
 	_hostApp = make(map[string]*myClassic)
 

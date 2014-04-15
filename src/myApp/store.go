@@ -11,20 +11,26 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 type Store struct {
 	Id           int64
 	Name         string `xorm:"varchar(25) not null unique"`
 	DefaultTheme string
-	StorageRoot  string `xorm:"-"`
+	CreatedAt    time.Time  `xorm:"index"`
+	UpdatedAt    time.Time  `xorm:"index"`
+	storageRoot  string     `xorm:"-"`
+	themes       []Theme    `xorm:"-"`
+	templates    []Template `xorm:"-"`
+	pages        []Page     `xorm:"-"`
 }
 
 func (store *Store) CreateApp() *myClassic {
 	log.Println("create app entity")
 
 	m := withoutLogging()
-	store.StorageRoot = filepath.Join(_appDir, "storage", store.Name)
+	store.storageRoot = filepath.Join(_appDir, "storage", store.Name)
 
 	//session setup
 	session_store := sessions.NewCookieStore([]byte("xyz123"))
@@ -44,7 +50,7 @@ func (store *Store) CreateApp() *myClassic {
 		}
 
 		//templates folder setup
-		templatesPath := filepath.Join(store.StorageRoot, "themes", sess.Get("theme").(string), "templates")
+		templatesPath := filepath.Join(store.storageRoot, "themes", sess.Get("theme").(string), "templates")
 		renderOption := render.Options{Directory: templatesPath, Extensions: []string{".html"}, IndentJSON: true}
 		handler := render.Renderer(renderOption)
 		c.Invoke(handler)
@@ -52,14 +58,14 @@ func (store *Store) CreateApp() *myClassic {
 	})
 
 	//files folder setup
-	filesPath := filepath.Join(store.StorageRoot, "files")
+	filesPath := filepath.Join(store.storageRoot, "files")
 	filesOption := martini.StaticOptions{Prefix: "/files/"}
 	m.Use(martini.Static(filesPath, filesOption))
 
 	//public folder steup
 	m.Get("/public/.*", func(res http.ResponseWriter, req *http.Request, c martini.Context, sess sessions.Session) {
 		v := sess.Get("theme")
-		publicPath := filepath.Join(store.StorageRoot, "themes", v.(string), "public")
+		publicPath := filepath.Join(store.storageRoot, "themes", v.(string), "public")
 		publicOption := martini.StaticOptions{Prefix: "/public", SkipLogging: true}
 		handler := martini.Static(publicPath, publicOption)
 		_, err := c.Invoke(handler)
@@ -80,13 +86,13 @@ func (store *Store) CreateApp() *myClassic {
 		return getPage("index")
 	})
 
-	m.Get("/api/v1/themes/:themeName", func(r render.Render, params martini.Params) {
-
+	m.Get("/pages/:pageName", func(r render.Render, params martini.Params) {
+		displayPage(r, store, params["pageName"])
 	})
 
 	m.Get("/api/v1/themes", func(r render.Render) {
-		theme := Theme{Id: 1, Name: "Simple", IsDefault: true}
-		r.JSON(200, theme)
+		themes := getThemes()
+		r.JSON(200, themes)
 	})
 
 	m.Post("/api/v1/themes", binding.Json(Theme{}), binding.ErrorHandler, func(theme Theme) string {
@@ -102,7 +108,7 @@ func (store *Store) CreateApp() *myClassic {
 		println("theme:" + theme)
 
 		if len(theme) > 0 {
-			templatesDir := filepath.Join(store.StorageRoot, "themes", theme, "templates")
+			templatesDir := filepath.Join(store.storageRoot, "themes", theme, "templates")
 			templates := []Template{}
 
 			filepath.Walk(templatesDir, func(path string, fileInfo os.FileInfo, err error) error {
@@ -136,7 +142,7 @@ func (store *Store) CreateApp() *myClassic {
 
 		log.Println("starting api/pages")
 
-		pagesDir := filepath.Join(store.StorageRoot, "pages")
+		pagesDir := filepath.Join(store.storageRoot, "pages")
 		pages := []Page{}
 
 		filepath.Walk(pagesDir, func(path string, fileInfo os.FileInfo, err error) error {
@@ -165,10 +171,6 @@ func (store *Store) CreateApp() *myClassic {
 		log.Println("finished api/pages")
 	})
 
-	m.Get("/pages/:pageName", func(r render.Render, params martini.Params) {
-		displayPage(r, store, params["pageName"])
-	})
-
 	return m
 }
 
@@ -178,7 +180,7 @@ func (store *Store) Create() {
 	//insert to database
 	_, err := _engine.Insert(store)
 	if err != nil {
-		println(err.Error())
+		panic(err)
 	}
 }
 
@@ -188,6 +190,6 @@ func (hostTable *HostTable) Create() {
 	//insert to database
 	_, err := _engine.Insert(hostTable)
 	if err != nil {
-		println(err.Error())
+		panic(err)
 	}
 }

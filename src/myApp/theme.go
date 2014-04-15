@@ -9,11 +9,12 @@ import (
 
 type Theme struct {
 	Id        int64  `xorm:"index"`
+	StoreId   int64  `xorm:"not null" form:"-" json:"-"`
 	Name      string `xorm:"varchar(25) not null unique"`
 	IsDefault bool
 	TimeStamp string    `form:"-" json:"-"`
-	Created   time.Time `xorm:"index"`
-	StoreId   int64     `xorm:"not null unique" form:"-" json:"-"`
+	CreatedAt time.Time `xorm:"index"`
+	UpdatedAt time.Time `xorm:"index"`
 }
 
 func (theme Theme) Validate(errors *binding.Errors, req *http.Request) {
@@ -31,8 +32,21 @@ func (theme *Theme) Create() {
 	//insert to database
 	_, err := _engine.Insert(theme)
 	if err != nil {
-		println(err.Error())
+		panic(err)
 	}
 
 	//create theme folder
+}
+
+func getThemes() *[]Theme {
+	log.Println("get themes")
+
+	themes := make([]Theme, 0)
+	err := _engine.Find(&themes)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &themes
 }

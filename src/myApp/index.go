@@ -47,12 +47,7 @@ func init() {
 	//defer _engine.Close()
 
 	_engine.Sync(new(HostTable), new(Store), new(User), new(Theme), new(Template), new(Page))
-
-	store := Store{Name: "jason", DefaultTheme: "simple"}
-	store.Create()
-
-	hostTable := HostTable{Host: "jason.mystore.com:3000", StoreId: store.Id}
-	hostTable.Create()
+	createFakeData()
 }
 
 func main() {
@@ -69,7 +64,7 @@ func main() {
 
 		var isHostMatch = false
 
-		for key, value := range GetHostApp() {
+		for key, value := range getHostApp() {
 			if req.Host == key {
 				log.Println("Matched: " + req.Host)
 				isHostMatch = true
