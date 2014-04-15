@@ -19,11 +19,11 @@ type Store struct {
 	Name         string `xorm:"not null unique"`
 	DefaultTheme string
 	CreatedAt    time.Time
-	UpdatedAt    time.Time  `xorm:"index"`
-	storageRoot  string     `xorm:"-"`
-	themes       []Theme    `xorm:"-"`
-	templates    []Template `xorm:"-"`
-	pages        []Page     `xorm:"-"`
+	UpdatedAt    time.Time   `xorm:"index"`
+	storageRoot  string      `xorm:"-"`
+	themes       *[]Theme    `xorm:"-"`
+	templates    *[]Template `xorm:"-"`
+	pages        *[]Page     `xorm:"-"`
 }
 
 func (store *Store) CreateApp() *myClassic {

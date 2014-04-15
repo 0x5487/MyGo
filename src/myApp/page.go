@@ -37,7 +37,7 @@ func displayPage(r render.Render, myStore *Store, pageName string) {
 
 	var page *Page
 
-	for _, value := range myStore.pages {
+	for _, value := range *myStore.pages {
 		if value.Name == pageName {
 			page = &value
 			break
@@ -46,7 +46,7 @@ func displayPage(r render.Render, myStore *Store, pageName string) {
 
 	var templateName string
 
-	for _, template := range myStore.templates {
+	for _, template := range *myStore.templates {
 		if template.Id == page.TemplateId {
 			templateName = template.Name
 			break

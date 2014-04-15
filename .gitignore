@@ -2,6 +2,6 @@ bin
 pkg
 *.exe
 github.com
-test.db
+*.db
 
 
