@@ -16,9 +16,9 @@ import (
 
 type Store struct {
 	Id           int64
-	Name         string `xorm:"varchar(25) not null unique"`
+	Name         string `xorm:"not null unique"`
 	DefaultTheme string
-	CreatedAt    time.Time  `xorm:"index"`
+	CreatedAt    time.Time
 	UpdatedAt    time.Time  `xorm:"index"`
 	storageRoot  string     `xorm:"-"`
 	themes       []Theme    `xorm:"-"`

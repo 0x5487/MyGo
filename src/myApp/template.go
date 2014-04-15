@@ -7,11 +7,11 @@ import (
 
 type Template struct {
 	Id        int64
-	StoreId   int64     `xorm:"not null" form:"-" json:"-"`
-	ThemeId   int64     `xorm:"not null" form:"-" json:"-"`
-	Name      string    `xorm:"not null unique index"`
-	Content   string    `xorm:"-"`
-	CreatedAt time.Time `xorm:"index"`
+	StoreId   int64  `xorm:"not null unique(template)" form:"-" json:"-"`
+	ThemeId   int64  `xorm:"not null unique(template)" form:"-" json:"-"`
+	Name      string `xorm:"not null unique(template)"`
+	Content   string `xorm:"-"`
+	CreatedAt time.Time
 	UpdatedAt time.Time `xorm:"index"`
 }
 

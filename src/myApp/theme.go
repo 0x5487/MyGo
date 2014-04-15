@@ -9,11 +9,11 @@ import (
 
 type Theme struct {
 	Id        int64  `xorm:"index"`
-	StoreId   int64  `xorm:"not null" form:"-" json:"-"`
-	Name      string `xorm:"varchar(25) not null unique"`
+	StoreId   int64  `xorm:"not null unique(theme)" form:"-" json:"-"`
+	Name      string `xorm:"not null unique(theme)"`
 	IsDefault bool
-	TimeStamp string    `form:"-" json:"-"`
-	CreatedAt time.Time `xorm:"index"`
+	TimeStamp string `form:"-" json:"-"`
+	CreatedAt time.Time
 	UpdatedAt time.Time `xorm:"index"`
 }
 

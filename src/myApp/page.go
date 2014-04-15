@@ -12,13 +12,13 @@ import (
 
 type Page struct {
 	Id          int64
-	StoreId     int64  `xorm:"not null index" form:"-" json:"-"`
-	TemplateId  int64  `xorm:"not null index"`
-	Name        string `xorm:"not null unique index"`
+	StoreId     int64  `xorm:"not null unique(page) index" form:"-" json:"-"`
+	TemplateId  int64  `xorm:"not null unique(page) index"`
+	Name        string `xorm:"not null unique(page) index"`
 	Title       string
 	Description string
-	Content     string    `xorm:"-"`
-	CreatedAt   time.Time `xorm:"index"`
+	Content     string `xorm:"-"`
+	CreatedAt   time.Time
 	UpdatedAt   time.Time `xorm:"index"`
 }
 
