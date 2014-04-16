@@ -38,11 +38,11 @@ func (theme *Theme) Create() {
 	//create theme folder
 }
 
-func getThemes() *[]Theme {
-	log.Println("get themes")
+func getThemes(storeId int64) *[]Theme {
+	log.Println("get themes from database")
 
 	themes := make([]Theme, 0)
-	err := _engine.Find(&themes)
+	err := _engine.Where("StoreId = ?", storeId).Find(&themes)
 
 	if err != nil {
 		panic(err)

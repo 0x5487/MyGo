@@ -8,7 +8,6 @@ import (
 type Template struct {
 	Id        int64
 	StoreId   int64  `xorm:"not null unique(template)" form:"-" json:"-"`
-	ThemeId   int64  `xorm:"not null unique(template)" form:"-" json:"-"`
 	Name      string `xorm:"not null unique(template)"`
 	Content   string `xorm:"-"`
 	CreatedAt time.Time
@@ -16,22 +15,19 @@ type Template struct {
 }
 
 func (template *Template) create() {
-	log.Println("create template")
+	log.Println("creating template")
 
-	//insert to database
 	_, err := _engine.Insert(template)
 	if err != nil {
 		panic(err)
 	}
-
-	//create theme folder
 }
 
-func getTemplates(themeName string) *[]Template {
-	log.Println("get templates: " + themeName)
+func getTemplates(storeId int64) *[]Template {
+	log.Println("get templates: ")
 
 	templates := make([]Template, 0)
-	err := _engine.Find(&templates)
+	err := _engine.Where("StoreId = ?", storeId).Find(&templates)
 
 	if err != nil {
 		panic(err)

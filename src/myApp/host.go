@@ -15,7 +15,7 @@ var _hostApp map[string]*myClassic
 
 func getHostApp() map[string]*myClassic {
 	if _hostApp == nil {
-		log.Println("fill hostApp")
+		log.Println("filling hostApp")
 		updateHostApp()
 	}
 	return _hostApp

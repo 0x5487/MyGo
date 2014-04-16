@@ -29,8 +29,12 @@ type Store struct {
 func (store *Store) CreateApp() *myClassic {
 	log.Println("create app entity")
 
-	m := withoutLogging()
 	store.storageRoot = filepath.Join(_appDir, "storage", store.Name)
+	store.themes = getThemes(store.Id)
+	store.templates = getTemplates(store.Id)
+	store.pages = getPages(store.Id)
+
+	m := withoutLogging()
 
 	//session setup
 	session_store := sessions.NewCookieStore([]byte("xyz123"))
@@ -91,7 +95,7 @@ func (store *Store) CreateApp() *myClassic {
 	})
 
 	m.Get("/api/v1/themes", func(r render.Render) {
-		themes := getThemes()
+		themes := getThemes(store.Id)
 		r.JSON(200, themes)
 	})
 
