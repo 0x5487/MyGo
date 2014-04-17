@@ -45,7 +45,7 @@ func init() {
 
 	_engine, err = xorm.NewEngine("sqlite3", "./database/test.db")
 	//defer _engine.Close()
-
+	_engine.SetMapper(xorm.SameMapper{})
 	_engine.Sync(new(HostTable), new(Store), new(User), new(Theme), new(Template), new(Page))
 	createFakeData()
 }

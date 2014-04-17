@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"github.com/martini-contrib/render"
-	//"log"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -60,6 +60,15 @@ func displayPage(r render.Render, myStore *Store, pageName string) {
 	r.HTML(200, templateName, pageJSON)
 }
 
+func (page *Page) create() {
+	log.Println("creating template")
+
+	_, err := _engine.Insert(page)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func getPage(pageName string) string {
 	pagePath := filepath.Join(_appDir, "pages", pageName+".html")
 	buf, err := ioutil.ReadFile(pagePath)
@@ -67,4 +76,17 @@ func getPage(pageName string) string {
 		panic(err)
 	}
 	return string(buf[:])
+}
+
+func getPages(storeId int64) *[]Page {
+	log.Println("get pages from database")
+
+	pages := make([]Page, 0)
+	err := _engine.Where("StoreId = ?", storeId).Find(&pages)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &pages
 }
