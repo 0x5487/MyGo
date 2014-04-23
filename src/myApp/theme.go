@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/martini-contrib/binding"
-	"log"
+	//"log"
 	"net/http"
 	"time"
 )
@@ -27,8 +27,6 @@ func (theme Theme) Validate(errors *binding.Errors, req *http.Request) {
 }
 
 func (theme *Theme) Create() {
-	log.Println("create theme")
-
 	//insert to database
 	_, err := _engine.Insert(theme)
 	if err != nil {
@@ -39,8 +37,6 @@ func (theme *Theme) Create() {
 }
 
 func getThemes(storeId int64) *[]Theme {
-	log.Println("get themes from database")
-
 	themes := make([]Theme, 0)
 	err := _engine.Where("StoreId = ?", storeId).Find(&themes)
 

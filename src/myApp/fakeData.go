@@ -16,14 +16,38 @@ func createFakeData() {
 	redTheme.Create()
 
 	//templates
-	basicTemplate := Template{Name: "basic", StoreId: jasonStore.Id}
+	basicTemplate := Template{Name: "basic", StoreId: jasonStore.Id, ThemeId: simpleTheme.Id}
+	basicTemplate.Content =
+		`<html>
+		    <head>
+		        <title>{{.Title}}</title>
+		        <link rel="stylesheet" href="/public/css/default.css"/>
+		    </head>
+		    <body>
+				{{.Content}}
+		    </body>
+		</html>`
 	basicTemplate.create()
 
-	homeTemplate := Template{Name: "home", StoreId: jasonStore.Id}
+	homeTemplate := Template{Name: "home", StoreId: jasonStore.Id, ThemeId: simpleTheme.Id}
+	homeTemplate.Content =
+		`<html>
+			<head>
+			    <title>{{.Title}}</title>
+			</head>
+			<body>
+			    {{.Content}}
+			</body>
+		</html>`
 	homeTemplate.create()
 
 	//pages
-	homePage := Page{StoreId: jasonStore.Id, TemplateId: homeTemplate.Id, Name: "home"}
+	homePage := Page{StoreId: jasonStore.Id, TemplateName: homeTemplate.Name, Name: "home"}
+	homePage.Content = "Hello Jason"
 	homePage.create()
+
+	helloPage := Page{StoreId: jasonStore.Id, TemplateName: basicTemplate.Name, Name: "hello"}
+	helloPage.Content = "Welcome to my hello page."
+	helloPage.create()
 
 }

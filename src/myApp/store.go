@@ -1,15 +1,16 @@
 package main
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessions"
-	"io/ioutil"
+	//"io/ioutil"
 	"log"
 	"net/http"
-	"os"
+	//"os"
+	//"html/template"
 	"path/filepath"
 	"time"
 )
@@ -19,7 +20,7 @@ type Store struct {
 	Name         string `xorm:"not null unique"`
 	DefaultTheme string
 	CreatedAt    time.Time
-	UpdatedAt    time.Time   `xorm:"index"`
+	UpdatedAt    time.Time
 	storageRoot  string      `xorm:"-"`
 	themes       *[]Theme    `xorm:"-"`
 	templates    *[]Template `xorm:"-"`
@@ -42,10 +43,13 @@ func (store *Store) CreateApp() *myClassic {
 
 	//setup theme
 	m.Use(func(res http.ResponseWriter, req *http.Request, c martini.Context, sess sessions.Session) {
-		theme := req.URL.Query().Get("theme")
+		themeName := req.URL.Query().Get("theme")
 
-		if len(theme) > 0 {
-			sess.Set("theme", theme)
+		if len(themeName) > 0 {
+			targetTheme := store.getTheme(themeName)
+			if targetTheme != nil {
+				sess.Set("theme", themeName)
+			}
 		} else {
 			v := sess.Get("theme")
 			if v == nil {
@@ -53,8 +57,9 @@ func (store *Store) CreateApp() *myClassic {
 			}
 		}
 
-		//templates folder setup
-		templatesPath := filepath.Join(store.storageRoot, "themes", sess.Get("theme").(string), "templates")
+		themeName = sess.Get("theme").(string)
+		log.Println(themeName)
+		templatesPath := filepath.Join(store.storageRoot, "themes", themeName, "templates")
 		renderOption := render.Options{Directory: templatesPath, Extensions: []string{".html"}, IndentJSON: true}
 		handler := render.Renderer(renderOption)
 		c.Invoke(handler)
@@ -100,87 +105,56 @@ func (store *Store) CreateApp() *myClassic {
 	})
 
 	m.Post("/api/v1/themes", binding.Json(Theme{}), binding.ErrorHandler, func(theme Theme) string {
-		log.Println(" api/v1/themes ")
+		log.Println("starting api/v1/themes ")
 		theme.StoreId = 5
 		theme.Create()
 
 		return theme.Name
 	})
 
-	m.Get("/api/v1/templates/", func(req *http.Request, r render.Render, params martini.Params) {
-		theme := req.URL.Query().Get("theme")
-		println("theme:" + theme)
-
-		if len(theme) > 0 {
-			templatesDir := filepath.Join(store.storageRoot, "themes", theme, "templates")
-			templates := []Template{}
-
-			filepath.Walk(templatesDir, func(path string, fileInfo os.FileInfo, err error) error {
-
-				ext := filepath.Ext(path)
-				if ext == ".html" {
-					buf, err := ioutil.ReadFile(path)
-					if err != nil {
-						panic(err)
-					}
-
-					content := string(buf[:])
-					name := fileInfo.Name()
-
-					template := Template{
-						Name:    name,
-						Content: content,
-					}
-
-					templates = append(templates, template)
-				}
-
-				return nil
-			})
-
-			r.JSON(200, templates)
-		}
-	})
-
 	m.Get("/api/v1/pages/", func(req *http.Request, r render.Render, params martini.Params) {
 
 		log.Println("starting api/pages")
 
-		pagesDir := filepath.Join(store.storageRoot, "pages")
-		pages := []Page{}
-
-		filepath.Walk(pagesDir, func(path string, fileInfo os.FileInfo, err error) error {
-
-			ext := filepath.Ext(path)
-			if ext == ".json" {
-				buf, err := ioutil.ReadFile(path)
-				if err != nil {
-					panic(err)
-				}
-
-				var page Page
-				if err = json.Unmarshal(buf, &page); err != nil {
-					return err
-				}
-
-				//page.Title = fileInfo.Name()
-				pages = append(pages, page)
-			}
-
-			return nil
-		})
-
+		pages := getPages(store.Id)
 		r.JSON(200, pages)
 
 		log.Println("finished api/pages")
+	})
+
+	m.Get("/api/v1/templates/", func(req *http.Request, r render.Render, params martini.Params) {
+		println("calling /api/v1/templates/")
+
+		themeName := req.URL.Query().Get("theme")
+
+		if len(themeName) <= 0 {
+			r.JSON(404, "theme parameter is missing")
+		}
+
+		//ensure theme is valid
+		targetTheme := store.getTheme(themeName)
+
+		if targetTheme == nil {
+			r.JSON(404, "theme is not found")
+			return
+		}
+
+		templates := []Template{}
+
+		for _, template := range *store.templates {
+			if targetTheme.Id == template.ThemeId {
+				templates = append(templates, template)
+			}
+		}
+
+		r.JSON(200, templates)
+
 	})
 
 	return m
 }
 
 func (store *Store) Create() {
-	log.Println("create Store entity")
-
 	//insert to database
 	_, err := _engine.Insert(store)
 	if err != nil {
@@ -189,11 +163,21 @@ func (store *Store) Create() {
 }
 
 func (hostTable *HostTable) Create() {
-	log.Println("create HostTable entity")
-
 	//insert to database
 	_, err := _engine.Insert(hostTable)
 	if err != nil {
 		panic(err)
 	}
+}
+
+func (store *Store) getTheme(themeName string) *Theme {
+	var targetTheme *Theme
+
+	for _, theme := range *store.themes {
+		if theme.Name == themeName {
+			targetTheme = &theme
+			break
+		}
+	}
+	return targetTheme
 }

@@ -1,0 +1,31 @@
+/*
+	if len(theme) > 0 {
+		templatesDir := filepath.Join(store.storageRoot, "themes", theme, "templates")
+		templates := []Template{}
+
+		filepath.Walk(templatesDir, func(path string, fileInfo os.FileInfo, err error) error {
+
+			ext := filepath.Ext(path)
+			if ext == ".html" {
+				buf, err := ioutil.ReadFile(path)
+				if err != nil {
+					panic(err)
+				}
+
+				content := string(buf[:])
+				name := fileInfo.Name()
+
+				template := Template{
+					Name:    name,
+					Content: content,
+				}
+
+				templates = append(templates, template)
+			}
+
+			return nil
+		})
+
+		r.JSON(200, templates)
+	}
+*/
