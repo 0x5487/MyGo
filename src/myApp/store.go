@@ -2,9 +2,9 @@ package main
 
 import (
 	//"encoding/json"
+	"github.com/JasonSoft/render"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
-	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessions"
 	//"io/ioutil"
 	"log"
@@ -68,11 +68,20 @@ func (store *Store) CreateApp() *myClassic {
 			v := sess.Get("theme")
 			if v == nil {
 				sess.Set("theme", store.DefaultTheme)
+			} else {
+				themeName = sess.Get("theme").(string)
 			}
 		}
 
-		templatesPath := filepath.Join(store.storageRoot, "themes", themeName, "templates")
-		renderOption := render.Options{Directory: templatesPath, Extensions: []string{".html"}, IndentJSON: true}
+		/*
+			templatesPath := filepath.Join(store.storageRoot, "themes", themeName, "templates")
+			renderOption := render.Options{Directory: templatesPath, Extensions: []string{".html"}, IndentJSON: true}
+			handler := render.Renderer(renderOption)
+			c.Invoke(handler)
+			c.Next()
+		*/
+
+		renderOption := render.Options{Template: store.templatesService["__1"], IndentJSON: true}
 		handler := render.Renderer(renderOption)
 		c.Invoke(handler)
 		c.Next()
