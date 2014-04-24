@@ -10,21 +10,23 @@ import (
 	"log"
 	"net/http"
 	//"os"
-	//"html/template"
+	"html/template"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
 type Store struct {
-	Id           int64
-	Name         string `xorm:"not null unique"`
-	DefaultTheme string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	storageRoot  string      `xorm:"-"`
-	themes       *[]Theme    `xorm:"-"`
-	templates    *[]Template `xorm:"-"`
-	pages        *[]Page     `xorm:"-"`
+	Id               int64
+	Name             string `xorm:"not null unique"`
+	DefaultTheme     string
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
+	storageRoot      string                        `xorm:"-"`
+	themes           *[]Theme                      `xorm:"-"`
+	templates        *[]Template                   `xorm:"-"`
+	pages            *[]Page                       `xorm:"-"`
+	templatesService map[string]*template.Template `xorm:"-"`
 }
 
 func (store *Store) CreateApp() *myClassic {
@@ -34,6 +36,18 @@ func (store *Store) CreateApp() *myClassic {
 	store.themes = getThemes(store.Id)
 	store.templates = getTemplates(store.Id)
 	store.pages = getPages(store.Id)
+	store.templatesService = map[string]*template.Template{}
+
+	//compile templates
+	for _, tmpl := range *store.templates {
+		themeKey := "__" + strconv.FormatInt(tmpl.ThemeId, 10)
+		t := store.templatesService[themeKey]
+		if t == nil {
+			t = template.New(tmpl.Name)
+		}
+		template.Must(t.New(tmpl.Name).Parse(tmpl.Content))
+		store.templatesService[themeKey] = t
+	}
 
 	m := withoutLogging()
 
@@ -57,8 +71,6 @@ func (store *Store) CreateApp() *myClassic {
 			}
 		}
 
-		themeName = sess.Get("theme").(string)
-		log.Println(themeName)
 		templatesPath := filepath.Join(store.storageRoot, "themes", themeName, "templates")
 		renderOption := render.Options{Directory: templatesPath, Extensions: []string{".html"}, IndentJSON: true}
 		handler := render.Renderer(renderOption)

@@ -29,7 +29,7 @@ func updateHostApp() {
 		panic(err)
 	}
 
-	stores := make(map[int64]*Store)
+	stores := map[int64]*Store{}
 	err = _engine.Find(&stores)
 	log.Printf("Store count: %d", len(stores))
 	if err != nil {

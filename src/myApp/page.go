@@ -37,8 +37,6 @@ func displayPage(r render.Render, myStore *Store, pageName string) {
 }
 
 func (page *Page) create() {
-	log.Println("creating template")
-
 	_, err := _engine.Insert(page)
 	if err != nil {
 		panic(err)
