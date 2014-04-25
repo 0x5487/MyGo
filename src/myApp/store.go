@@ -12,7 +12,7 @@ import (
 	//"os"
 	"html/template"
 	"path/filepath"
-	"strconv"
+	//"strconv"
 	"time"
 )
 
@@ -30,7 +30,6 @@ type Store struct {
 }
 
 func (store *Store) CreateApp() *myClassic {
-	log.Println("create app entity")
 
 	store.storageRoot = filepath.Join(_appDir, "storage", store.Name)
 	store.themes = getThemes(store.Id)
@@ -40,13 +39,13 @@ func (store *Store) CreateApp() *myClassic {
 
 	//compile templates
 	for _, tmpl := range *store.templates {
-		themeKey := "__" + strconv.FormatInt(tmpl.ThemeId, 10)
-		t := store.templatesService[themeKey]
+		theme := store.getThemeById(tmpl.ThemeId)
+		t := store.templatesService[theme.Name]
 		if t == nil {
 			t = template.New(tmpl.Name)
 		}
 		template.Must(t.New(tmpl.Name).Parse(tmpl.Content))
-		store.templatesService[themeKey] = t
+		store.templatesService[theme.Name] = t
 	}
 
 	m := withoutLogging()
@@ -60,6 +59,7 @@ func (store *Store) CreateApp() *myClassic {
 		themeName := req.URL.Query().Get("theme")
 
 		if len(themeName) > 0 {
+			//ensure the themeName is valid
 			targetTheme := store.getTheme(themeName)
 			if targetTheme != nil {
 				sess.Set("theme", themeName)
@@ -81,7 +81,7 @@ func (store *Store) CreateApp() *myClassic {
 			c.Next()
 		*/
 
-		renderOption := render.Options{Template: store.templatesService["__1"], IndentJSON: true}
+		renderOption := render.Options{Template: store.templatesService[themeName], IndentJSON: true}
 		handler := render.Renderer(renderOption)
 		c.Invoke(handler)
 		c.Next()
@@ -183,19 +183,23 @@ func (store *Store) Create() {
 	}
 }
 
-func (hostTable *HostTable) Create() {
-	//insert to database
-	_, err := _engine.Insert(hostTable)
-	if err != nil {
-		panic(err)
-	}
-}
-
 func (store *Store) getTheme(themeName string) *Theme {
 	var targetTheme *Theme
 
 	for _, theme := range *store.themes {
 		if theme.Name == themeName {
+			targetTheme = &theme
+			break
+		}
+	}
+	return targetTheme
+}
+
+func (store *Store) getThemeById(themeId int64) *Theme {
+	var targetTheme *Theme
+
+	for _, theme := range *store.themes {
+		if theme.Id == themeId {
 			targetTheme = &theme
 			break
 		}

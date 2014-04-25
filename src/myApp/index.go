@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	//"runtime"
+	"runtime"
 )
 
 type myClassic struct {
@@ -29,8 +29,7 @@ var _appDir string
 var _engine *xorm.Engine
 
 func init() {
-	//runtime.GOMAXPROCS(runtime.NumCPU())
-
+	//define global variables
 	var err error
 	_appDir, err = filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
@@ -42,12 +41,18 @@ func init() {
 		os.Remove(databasePath)
 		log.Println("database file was removed")
 	}
+	//define global variables *
 
 	_engine, err = xorm.NewEngine("sqlite3", "./database/test.db")
+	// ToDo: we need to close the database connection
 	//defer _engine.Close()
 	_engine.SetMapper(xorm.SameMapper{})
 	_engine.Sync(new(HostTable), new(Store), new(User), new(Theme), new(Template), new(Page))
+
 	createFakeData()
+	getHostApp()
+
+	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
 func main() {
@@ -66,7 +71,7 @@ func main() {
 
 		for key, value := range getHostApp() {
 			if req.Host == key {
-				log.Println("Matched: " + req.Host)
+				//log.Println("Matched: " + req.Host)
 				isHostMatch = true
 				value.ServeHTTP(res, req)
 				break

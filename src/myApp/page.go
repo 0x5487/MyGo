@@ -4,7 +4,7 @@ import (
 	//"encoding/json"
 	"github.com/JasonSoft/render"
 	"io/ioutil"
-	"log"
+	//"log"
 	//"os"
 	"path/filepath"
 	"time"
@@ -53,8 +53,6 @@ func getPage(pageName string) string {
 }
 
 func getPages(storeId int64) *[]Page {
-	log.Println("get pages from database")
-
 	pages := make([]Page, 0)
 	err := _engine.Where("StoreId = ?", storeId).Find(&pages)
 

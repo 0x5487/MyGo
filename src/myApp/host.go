@@ -15,7 +15,6 @@ var _hostApp map[string]*myClassic
 
 func getHostApp() map[string]*myClassic {
 	if _hostApp == nil {
-		log.Println("filling hostApp")
 		updateHostApp()
 	}
 	return _hostApp
@@ -40,5 +39,13 @@ func updateHostApp() {
 
 	for _, value := range hostTables {
 		_hostApp[value.Host] = stores[value.StoreId].CreateApp()
+	}
+}
+
+func (hostTable *HostTable) Create() {
+	//insert to database
+	_, err := _engine.Insert(hostTable)
+	if err != nil {
+		panic(err)
 	}
 }

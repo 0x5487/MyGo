@@ -14,7 +14,7 @@ type Theme struct {
 	IsDefault bool
 	TimeStamp string `form:"-" json:"-"`
 	CreatedAt time.Time
-	UpdatedAt time.Time `xorm:"index"`
+	UpdatedAt time.Time
 }
 
 func (theme Theme) Validate(errors *binding.Errors, req *http.Request) {
