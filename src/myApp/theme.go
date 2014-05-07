@@ -10,7 +10,7 @@ import (
 type Theme struct {
 	Id        int64  `xorm:"index"`
 	StoreId   int64  `xorm:"not null unique(theme)" form:"-" json:"-"`
-	Name      string `xorm:"not null unique(theme)"`
+	Name      string `xorm:"not null unique(theme)" binding:"required"`
 	IsDefault bool
 	TimeStamp string `form:"-" json:"-"`
 	CreatedAt time.Time
@@ -19,21 +19,22 @@ type Theme struct {
 
 func (theme Theme) Validate(errors *binding.Errors, req *http.Request) {
 
-	if len(theme.Name) < 4 {
-		errors.Fields["Name"] = "Too short; minimum 4 characters"
-	} else if len(theme.Name) > 120 {
-		errors.Fields["Name"] = "Too long; maximum 120 characters"
-	}
+	/*
+		if len(theme.Name) < 4 {
+			errors.Fields["Name"] = "Too short; minimum 4 characters"
+		} else if len(theme.Name) > 120 {
+			errors.Fields["Name"] = "Too long; maximum 120 characters"
+		}*/
 }
 
-func (theme *Theme) Create() {
+func (theme *Theme) Create() error {
 	//insert to database
 	_, err := _engine.Insert(theme)
 	if err != nil {
-		panic(err)
+		return err
+	} else {
+		return nil
 	}
-
-	//create theme folder
 }
 
 func getThemes(storeId int64) *[]Theme {

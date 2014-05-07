@@ -127,36 +127,37 @@ func (store *Store) CreateApp() *myClassic {
 
 	m.Post("/api/v1/themes", binding.Json(Theme{}), binding.ErrorHandler, func(theme Theme) string {
 		log.Println("starting api/v1/themes ")
-		theme.StoreId = 5
-		theme.Create()
+
+		theme.StoreId = store.Id
+		err := theme.Create()
+
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		return theme.Name
 	})
 
-	m.Get("/api/v1/pages/", func(req *http.Request, r render.Render, params martini.Params) {
-
-		log.Println("starting api/pages")
-
+	m.Get("/api/v1/pages", func(req *http.Request, r render.Render, params martini.Params) {
 		pages := getPages(store.Id)
 		r.JSON(200, pages)
-
-		log.Println("finished api/pages")
 	})
 
-	m.Get("/api/v1/templates/", func(req *http.Request, r render.Render, params martini.Params) {
+	m.Get("/api/v1/templates", func(req *http.Request, r render.Render, params martini.Params) {
 		println("calling /api/v1/templates/")
 
 		themeName := req.URL.Query().Get("theme")
 
 		if len(themeName) <= 0 {
-			r.JSON(404, "theme parameter is missing")
+			r.JSON(404, "theme parameter was missing")
+			return
 		}
 
 		//ensure theme is valid
 		targetTheme := store.getTheme(themeName)
 
 		if targetTheme == nil {
-			r.JSON(404, "theme is not found")
+			r.JSON(404, "theme was not found")
 			return
 		}
 
