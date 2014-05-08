@@ -11,22 +11,14 @@ import (
 	"runtime"
 )
 
+var _appDir string
+var _engine *xorm.Engine
+var _hostApp map[string]*myClassic
+
 type myClassic struct {
 	*martini.Martini
 	martini.Router
 }
-
-func withoutLogging() *myClassic {
-	r := martini.NewRouter()
-	m := martini.New()
-	m.Use(martini.Recovery())
-	m.MapTo(r, (*martini.Routes)(nil))
-	m.Action(r.Handle)
-	return &myClassic{m, r}
-}
-
-var _appDir string
-var _engine *xorm.Engine
 
 func init() {
 	//define global variables
@@ -51,6 +43,7 @@ func init() {
 
 	createFakeData()
 	getHostApp()
+	getHostTables()
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
@@ -88,4 +81,13 @@ func main() {
 	})
 
 	m.Run()
+}
+
+func withoutLogging() *myClassic {
+	r := martini.NewRouter()
+	m := martini.New()
+	m.Use(martini.Recovery())
+	m.MapTo(r, (*martini.Routes)(nil))
+	m.Action(r.Handle)
+	return &myClassic{m, r}
 }

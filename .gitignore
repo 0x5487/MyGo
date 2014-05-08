@@ -4,4 +4,4 @@ pkg
 github.com
 *.db
 STEHelper
-
+.idea

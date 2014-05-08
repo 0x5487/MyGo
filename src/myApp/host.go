@@ -11,8 +11,6 @@ type HostTable struct {
 	StoreId int64 `xorm:"index"`
 }
 
-var _hostApp map[string]*myClassic
-
 func getHostApp() map[string]*myClassic {
 	if _hostApp == nil {
 		updateHostApp()
@@ -48,4 +46,13 @@ func (hostTable *HostTable) Create() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func getHostTables() *[]HostTable {
+	results := []HostTable{}
+	err := _engine.Find(&results)
+	if err != nil {
+		panic(err)
+	}
+	return &results
 }
