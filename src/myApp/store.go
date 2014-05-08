@@ -89,7 +89,7 @@ func (store *Store) CreateApp() *myClassic {
 
 	//files folder setup
 	filesPath := filepath.Join(store.storageRoot, "files")
-	filesOption := martini.StaticOptions{Prefix: "/files/"}
+	filesOption := martini.StaticOptions{Prefix: "/files/", SkipLogging: true}
 	m.Use(martini.Static(filesPath, filesOption))
 
 	//public folder steup

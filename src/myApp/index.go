@@ -57,7 +57,7 @@ func init() {
 
 func main() {
 	m := withoutLogging()
-	martini.Env = martini.Dev
+	martini.Env = martini.Prod
 
 	//m.Use(render.Renderer())
 
