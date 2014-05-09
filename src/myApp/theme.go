@@ -4,6 +4,7 @@ import (
 	"github.com/martini-contrib/binding"
 	//"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -27,10 +28,15 @@ func (theme Theme) Validate(errors *binding.Errors, req *http.Request) {
 		}*/
 }
 
-func (theme *Theme) Create() error {
+func (theme *Theme) create() error {
 	//insert to database
 	_, err := _engine.Insert(theme)
 	if err != nil {
+		errMsg := err.Error()
+		if strings.Contains(errMsg, "UNIQUE constraint failed:") {
+			myErr := appError{Ex: err, Message: "theme name was already existing.", Code: 4001}
+			return &myErr
+		}
 		return err
 	} else {
 		return nil

@@ -7,14 +7,15 @@ import (
 	//"log"
 	//"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
 type Page struct {
-	Id           int64
+	Id           int64  `xorm:"index"`
 	StoreId      int64  `xorm:"not null unique(page) index" form:"-" json:"-"`
-	TemplateName string `xorm:"not null unique(page) index"`
-	Name         string `xorm:"not null unique(page) index"`
+	TemplateName string `xorm:"not null unique(page) index" binding:"required"`
+	Name         string `xorm:"not null unique(page) index" binding:"required"`
 	Title        string
 	Description  string
 	Content      string
@@ -36,10 +37,17 @@ func displayPage(r render.Render, myStore *Store, pageName string) {
 	r.HTML(200, page.TemplateName, page)
 }
 
-func (page *Page) create() {
+func (page *Page) create() error {
 	_, err := _engine.Insert(page)
 	if err != nil {
-		panic(err)
+		errMsg := err.Error()
+		if strings.Contains(errMsg, "UNIQUE constraint failed:") {
+			myErr := appError{Ex: err, Message: "page name was already existing.", Code: 4001}
+			return &myErr
+		}
+		return err
+	} else {
+		return nil
 	}
 }
 

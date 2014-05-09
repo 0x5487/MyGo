@@ -10,10 +10,10 @@ func createFakeData() {
 
 	//themes
 	simpleTheme := Theme{Name: "simple", IsDefault: true, StoreId: jasonStore.Id}
-	simpleTheme.Create()
+	simpleTheme.create()
 
 	redTheme := Theme{Name: "red", IsDefault: false, StoreId: jasonStore.Id}
-	redTheme.Create()
+	redTheme.create()
 
 	//templates
 	basicTemplate := Template{Name: "basic", StoreId: jasonStore.Id, ThemeId: simpleTheme.Id}
