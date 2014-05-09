@@ -121,6 +121,11 @@ func (store *Store) CreateApp() *myClassic {
 		displayPage(r, store, params["pageName"])
 	})
 
+	m.Get("/api/v1/themes/:themeName", func(r render.Render) {
+		themes := getThemes(store.Id)
+		r.JSON(200, themes)
+	})
+
 	m.Get("/api/v1/themes", func(r render.Render) {
 		themes := getThemes(store.Id)
 		r.JSON(200, themes)
@@ -165,6 +170,33 @@ func (store *Store) CreateApp() *myClassic {
 		return ""
 	})
 
+	m.Get("/api/v1/templates/:templateName", func(req *http.Request, r render.Render, params martini.Params) {
+		themeName := req.URL.Query().Get("theme")
+
+		if len(themeName) <= 0 {
+			r.JSON(404, "theme parameter was missing")
+			return
+		}
+
+		//ensure theme is valid
+		targetTheme := store.getTheme(themeName)
+
+		if targetTheme == nil {
+			r.JSON(404, "theme was not found")
+			return
+		}
+
+		templates := []Template{}
+
+		for _, template := range *store.templates {
+			if targetTheme.Id == template.ThemeId {
+				templates = append(templates, template)
+			}
+		}
+
+		r.JSON(200, templates)
+	})
+
 	m.Get("/api/v1/templates", func(req *http.Request, r render.Render, params martini.Params) {
 		themeName := req.URL.Query().Get("theme")
 
@@ -190,6 +222,24 @@ func (store *Store) CreateApp() *myClassic {
 		}
 
 		r.JSON(200, templates)
+	})
+
+	m.Post("/api/v1/templates", binding.Json(Template{}), binding.ErrorHandler, func(template Template, res http.ResponseWriter) string {
+
+		template.StoreId = store.Id
+		err := template.create()
+
+		if err != nil {
+			if aE, ok := err.(*appError); ok {
+				res.WriteHeader(500)
+				return aE.Message
+			}
+		}
+
+		location := fmt.Sprintf("/api/v1/templates/%d?theme", template.Id)
+		res.Header().Add("location", location)
+		res.WriteHeader(201)
+		return ""
 	})
 
 	return m

@@ -30,6 +30,8 @@ func (theme Theme) Validate(errors *binding.Errors, req *http.Request) {
 
 func (theme *Theme) create() error {
 	//insert to database
+	theme.CreatedAt = time.Now().UTC()
+	theme.UpdatedAt = time.Now().UTC()
 	_, err := _engine.Insert(theme)
 	if err != nil {
 		errMsg := err.Error()
@@ -52,4 +54,14 @@ func getThemes(storeId int64) *[]Theme {
 	}
 
 	return &themes
+}
+
+func getThemeByName(storeId int64, themeName string) *Theme {
+	theme := Theme{}
+	err := _engine.Where("storeId = ? and name = ?", storeId, themeName).Find(&theme)
+
+	if err != nil {
+		panic(err)
+	}
+	return &theme
 }

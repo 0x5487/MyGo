@@ -38,6 +38,8 @@ func displayPage(r render.Render, myStore *Store, pageName string) {
 }
 
 func (page *Page) create() error {
+	page.CreatedAt = time.Now().UTC()
+	page.UpdatedAt = time.Now().UTC()
 	_, err := _engine.Insert(page)
 	if err != nil {
 		errMsg := err.Error()
