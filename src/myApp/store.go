@@ -121,6 +121,23 @@ func (store *Store) CreateApp() *myClassic {
 		displayPage(r, store, params["pageName"])
 	})
 
+	m.Get("/collections/:collectionName", func(r render.Render, params martini.Params) {
+		displayPage(r, store, "collectionName")
+	})
+
+	m.Get("/collections", func(r render.Render, params martini.Params) {
+		displayPage(r, store, "collection_list")
+	})
+
+	m.Get("/cart", func(r render.Render, params martini.Params) {
+		displayPage(r, store, "cart")
+	})
+
+	m.Get("/api/v1/collections", func(r render.Render) {
+		themes := getThemes(store.Id)
+		r.JSON(200, themes)
+	})
+
 	m.Get("/api/v1/themes/:themeName", func(r render.Render) {
 		themes := getThemes(store.Id)
 		r.JSON(200, themes)
