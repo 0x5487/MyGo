@@ -20,11 +20,11 @@ func createFakeData() {
 	basicTemplate.Content =
 		`<html>
 		    <head>
-		        <title>{{.Title}}</title>
+		        <title>{{.Page.Title}}</title>
 		        <link rel="stylesheet" href="/public/css/default.css"/>
 		    </head>
 		    <body>
-				{{.Content}}
+				{{.Page.Content}}
 		    </body>
 		</html>`
 	basicTemplate.create()
@@ -33,10 +33,11 @@ func createFakeData() {
 	homeTemplate.Content =
 		`<html>
 			<head>
-			    <title>{{.Title}}</title>
+			    <title>{{.Page.Title}}</title>
 			</head>
-			<body>
-			    {{.Content}}
+			<body>		
+				{{.Collections}}
+				{{.Page.Content}}
 			</body>
 		</html>`
 	homeTemplate.create()
@@ -49,5 +50,9 @@ func createFakeData() {
 	helloPage := Page{StoreId: jasonStore.Id, TemplateName: basicTemplate.Name, Name: "hello"}
 	helloPage.Content = "Welcome to my hello page."
 	helloPage.create()
+
+	product_list_Page := Page{StoreId: jasonStore.Id, TemplateName: basicTemplate.Name, Name: "product_list"}
+	product_list_Page.Content = "product list page."
+	product_list_Page.create()
 
 }

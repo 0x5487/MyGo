@@ -47,6 +47,7 @@ func (store *Store) CreateApp() *myClassic {
 		}
 		template.Must(t.New(tmpl.Name).Parse(tmpl.Content))
 		store.templatesService[theme.Name] = t
+
 	}
 
 	m := withoutLogging()
@@ -72,6 +73,7 @@ func (store *Store) CreateApp() *myClassic {
 			} else {
 				themeName = sess.Get("theme").(string)
 			}
+
 		}
 
 		/*
@@ -121,8 +123,16 @@ func (store *Store) CreateApp() *myClassic {
 		displayPage(r, store, params["pageName"])
 	})
 
+	m.Get("/products/:productName", func(r render.Render, params martini.Params) {
+		displayPage(r, store, "product_detail")
+	})
+
+	m.Get("/products", func(r render.Render, params martini.Params) {
+		displayPage(r, store, "product_list")
+	})
+
 	m.Get("/collections/:collectionName", func(r render.Render, params martini.Params) {
-		displayPage(r, store, "collectionName")
+		displayPage(r, store, "collection_detail")
 	})
 
 	m.Get("/collections", func(r render.Render, params martini.Params) {
@@ -131,6 +141,10 @@ func (store *Store) CreateApp() *myClassic {
 
 	m.Get("/cart", func(r render.Render, params martini.Params) {
 		displayPage(r, store, "cart")
+	})
+
+	m.Get("/session", func(r render.Render, sess sessions.Session) string {
+		return sess.Get("theme").(string)
 	})
 
 	m.Get("/api/v1/collections", func(r render.Render) {

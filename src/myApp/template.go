@@ -16,6 +16,15 @@ type Template struct {
 	UpdatedAt time.Time
 }
 
+type TemplateContext struct {
+	Page  *Page
+	Store *Store
+}
+
+func (context TemplateContext) Collections() []Collection {
+	return GetCollections(context.Store.Id)
+}
+
 func (template *Template) create() error {
 	template.CreatedAt = time.Now().UTC()
 	template.UpdatedAt = time.Now().UTC()

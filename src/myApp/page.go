@@ -34,7 +34,10 @@ func displayPage(r render.Render, myStore *Store, pageName string) {
 		}
 	}
 
-	r.HTML(200, page.TemplateName, page)
+	if page != nil {
+		context := TemplateContext{Page: page, Store: myStore}
+		r.HTML(200, page.TemplateName, context)
+	}
 }
 
 func (page *Page) create() error {
