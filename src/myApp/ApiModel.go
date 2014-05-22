@@ -1,0 +1,85 @@
+package main
+
+type ManageInventoryMethod int
+type Money int64
+
+const (
+	NoTrack = iota
+	Track
+	External
+)
+
+type LinkModel struct {
+	Url string
+}
+
+type Collection struct {
+	Id           int
+	StoreId      int
+	ResourceId   string
+	DisplayName  string
+	IsVisible    bool
+	Tags         string
+	CustomFields LinkModel
+}
+
+type Product struct {
+	Id                        int
+	StoreId                   int
+	Sku                       string
+	ResourceId                string
+	DisplayName               string
+	IsPurchasable             bool
+	IsVisible                 bool
+	IsBackOrderEnabled        bool
+	IsPreOrderEnabled         bool
+	IsShippingAddressRequired bool
+	Tags                      string
+	ListPrice                 Money
+	Price                     Money
+	Description               string
+	Vendor                    string
+	InventoryQuantity         int
+	ManageInventoryMethod     ManageInventoryMethod
+	Weight                    int32
+	Variations                LinkModel
+	Images                    LinkModel
+	CustomFields              LinkModel
+}
+
+type Variation struct {
+	Id                        int
+	StoreId                   int
+	Sku                       string
+	DisplayName               string
+	IsPurchasable             bool
+	IsVisible                 bool
+	IsBackOrderEnabled        bool
+	IsPreOrderEnabled         bool
+	IsShippingAddressRequired bool
+	Tags                      string
+	ListPrice                 Money
+	Price                     Money
+	Description               string
+	Vendor                    string
+	InventoryQuantity         int
+	ManageInventoryMethod     ManageInventoryMethod
+	Weight                    int32
+}
+
+type Image struct {
+	Id           int
+	StoreId      int
+	Url          string
+	Position     int
+	FileName     string
+	Attachment   string
+	CustomFields LinkModel
+}
+
+type CustomField struct {
+	Id      int
+	StoreId int
+	Key     string
+	Value   string
+}
