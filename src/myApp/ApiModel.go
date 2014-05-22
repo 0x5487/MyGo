@@ -13,18 +13,37 @@ type LinkModel struct {
 	Url string
 }
 
+type Image struct {
+	Id           int32
+	StoreId      int
+	Url          string
+	Position     int
+	FileName     string
+	Attachment   string
+	CustomFields LinkModel
+}
+
+type CustomField struct {
+	Id      int32
+	StoreId int
+	Key     string
+	Value   string
+}
+
 type Collection struct {
-	Id           int
+	Id           int32
 	StoreId      int
 	ResourceId   string
 	DisplayName  string
 	IsVisible    bool
+	Description  string
+	Image        Image
 	Tags         string
 	CustomFields LinkModel
 }
 
 type Product struct {
-	Id                        int
+	Id                        int32
 	StoreId                   int
 	Sku                       string
 	ResourceId                string
@@ -48,7 +67,7 @@ type Product struct {
 }
 
 type Variation struct {
-	Id                        int
+	Id                        int32
 	StoreId                   int
 	Sku                       string
 	DisplayName               string
@@ -67,19 +86,17 @@ type Variation struct {
 	Weight                    int32
 }
 
-type Image struct {
-	Id           int
-	StoreId      int
-	Url          string
-	Position     int
-	FileName     string
-	Attachment   string
-	CustomFields LinkModel
+//database bridge table
+
+type collection_product struct {
+	Id           int32
+	CollectionId int32
+	ProductId    int32
 }
 
-type CustomField struct {
-	Id      int
-	StoreId int
-	Key     string
-	Value   string
+type image_any struct {
+	Id           int32
+	ImageId      int32
+	CollectionId int32
+	ProductId    int32
 }
