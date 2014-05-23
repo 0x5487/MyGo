@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/go-martini/martini"
+	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
@@ -18,6 +19,15 @@ var _hostApp map[string]*myClassic
 type myClassic struct {
 	*martini.Martini
 	martini.Router
+}
+
+func withoutLogging() *myClassic {
+	r := martini.NewRouter()
+	m := martini.New()
+	m.Use(martini.Recovery())
+	m.MapTo(r, (*martini.Routes)(nil))
+	m.Action(r.Handle)
+	return &myClassic{m, r}
 }
 
 func init() {
@@ -38,8 +48,8 @@ func init() {
 	_engine, err = xorm.NewEngine("sqlite3", "./database/test.db")
 	// ToDo: we need to close the database connection
 	//defer _engine.Close()
-	//_engine.SetMapper(xorm.SameMapper{})
-	_engine.Sync(new(HostTable), new(Store), new(User), new(Theme), new(Template), new(Page))
+	_engine.SetMapper(core.SameMapper{})
+	_engine.Sync(new(HostTable), new(Store), new(User), new(Theme), new(Template), new(Page), new(Image), new(Collection), new(Product), new(CustomField), new(Variation), new(collection_product), new(image_any))
 
 	createFakeData()
 	getHostApp()
@@ -81,13 +91,4 @@ func main() {
 	})
 
 	m.Run()
-}
-
-func withoutLogging() *myClassic {
-	r := martini.NewRouter()
-	m := martini.New()
-	m.Use(martini.Recovery())
-	m.MapTo(r, (*martini.Routes)(nil))
-	m.Action(r.Handle)
-	return &myClassic{m, r}
 }

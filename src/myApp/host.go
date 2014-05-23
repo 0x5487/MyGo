@@ -6,9 +6,9 @@ import (
 )
 
 type HostTable struct {
-	Id      int64
+	Id      int `xorm:"SERIAL index"`
+	StoreId int `xorm:"INT index"`
 	Host    string
-	StoreId int64 `xorm:"index"`
 }
 
 func getHostApp() map[string]*myClassic {
@@ -21,17 +21,17 @@ func getHostApp() map[string]*myClassic {
 func updateHostApp() {
 	hostTables := make([]HostTable, 0)
 	err := _engine.Find(&hostTables)
+	if err != nil {
+		panic(err)
+	}
 	log.Printf("Host count: %d", len(hostTables))
-	if err != nil {
-		panic(err)
-	}
 
-	stores := map[int64]*Store{}
+	stores := map[int]*Store{}
 	err = _engine.Find(&stores)
-	log.Printf("Store count: %d", len(stores))
 	if err != nil {
 		panic(err)
 	}
+	log.Printf("Store count: %d", len(stores))
 
 	_hostApp = make(map[string]*myClassic)
 

@@ -18,7 +18,7 @@ import (
 )
 
 type Store struct {
-	Id               int64
+	Id               int    `xorm:"SERIAL index"`
 	Name             string `xorm:"not null unique"`
 	DefaultTheme     string
 	CreatedAt        time.Time
@@ -296,7 +296,7 @@ func (store *Store) getTheme(themeName string) *Theme {
 	return targetTheme
 }
 
-func (store *Store) getThemeById(themeId int64) *Theme {
+func (store *Store) getThemeById(themeId int) *Theme {
 	var targetTheme *Theme
 
 	for _, theme := range *store.themes {

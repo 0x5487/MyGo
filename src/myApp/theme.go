@@ -9,8 +9,8 @@ import (
 )
 
 type Theme struct {
-	Id        int64  `xorm:"index"`
-	StoreId   int64  `xorm:"not null unique(theme)" form:"-" json:"-"`
+	Id        int    `xorm:"SERIAL index"`
+	StoreId   int    `xorm:"INT not null unique(theme)" form:"-" json:"-"`
 	Name      string `xorm:"not null unique(theme)" binding:"required"`
 	IsDefault bool
 	TimeStamp string `form:"-" json:"-"`
@@ -45,7 +45,7 @@ func (theme *Theme) create() error {
 	}
 }
 
-func getThemes(storeId int64) *[]Theme {
+func getThemes(storeId int) *[]Theme {
 	themes := make([]Theme, 0)
 	err := _engine.Where("StoreId = ?", storeId).Find(&themes)
 
@@ -56,7 +56,7 @@ func getThemes(storeId int64) *[]Theme {
 	return &themes
 }
 
-func getThemeByName(storeId int64, themeName string) *Theme {
+func getThemeByName(storeId int, themeName string) *Theme {
 	theme := Theme{}
 	err := _engine.Where("storeId = ? and name = ?", storeId, themeName).Find(&theme)
 

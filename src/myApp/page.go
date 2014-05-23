@@ -12,8 +12,8 @@ import (
 )
 
 type Page struct {
-	Id           int64  `xorm:"index"`
-	StoreId      int64  `xorm:"not null unique(page) index" form:"-" json:"-"`
+	Id           int    `xorm:"SERIAL index"`
+	StoreId      int    `xorm:"INT not null unique(page) index" form:"-" json:"-"`
 	TemplateName string `xorm:"not null unique(page) index" binding:"required"`
 	Name         string `xorm:"not null unique(page) index" binding:"required"`
 	Title        string
@@ -65,7 +65,7 @@ func getPage(pageName string) string {
 	return string(buf[:])
 }
 
-func getPages(storeId int64) *[]Page {
+func getPages(storeId int) *[]Page {
 	pages := make([]Page, 0)
 	err := _engine.Where("StoreId = ?", storeId).Find(&pages)
 

@@ -7,9 +7,9 @@ import (
 )
 
 type Template struct {
-	Id        int64  `xorm:"index"`
-	StoreId   int64  `xorm:"not null unique(template)" form:"-" json:"-"`
-	ThemeId   int64  `xorm:"not null unique(template)" binding:"required"`
+	Id        int    `xorm:"SERIAL index"`
+	StoreId   int    `xorm:"INT not null unique(template)" form:"-" json:"-"`
+	ThemeId   int    `xorm:"INT not null unique(template)" binding:"required"`
 	Name      string `xorm:"not null unique(template)" binding:"required"`
 	Content   string
 	CreatedAt time.Time
@@ -42,7 +42,7 @@ func (template *Template) create() error {
 	}
 }
 
-func getTemplates(storeId int64) *[]Template {
+func getTemplates(storeId int) *[]Template {
 	templates := make([]Template, 0)
 	err := _engine.Where("StoreId = ?", storeId).Find(&templates)
 

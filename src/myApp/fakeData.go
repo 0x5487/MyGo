@@ -55,4 +55,10 @@ func createFakeData() {
 	product_list_Page.Content = "product list page."
 	product_list_Page.create()
 
+	//create collections
+	menCollection := Collection{StoreId: jasonStore.Id, DisplayName: "DisplayName_Men", ResourceId: "Men", Tags: "shirt_tee, long_tee, polo, jeans, underwear, 領帶"}
+	menCollection.create()
+
+	//create products
+
 }
