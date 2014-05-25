@@ -5,8 +5,8 @@ func createFakeData() {
 	jasonStore := Store{Name: "jason", DefaultTheme: "simple"}
 	jasonStore.Create()
 
-	hostTable := HostTable{Host: "jason.mystore.com:3000", StoreId: jasonStore.Id}
-	hostTable.Create()
+	hostMapping := HostMapping{Host: "jason.mystore.com:3000", StoreId: jasonStore.Id}
+	hostMapping.create()
 
 	//themes
 	simpleTheme := Theme{Name: "simple", IsDefault: true, StoreId: jasonStore.Id}
@@ -57,7 +57,9 @@ func createFakeData() {
 
 	//create collections
 	menCollection := Collection{StoreId: jasonStore.Id, DisplayName: "DisplayName_Men", ResourceId: "Men", Tags: "shirt_tee, long_tee, polo, jeans, underwear, 領帶"}
-	menCollection.create()
+	if err := menCollection.create(); err != nil {
+		println(err.Error())
+	}
 
 	//create products
 

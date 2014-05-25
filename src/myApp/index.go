@@ -49,11 +49,11 @@ func init() {
 	// ToDo: we need to close the database connection
 	//defer _engine.Close()
 	_engine.SetMapper(core.SameMapper{})
-	_engine.Sync(new(HostTable), new(Store), new(User), new(Theme), new(Template), new(Page), new(Image), new(Collection), new(Product), new(CustomField), new(Variation), new(collection_product), new(image_any))
+	_engine.Sync(new(HostMapping), new(Store), new(User), new(Theme), new(Template), new(Page), new(Image), new(Collection), new(Product), new(CustomField), new(Variation), new(collection_product), new(image_any))
 
 	createFakeData()
 	getHostApp()
-	getHostTables()
+	getHostMappings()
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }

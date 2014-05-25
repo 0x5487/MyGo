@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-type HostTable struct {
+type HostMapping struct {
 	Id      int `xorm:"SERIAL index"`
 	StoreId int `xorm:"INT index"`
 	Host    string
@@ -19,14 +19,14 @@ func getHostApp() map[string]*myClassic {
 }
 
 func updateHostApp() {
-	hostTables := make([]HostTable, 0)
-	err := _engine.Find(&hostTables)
+	hostMappings := make([]HostMapping, 0)
+	err := _engine.Find(&hostMappings)
 	if err != nil {
 		panic(err)
 	}
-	log.Printf("Host count: %d", len(hostTables))
+	log.Printf("Host count: %d", len(hostMappings))
 
-	stores := map[int]*Store{}
+	var stores []Store
 	err = _engine.Find(&stores)
 	if err != nil {
 		panic(err)
@@ -35,12 +35,17 @@ func updateHostApp() {
 
 	_hostApp = make(map[string]*myClassic)
 
-	for _, value := range hostTables {
-		_hostApp[value.Host] = stores[value.StoreId].CreateApp()
+	for _, hostMapping := range hostMappings {
+		for _, store := range stores {
+
+			if store.Id == hostMapping.StoreId {
+				_hostApp[hostMapping.Host] = store.CreateApp()
+			}
+		}
 	}
 }
 
-func (hostTable *HostTable) Create() {
+func (hostTable *HostMapping) create() {
 	//insert to database
 	_, err := _engine.Insert(hostTable)
 	if err != nil {
@@ -48,8 +53,8 @@ func (hostTable *HostTable) Create() {
 	}
 }
 
-func getHostTables() *[]HostTable {
-	results := []HostTable{}
+func getHostMappings() *[]HostMapping {
+	results := []HostMapping{}
 	err := _engine.Find(&results)
 	if err != nil {
 		panic(err)

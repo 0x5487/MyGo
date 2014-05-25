@@ -19,38 +19,38 @@ type LinkModel struct {
 }
 
 type Image struct {
-	Id           int `xorm:"SERIAL index"`
-	StoreId      int
+	Id           int `xorm:"PK SERIAL index"`
+	StoreId      int `xorm:"INT index"`
 	Url          string
 	Position     int
 	FileName     string
 	Attachment   string
-	CustomFields LinkModel
+	CustomFields LinkModel `xorm:"-"`
 }
 
 type CustomField struct {
-	Id      int    `xorm:"SERIAL index"`
+	Id      int    `xorm:"PK SERIAL index"`
 	StoreId int    `xorm:"INT not null unique(custom_field) index"`
 	Key     string `xorm:"not null unique(custom_field)"`
 	Value   string
 }
 
 type Collection struct {
-	Id           int    `xorm:"SERIAL index"`
-	StoreId      int    `xorm:"INT not null unique(collection) index" form:"-" json:"-"`
-	ResourceId   string `xorm:"not null unique(collection) index"`
-	DisplayName  string `xorm:"not null unique(collection) index"`
+	Id           int    `xorm:"PK SERIAL index"`
+	StoreId      int    `xorm:"INT not null unique(resourceId) unique(name) index" form:"-" json:"-"`
+	ResourceId   string `xorm:"not null unique(resourceId) index"`
+	DisplayName  string `xorm:"not null unique(name) index"`
 	IsVisible    bool
 	Description  string
-	Image        Image
+	Image        Image `xorm:"-"`
 	Tags         string
-	CustomFields LinkModel
+	CustomFields LinkModel `xorm:"-"`
 	CreatedAt    time.Time
 	UpdatedAt    time.Time `xorm:"index"`
 }
 
 type Product struct {
-	Id                        int `xorm:"SERIAL index"`
+	Id                        int `xorm:"PK SERIAL index"`
 	StoreId                   int `xorm:"INT index"`
 	Sku                       string
 	ResourceId                string
@@ -61,22 +61,22 @@ type Product struct {
 	IsPreOrderEnabled         bool
 	IsShippingAddressRequired bool
 	Tags                      string
-	ListPrice                 Money
-	Price                     Money
+	ListPrice                 Money `xorm:"INT index"`
+	Price                     Money `xorm:"INT index"`
 	Description               string
 	Vendor                    string
 	InventoryQuantity         int
 	ManageInventoryMethod     ManageInventoryMethod
 	Weight                    int32
-	Variations                LinkModel
-	Images                    LinkModel
-	CustomFields              LinkModel
+	Variations                LinkModel `xorm:"-"`
+	Images                    LinkModel `xorm:"-"`
+	CustomFields              LinkModel `xorm:"-"`
 	CreatedAt                 time.Time
 	UpdatedAt                 time.Time `xorm:"index"`
 }
 
 type Variation struct {
-	Id                        int `xorm:"SERIAL index"`
+	Id                        int `xorm:"PK SERIAL index"`
 	StoreId                   int `xorm:"INT index"`
 	Sku                       string
 	DisplayName               string
@@ -86,8 +86,8 @@ type Variation struct {
 	IsPreOrderEnabled         bool
 	IsShippingAddressRequired bool
 	Tags                      string
-	ListPrice                 Money
-	Price                     Money
+	ListPrice                 Money `xorm:"INT index"`
+	Price                     Money `xorm:"INT index"`
 	Description               string
 	Vendor                    string
 	InventoryQuantity         int
@@ -108,8 +108,7 @@ type collection_product struct {
 }
 
 type image_any struct {
-	Id           int `xorm:"SERIAL index"`
-	ImageId      int
+	Id           int `xorm:"PK SERIAL index"`
 	CollectionId int
 	ProductId    int
 	CreatedAt    time.Time
