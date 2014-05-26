@@ -5,8 +5,8 @@ func createFakeData() {
 	jasonStore := Store{Name: "jason", DefaultTheme: "simple"}
 	jasonStore.Create()
 
-	hostMapping := HostMapping{Host: "jason.mystore.com:3000", StoreId: jasonStore.Id}
-	hostMapping.create()
+	host := Host{Name: "jason.mystore.com:3000", StoreId: jasonStore.Id}
+	host.create()
 
 	//themes
 	simpleTheme := Theme{Name: "simple", IsDefault: true, StoreId: jasonStore.Id}
@@ -62,5 +62,12 @@ func createFakeData() {
 	}
 
 	//create products
+	menWatch := Product{StoreId: jasonStore.Id, Sku: "sku123", DisplayName: "SIRIUS"}
+	menWatch.create()
 
+	//create CustomField
+	customField := CustomField{StoreId: jasonStore.Id, TypeId: 1, ParentId: menCollection.Id, Key: "Jason.ABC", Value: "Hello World"}
+	if err := customField.create(); err != nil {
+		println(err.Error())
+	}
 }

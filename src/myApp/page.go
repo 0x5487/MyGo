@@ -3,10 +3,8 @@ package main
 import (
 	//"encoding/json"
 	"github.com/JasonSoft/render"
-	"io/ioutil"
 	//"log"
 	//"os"
-	"path/filepath"
 	"strings"
 	"time"
 )
@@ -54,15 +52,6 @@ func (page *Page) create() error {
 	} else {
 		return nil
 	}
-}
-
-func getPage(pageName string) string {
-	pagePath := filepath.Join(_appDir, "pages", pageName+".html")
-	buf, err := ioutil.ReadFile(pagePath)
-	if err != nil {
-		panic(err)
-	}
-	return string(buf[:])
 }
 
 func getPages(storeId int) *[]Page {

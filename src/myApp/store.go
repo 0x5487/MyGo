@@ -112,11 +112,11 @@ func (store *Store) CreateApp() *myClassic {
 	})
 
 	m.Get("/admin/main", func() string {
-		return getPage("main")
+		return displayShare("main.html")
 	})
 
 	m.Get("/admin", func() string {
-		return getPage("index")
+		return displayShare("index.html")
 	})
 
 	m.Get("/pages/:pageName", func(r render.Render, params martini.Params) {
