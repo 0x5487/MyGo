@@ -109,11 +109,43 @@ type Variation struct {
 	UpdatedAt                 time.Time `xorm:"index"`
 }
 
-type VariationOption struct {
+type OptionSet struct {
+	Id        int
+	Name      string
+	Options   LinkModel `xorm:"-"`
+	CreatedAt time.Time
+	UpdatedAt time.Time `xorm:"index"`
+}
+
+type OptionSetOption struct {
+	Id           int
+	OptionSetId  int
+	OptionId     int
+	Position     int
+	IsRequired   bool
+	Option       Option        `xorm:"-"`
+	OptionValues []OptionValue `xorm:"-"`
+	CreatedAt    time.Time
+	UpdatedAt    time.Time `xorm:"index"`
+}
+
+type Option struct {
 	Id          int
-	VariationId int
-	OptionId    int
-	OptionValue int
+	Name        string
+	DisplayName string
+	Values      LinkModel `xorm:"-"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time `xorm:"index"`
+}
+
+type OptionValue struct {
+	Id        int
+	OptionId  int
+	Position  int
+	Lable     string
+	Value     string
+	CreatedAt time.Time
+	UpdatedAt time.Time `xorm:"index"`
 }
 
 type collection_product struct {

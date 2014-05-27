@@ -14,6 +14,12 @@ type appError struct {
 	Code    int
 }
 
+type User struct {
+	Id    int32
+	Name  string `xorm:"varchar(25) not null unique 'usr_name'"`
+	Email string
+}
+
 func (e *appError) Error() string { return e.Message }
 
 func displayPrivate(fileName string) string {
