@@ -2,7 +2,8 @@
 
 function collectionController($scope){
 
-    $scope.collections = [ { Id:1, Name: "Man", Description: "well....", IsSelected: false },
+    $scope.collections = [
+        { Id:1, Name: "Man", Description: "well....", IsSelected: false },
         { Id:2, Name: "Women", Description: "blah...blah...", IsSelected: false },
         { Id:3, Name: "Kids", Description: "for your kids", IsSelected: false }
     ];

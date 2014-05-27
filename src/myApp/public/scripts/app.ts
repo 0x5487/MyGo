@@ -9,21 +9,25 @@ var catalogApp = angular.module('catalogApp', [
 catalogApp.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
-            when('/collections', {
-                templateUrl: '/views/collections.html',
-                controller: 'collectionController'
-            }).
             when('/collection/add', {
                 templateUrl: '/views/add_collection.html',
-                controller: 'addCollectionController'
+                controller: 'addCollection'
             }).
             when('/collection/:collectionId', {
                 templateUrl: '/views/display_collection.html',
                 controller: 'displayCollectionController'
             }).
+            when('/collections', {
+                templateUrl: '/views/collection_list.html',
+                controller: 'collectionController'
+            }).
+            when('/products/add', {
+                templateUrl: '/views/add_product.html',
+                controller: 'productAdd'
+            }).
             when('/products', {
-                templateUrl: '/views/collection_old.html',
-                controller: 'productController'
+                templateUrl: '/views/product_list.html',
+                controller: 'products'
             }).
             when('/pages', {
                 templateUrl: '/views/pages.html',

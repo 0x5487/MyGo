@@ -109,7 +109,12 @@ type Variation struct {
 	UpdatedAt                 time.Time `xorm:"index"`
 }
 
-//database bridge table
+type VariationOption struct {
+	Id          int
+	VariationId int
+	OptionId    int
+	OptionValue int
+}
 
 type collection_product struct {
 	Id           int `xorm:"PK SERIAL index"`

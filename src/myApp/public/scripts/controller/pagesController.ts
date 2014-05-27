@@ -9,8 +9,7 @@ function pagesController($scope, $window)
 
 
 //add
-function addPageController($scope, $window)
-{
+function addPageController($scope, $window) {
     $scope.viewClass = "cl-mcont";
 
 

@@ -1,0 +1,37 @@
+<div>
+    <p>Add Product</p>
+
+
+    <form name="productForm">
+        <div>
+            <label>*Name:</label><input type="text" name="name" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required/><span ng-show="collectionForm.name.$invalid && !collectionForm.name.$pristine">name is too short.</span><br/>
+
+        </div>
+        <div>
+            <label>Description:</label><input type="text" name="description" ng-model="product.Description">
+        </div>
+
+        <div>
+            <label>SKU:</label><input type="text" name="sku" ng-model="product.Sku">
+        </div>
+        <div>
+            <label>Vendor:</label><input type="text" name="vendor" ng-model="product.Vendor">
+        </div>
+        <div>
+            <label>Tags:</label><input type="text" name="tags" ng-model="product.Tag">
+        </div>
+        <div>
+            <label>Price:</label><input type="text" name="price" ng-model="product.Price">
+        </div>
+        <div>
+            <label>List Price:</label><input type="text" name="listprice" ng-model="product.ListPrice">
+        </div>
+        <div>
+            <label>ResourceId:</label><input type="text" name="resourceid" ng-model="product.ResourceId">
+        </div>
+        <button type="submit" data-ng-click="create()" class="btn btn-default" ng-disabled="collectionForm.$invalid">Submit</button>
+
+
+    </form>
+
+</div>

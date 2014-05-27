@@ -1,9 +1,8 @@
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
 
-function homeController($scope, $window)
-{
+function homeController($scope, $window) {
 
-    $scope.login = function() {
+    $scope.login = function () {
 
         if ($scope.username == "jason" && $scope.password == "123123") {
 

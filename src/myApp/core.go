@@ -16,8 +16,8 @@ type appError struct {
 
 func (e *appError) Error() string { return e.Message }
 
-func displayShare(fileName string) string {
-	filePath := filepath.Join(_appDir, "shares", fileName)
+func displayPrivate(fileName string) string {
+	filePath := filepath.Join(_appDir, "private", fileName)
 	buf, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		panic(err)
