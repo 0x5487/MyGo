@@ -77,9 +77,10 @@ type Product struct {
 	Price                     Money `xorm:"INT index"`
 	Description               string
 	Vendor                    string
-	InventoryQuantity         int
+	InventoryQuantity         int `xorm:"INT"`
 	ManageInventoryMethod     ManageInventoryMethod
-	Weight                    int32
+	Weight                    int
+	OptionSetId               int       `xorm:"INT"`
 	Variations                LinkModel `xorm:"-"`
 	Images                    LinkModel `xorm:"-"`
 	CustomFields              LinkModel `xorm:"-"`
@@ -102,9 +103,9 @@ type Variation struct {
 	Price                     Money `xorm:"INT index"`
 	Description               string
 	Vendor                    string
-	InventoryQuantity         int
+	InventoryQuantity         int `xorm:"INT"`
 	ManageInventoryMethod     ManageInventoryMethod
-	Weight                    int32
+	Weight                    int
 	CreatedAt                 time.Time
 	UpdatedAt                 time.Time `xorm:"index"`
 }

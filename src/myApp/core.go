@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	//"log"
 	//"os"
+	"github.com/go-martini/martini"
 	"path/filepath"
 )
 
@@ -20,6 +21,11 @@ type User struct {
 	Email string
 }
 
+type myClassic struct {
+	*martini.Martini
+	martini.Router
+}
+
 func (e *appError) Error() string { return e.Message }
 
 func displayPrivate(fileName string) string {
@@ -29,4 +35,13 @@ func displayPrivate(fileName string) string {
 		panic(err)
 	}
 	return string(buf[:])
+}
+
+func withoutLogging() *myClassic {
+	r := martini.NewRouter()
+	m := martini.New()
+	m.Use(martini.Recovery())
+	m.MapTo(r, (*martini.Routes)(nil))
+	m.Action(r.Handle)
+	return &myClassic{m, r}
 }
