@@ -14,33 +14,60 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active cont" id="details">
+                    <div class="form-group">
+                        <label>*Name<span ng-show="collectionForm.name.$invalid && !collectionForm.name.$pristine">name is too short.</span><br/></label>
+                        <div>
+                            <input type="text" class="form-control" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description<span ng-show="collectionForm.name.$invalid && !collectionForm.name.$pristine">name is too short.</span><br/></label>
+                        <div>
+                            <input type="text" class="form-control" name="description" ng-model="product.Description">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label >Tags</label>
+                        <div>
+                            <input type="text" class="form-control" name="tags" ng-model="product.Tag">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6">
+                            <label>SKU</label>
+                            <div>
+                                <input type="text" class="form-control" name="sku" ng-model="product.Sku">
+                            </div>
+                                </div>
+                            <div class="col-sm-6 col-md-6">
+                            <label>Vendor</label>
+                            <div >
+                                <input type="text" class="form-control" name="vendor" ng-model="product.Vendor">
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6">
+                                <label>Price</label>
+                                <div>
+                                    <input type="text" class="form-control" name="price" ng-model="product.price">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <label>Regular Price</label>
+                                <div >
+                                    <input type="text" class="form-control" name="regularPrice" ng-model="product.regularPrice">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div>
-                            <label>*Name:</label><input type="text" name="name" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required/><span ng-show="collectionForm.name.$invalid && !collectionForm.name.$pristine">name is too short.</span><br/>
 
-                        </div>
-                        <div>
-                            <label>Description:</label><input type="text" name="description" ng-model="product.Description">
-                        </div>
 
-                        <div>
-                            <label>SKU:</label><input type="text" name="sku" ng-model="product.Sku">
-                        </div>
-                        <div>
-                            <label>Vendor:</label><input type="text" name="vendor" ng-model="product.Vendor">
-                        </div>
-                        <div>
-                            <label>Tags:</label><input type="text" name="tags" ng-model="product.Tag">
-                        </div>
-                        <div>
-                            <label>Price:</label><input type="text" name="price" ng-model="product.Price">
-                        </div>
-                        <div>
-                            <label>List Price:</label><input type="text" name="listprice" ng-model="product.ListPrice">
-                        </div>
-                        <div>
-                            <label>ResourceId:</label><input type="text" name="resourceid" ng-model="product.ResourceId">
-                        </div>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="tab-pane cont" id="options">
                     <h2>Typography</h2>
