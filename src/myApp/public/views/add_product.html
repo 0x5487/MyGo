@@ -2,36 +2,80 @@
     <p>Add Product</p>
 
 
-    <form name="productForm">
-        <div>
-            <label>*Name:</label><input type="text" name="name" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required/><span ng-show="collectionForm.name.$invalid && !collectionForm.name.$pristine">name is too short.</span><br/>
 
-        </div>
-        <div>
-            <label>Description:</label><input type="text" name="description" ng-model="product.Description">
-        </div>
+    <div class="tab-container">
+        <form name="productForm">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#details" data-toggle="tab" target="_self">Details</a></li>
+                <li><a href="#options" data-toggle="tab" target="_self">Options</a></li>
+                <li><a href="#customFields" data-toggle="tab" target="_self">Custom Fields</a></li>
+                <li><a href="#images" data-toggle="tab" target="_self">Images</a></li>
+                <li><a href="#collections" data-toggle="tab" target="_self">Collections</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active cont" id="details">
 
-        <div>
-            <label>SKU:</label><input type="text" name="sku" ng-model="product.Sku">
-        </div>
-        <div>
-            <label>Vendor:</label><input type="text" name="vendor" ng-model="product.Vendor">
-        </div>
-        <div>
-            <label>Tags:</label><input type="text" name="tags" ng-model="product.Tag">
-        </div>
-        <div>
-            <label>Price:</label><input type="text" name="price" ng-model="product.Price">
-        </div>
-        <div>
-            <label>List Price:</label><input type="text" name="listprice" ng-model="product.ListPrice">
-        </div>
-        <div>
-            <label>ResourceId:</label><input type="text" name="resourceid" ng-model="product.ResourceId">
-        </div>
-        <button type="submit" data-ng-click="create()" class="btn btn-default" ng-disabled="collectionForm.$invalid">Submit</button>
+                        <div>
+                            <label>*Name:</label><input type="text" name="name" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required/><span ng-show="collectionForm.name.$invalid && !collectionForm.name.$pristine">name is too short.</span><br/>
 
+                        </div>
+                        <div>
+                            <label>Description:</label><input type="text" name="description" ng-model="product.Description">
+                        </div>
 
-    </form>
+                        <div>
+                            <label>SKU:</label><input type="text" name="sku" ng-model="product.Sku">
+                        </div>
+                        <div>
+                            <label>Vendor:</label><input type="text" name="vendor" ng-model="product.Vendor">
+                        </div>
+                        <div>
+                            <label>Tags:</label><input type="text" name="tags" ng-model="product.Tag">
+                        </div>
+                        <div>
+                            <label>Price:</label><input type="text" name="price" ng-model="product.Price">
+                        </div>
+                        <div>
+                            <label>List Price:</label><input type="text" name="listprice" ng-model="product.ListPrice">
+                        </div>
+                        <div>
+                            <label>ResourceId:</label><input type="text" name="resourceid" ng-model="product.ResourceId">
+                        </div>
+                </div>
+                <div class="tab-pane cont" id="options">
+                    <h2>Typography</h2>
+                    <p>This is just an example of content writen by <b>Jeff Hanneman</b>, as you can see it is a clean design with large
+                </div>
+                <div class="tab-pane" id="customFields">customFields</div>
+                <div class="tab-pane" id="images">images</div>
+                <div class="tab-pane" id="collections">
+                    <h2>Collections</h2>
+                    <select id='custom-headers' multiple='multiple'>
+                        <option value='elem_1'>elem 1</option>
+                        <option value='elem_2'>elem 2</option>
+                        <option value='elem_3'>elem 3</option>
+                        <option value='elem_4'>elem 4</option>
+                        <option value='elem_5'>elem 5</option>
+                        <option value='elem_6'>elem 6</option>
+                        <option value='elem_7'>elem 7</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" data-ng-click="create()" class="btn btn-default" ng-disabled="collectionForm.$invalid">Save</button>
+        </form>
+    </div>
+
 
 </div>
+
+        <script type="text/javascript">
+
+            $(document).ready(function(){
+                $('#custom-headers').multiSelect({
+                    selectableHeader: "<div class='custom-header'>Selectable items</div>",
+                    selectionHeader: "<div class='custom-header'>Selection items</div>",
+                });
+            });
+
+        </script>
+
