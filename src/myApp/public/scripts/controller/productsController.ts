@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/angularjs/angular.d.ts" />
+
 
 function products($scope){
 
@@ -8,14 +8,18 @@ function products($scope){
 
 function productAdd($scope){
 
+    $scope.viewClass = "cl-mcont";
+
+
+    $scope.invertoryMethodChange = function(){
+        console.log("aa");
+    };
+
     $scope.product = {};
 
     $scope.create = function(){
         console.log($scope.product);
-    }
-
-    console.log("productAdd");
-
+    };
 
 
 }

@@ -1,10 +1,10 @@
-<div>
+<div ng-controller="productAdd">
     <p>Add Product</p>
 
 
 
     <div class="tab-container">
-        <form name="productForm">
+        <form name="productForm" class="" role="form">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#details" data-toggle="tab" target="_self">Details</a></li>
                 <li><a href="#options" data-toggle="tab" target="_self">Options</a></li>
@@ -13,7 +13,7 @@
                 <li><a href="#collections" data-toggle="tab" target="_self">Collections</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active cont" id="details">
+                <div class="tab-pane active content" id="details">
                     <div class="form-group">
                         <label>*Name<span ng-show="collectionForm.name.$invalid && !collectionForm.name.$pristine">name is too short.</span><br/></label>
                         <div>
@@ -23,7 +23,7 @@
                     <div class="form-group">
                         <label>Description<span ng-show="collectionForm.name.$invalid && !collectionForm.name.$pristine">name is too short.</span><br/></label>
                         <div>
-                            <input type="text" class="form-control" name="description" ng-model="product.Description">
+                            <textarea class="form-control" rows="8"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -65,7 +65,41 @@
                         </div>
                     </div>
 
+                    <div class="form-group form-horizontal">
+                        <div class="row">
+                            <label class="col-sm-3 col-md-3 control-label">Manage Inventory Method</label>
+                            <div class="col-sm-3 col-md-3">
+                                <select id="selInvertoryMethod" class="form-control" ng-change="invertoryMethodChange()">
+                                    <option value="0">No Track</option>
+                                    <option value="1">Tracking</option>
+                                </select>
+                                <div id="pnlInvortory">
+                                    <div class="form-inline">
+                                        <label class="control-label">Invertory quantity</label>
+                                        <input type="text" class="form-control" name="regularPrice" ng-model="product.regularPrice">
+                                    </div>
+                                    <div class="form-inline">
+                                        <label class="control-label">Low level quantity</label>
+                                        <input type="text" class="form-control" name="regularPrice" ng-model="product.regularPrice">
+                                    </div>
+                                </div>
 
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-horizontal">
+                        <div class="row">
+                            <label class="col-sm-3 col-md-3 control-label">Setting</label>
+                            <div class="col-sm-9 col-md-9">
+                                <label class="checkbox-inline"><input type="checkbox"/>Is visible</label>
+                                <label class="checkbox-inline"><input type="checkbox"/>Is purchasable</label>
+                                <label class="checkbox-inline"><input type="checkbox"/>Is back order enabled</label>
+                                <label class="checkbox-inline"><input type="checkbox"/>Is pre order enabled</label>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="clearfix"></div>
                 </div>
