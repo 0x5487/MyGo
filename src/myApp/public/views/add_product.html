@@ -4,7 +4,6 @@
 
 
     <div class="tab-container">
-        <form name="productForm" class="" role="form">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#details" data-toggle="tab" target="_self">Details</a></li>
                 <li><a href="#options" data-toggle="tab" target="_self">Options</a></li>
@@ -15,6 +14,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active content" id="details">
+                    <form name="productDetailsForm" class="" role="form">
                     <div class="form-group">
                         <label>*Name<span ng-show="collectionForm.name.$invalid && !collectionForm.name.$pristine">name is too short.</span><br/></label>
                         <div>
@@ -22,9 +22,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Description<span ng-show="collectionForm.name.$invalid && !collectionForm.name.$pristine">name is too short.</span><br/></label>
+                        <label>Content</label>
                         <div>
-                            <textarea class="form-control" rows="8"></textarea>
+                            <textarea class="form-control" rows="10"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -33,6 +33,7 @@
                             <input type="text" class="form-control" name="tags" ng-model="product.Tag">
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-6 col-md-6">
@@ -102,7 +103,7 @@
                                                 <input type="text" class="form-control" name="regularPrice" ng-model="product.regularPrice">
                                             <select id="selWeight" class="form-control">
                                                 <option value="0" selected>KG</option>
-                                                <option value="1">LB</option>
+                                                <option value="1">LBS</option>
                                             </select>
                                             </p>
                                         </div>
@@ -116,14 +117,15 @@
                     <div class="form-group">
                         <label>Setting</label>
                         <div class="content">
-                            <label class="checkbox-inline"><input type="checkbox"/>Is visible</label>
-                            <label class="checkbox-inline"><input type="checkbox"/>Is purchasable</label>
+                            <label class="checkbox-inline"><input type="checkbox" checked/>Is visible</label>
+                            <label class="checkbox-inline"><input type="checkbox" checked/>Is purchasable</label>
                             <label class="checkbox-inline"><input type="checkbox"/>Is back order enabled</label>
-                            <label class="checkbox-inline"><input type="checkbox"/>Is pre order enabled</label>
+                            <label class="checkbox-inline"><input type="checkbox"/>Is pre-order enabled</label>
                         </div>
                     </div>
 
                     <div class="clearfix"></div>
+                     </form>
                 </div>
                 <div class="tab-pane cont" id="options">
                     <div style="border-bottom: 1px">
@@ -148,97 +150,38 @@
                                         <th style="width:2%; vertical-align: middle;"><input type="checkbox" value="on"></th>
                                         <th>SKU</th>
                                         <th>Options</th>
+                                        <th>Price</th>
+                                        <th>Invertory Quantity</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr class="odd gradeX">
-                                        <th style="vertical-align: middle;"><input type="checkbox" value="on"></th>
-                                        <td style="vertical-align: middle;">Trident</td>
+                                        <th class="vertical-align"><input type="checkbox" value="on"></th>
+                                        <td class="vertical-align">Trident</td>
                                         <td>
                                             <strong>Color:</strong> Blue<br/>
                                             <strong>Size:</strong> 8G
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            9
                                         </td>
                                     </tr>
                                     <tr class="odd gradeX">
-                                        <th style="vertical-align: middle;"><input type="checkbox" value="on"></th>
-                                        <td style="vertical-align: middle;">Trident</td>
+                                        <th class="vertical-align"><input type="checkbox" value="on"></th>
+                                        <td class="vertical-align">Trident</td>
                                         <td>
                                             <strong>Color:</strong> Blue<br/>
                                             <strong>Size:</strong> 8G
                                         </td>
-                                    </tr>
-                                    <tr class="odd gradeX">
-                                        <th style="vertical-align: middle;"><input type="checkbox" value="on"></th>
-                                        <td style="vertical-align: middle;">Trident</td>
                                         <td>
-                                            <strong>Color:</strong> Blue<br/>
-                                            <strong>Size:</strong> 8G
+                                            same as default
                                         </td>
-                                    </tr>
-                                    <tr class="even gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Trident</td>
-                                        <td>USD 50.25</td>
-                                    </tr>
-                                    <tr class="odd gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Trident</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="even gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Trident</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Gecko</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Gecko</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Gecko</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Gecko</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Gecko</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Gecko</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Gecko</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Gecko</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Gecko</td>
-                                        <td>USD 60.50</td>
-                                    </tr>
-                                    <tr class="gradeA">
-                                        <th class="text-center"><input type="checkbox" value="on"></th>
-                                        <td>Gecko</td>
-                                        <td>USD 60.50</td>
+                                        <td>
+                                            9
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -253,38 +196,41 @@
                         <table class="no-border">
                             <thead class="no-border">
                             <tr>
-                                <th style="width:50%;">Name</th>
+                                <th style="width:45%;">Name</th>
                                 <th>Value</th>
                                 <th class="text-right">Action</th>
                             </tr>
                             </thead>
                             <tbody class="no-border-x no-border-y">
                             <tr>
-                                <td style="width:30%;">Filet Mignon</td>
+                                <td>Filet Mignon</td>
                                 <td>05/14/2013</td>
-                                <td class="text-right">$5,230.000</td>
+                                <td class="text-right"><a class="label label-default" href="#"><i class="fa fa-pencil"></i></a> <a class="label label-danger" href="#"><i class="fa fa-times"></i></a></td>
                             </tr>
                             <tr>
-                                <td style="width:30%;">Blue beer</td>
+                                <td>Blue beer</td>
                                 <td>16/08/2013</td>
-                                <td class="text-right">$5,230.000</td>
+                                <td class="text-right"><a class="label label-default" href="#"><i class="fa fa-pencil"></i></a> <a class="label label-danger" href="#"><i class="fa fa-times"></i></a></td>
                             </tr>
                             <tr>
-                                <td style="width:30%;">T-shirts</td>
+                                <td>T-shirts</td>
                                 <td>22/12/2013</td>
-                                <td class="text-right">$5,230.000</td>
+                                <td class="text-right"><a class="label label-default" href="#"><i class="fa fa-pencil"></i></a> <a class="label label-danger" href="#"><i class="fa fa-times"></i></a></td>
                             </tr>
                             <tr>
-                                <td style="width:30%;"><input type="text"/> </td>
                                 <td><input type="text"/> </td>
-                                <td class="text-right">$5,230.000</td>
+                                <td><input type="text"/> </td>
+                                <td class="text-right"><a class="label label-default" href="#"><i class="fa fa-save"></i></a> <a class="label label-danger" href="#"><i class="fa fa-times"></i></a></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
 
                 </div>
-                <div class="tab-pane" id="images">images</div>
+                <div class="tab-pane" id="images">
+                    <input id="fileupload" type="file" name="myfiles" multiple/>
+                    <div id="files" class="files"></div>
+                </div>
                 <div class="tab-pane" id="collections">
                     <select id='custom-headers' multiple='multiple'>
                         <option value='elem_1'>elem 1</option>
@@ -300,12 +246,33 @@
                     </select>
                 </div>
                 <div class="tab-pane cont" id="seo">
-                    <h2>Typography</h2>
-                    <p>This is just an example of content writen by <b>Jeff Hanneman</b>, as you can see it is a clean design with large
+                    <div class="form-group">
+                        <label>*Url</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">http://www.jasonstore.com/products/</span>
+                            <input type="text" class="form-control">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">Reset</button>
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Page Title</label>
+                        <div>
+                            <input type="text" class="form-control" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Meta Description</label>
+                        <div>
+                            <input type="text" class="form-control" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <button type="button" class="btn btn-default">Preview</button>
             <button type="submit" data-ng-click="create()" class="btn btn-primary" ng-disabled="collectionForm.$invalid">Save</button>
-        </form>
     </div>
 
     <!-- variation modal -->
@@ -409,6 +376,17 @@
                 $('#modal-dialog').css('margin-top', (userScreenHeight / 2) - (initModalHeight/2)); //center it if it does fit
             }
 
+        });
+
+        $('#fileupload').fileupload({
+            url: "/upload",
+            dataType: 'json',
+            autoUpload: true,
+            disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+            previewMaxWidth: 200,
+            previewMaxHeight: 200,
+            previewCrop: true
         });
     });
 

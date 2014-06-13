@@ -5841,6 +5841,10 @@ table tbody td .btn-group .dropdown-menu li > a {
     padding: 5px 12px;
     text-align: left;
 }
+
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td .vertical-align {
+    vertical-align: middle;
+}
 /*TABS*/
 .nav-tabs {
     border-bottom: 1px solid transparent;

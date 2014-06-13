@@ -7,15 +7,29 @@ import (
 	//"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/sessions"
 	//"io/ioutil"
+	"html/template"
 	//"log"
 	"net/http"
 	//"os"
-	"html/template"
 	"path/filepath"
 	//"strconv"
 	//"fmt"
+	//"io"
 	"time"
 )
+
+// FileInfo describes a file that has been uploaded.
+type FileInfo struct {
+	Key          string `json:"-"`
+	Url          string `json:"url,omitempty"`
+	ThumbnailUrl string `json:"thumbnail_url,omitempty"`
+	Name         string `json:"name"`
+	Type         string `json:"type"`
+	Size         int64  `json:"size"`
+	Error        string `json:"error,omitempty"`
+	DeleteUrl    string `json:"delete_url,omitempty"`
+	DeleteType   string `json:"delete_type,omitempty"`
+}
 
 type Store struct {
 	Id               int    `xorm:"SERIAL index"`
@@ -147,8 +161,12 @@ func (store *Store) CreateApp() *myClassic {
 		return sess.Get("theme").(string)
 	})
 
+	//setup aip
 	option := ApiOption{Store: store}
 	m.UseApi(option)
+
+	//setup upload server
+	m.UseUploadServer()
 
 	return m
 }
