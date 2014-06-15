@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"encoding/json"
 	"github.com/JasonSoft/render"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
@@ -15,6 +14,7 @@ import (
 	//"strconv"
 	"fmt"
 	//"time"
+	"encoding/json"
 )
 
 type ApiOption struct {
@@ -22,6 +22,7 @@ type ApiOption struct {
 }
 
 func (m *myClassic) UseApi(option ApiOption) error {
+
 	m.Get("/api/v1/collections", func(r render.Render) {
 		themes := getThemes(option.Store.Id)
 		r.JSON(200, themes)
@@ -146,6 +147,63 @@ func (m *myClassic) UseApi(option ApiOption) error {
 		res.Header().Add("location", location)
 		res.WriteHeader(201)
 		return ""
+	})
+
+	m.Get("/api/v1/products/:productId", func(req *http.Request, r render.Render, params martini.Params) {
+		var productId string = params["productId"]
+
+		link := LinkModel{Url: "http://abc"}
+		var product = Product{}
+		product.All = link
+
+		if productId == "1" {
+			links := [2]LinkModel{{Url: "Jaosn"}, {Url: "Hello"}}
+			product.All = links
+		}
+
+		r.JSON(200, product)
+	})
+
+	m.Post("/api/v1/products", binding.Json(Product{}), binding.ErrorHandler, func(product Product, res http.ResponseWriter, r render.Render) {
+
+		println(product.Id)
+
+		//product.All = LinkModel{Url: "abc"}
+
+		/*_, ok := product.All.(LinkModel)
+		if ok {
+			r.JSON(200, "ok")
+		} else {
+			r.JSON(200, "failed")
+		}*/
+
+		switch v := product.All.(type) {
+		case map[string]interface{}:
+			println("single")
+			j, err := json.Marshal(&product.All)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			var link LinkModel
+			err = json.Unmarshal(j, &link)
+			if err != nil {
+				fmt.Println(err)
+			}
+			println(link.Url)
+		case []interface{}:
+			println("double")
+
+			var links []LinkModel
+			ok := MarshalToType(&product.All, &links)
+			if ok {
+
+			} else {
+				println("Json failed")
+			}
+		default:
+			fmt.Printf("unexpected type %T,", v)
+		}
 	})
 
 	return nil

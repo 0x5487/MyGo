@@ -1,9 +1,7 @@
-/// <reference path="../../typed/angularjs/angular.d.ts" />
+/// <reference path="../../typings/angularjs/angular.d.ts" />
 
 
-var catalogApp = angular.module('catalogApp', [
-    'ngRoute'
-]);
+var catalogApp = angular.module('catalogApp', ['ngRoute']);
 
 
 catalogApp.config(['$routeProvider',
@@ -23,7 +21,11 @@ catalogApp.config(['$routeProvider',
             }).
             when('/products/add', {
                 templateUrl: '/views/add_product.html',
-                controller: 'productAdd'
+                controller: 'productAddCtrl'
+            }).
+            when('/products/:productId', {
+                templateUrl: '/views/product_list.html',
+                controller: 'displayProductCtrl'
             }).
             when('/products', {
                 templateUrl: '/views/product_list.html',
@@ -40,4 +42,5 @@ catalogApp.config(['$routeProvider',
             otherwise({
                 redirectTo: '/'
             });
-    }]);
+    }]
+);

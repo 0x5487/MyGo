@@ -62,7 +62,7 @@ func createFakeData() {
 	}
 
 	//create products
-	menWatch := Product{StoreId: jasonStore.Id, Sku: "sku123", DisplayName: "SIRIUS"}
+	menWatch := Product{StoreId: jasonStore.Id, Sku: "sku123", Name: "SIRIUS"}
 	menWatch.create()
 
 	//create CustomField

@@ -1,10 +1,11 @@
 package main
 
 import (
-	//"encoding/json"
+	"encoding/json"
 	"io/ioutil"
 	//"log"
 	//"os"
+	"fmt"
 	"github.com/go-martini/martini"
 	"path/filepath"
 )
@@ -44,4 +45,20 @@ func withoutLogging() *myClassic {
 	m.MapTo(r, (*martini.Routes)(nil))
 	m.Action(r.Handle)
 	return &myClassic{m, r}
+}
+
+func MarshalToType(source interface{}, target interface{}) bool {
+	var result bool = false
+
+	j, err := json.Marshal(source)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = json.Unmarshal(j, target)
+	if err != nil {
+		fmt.Println(err)
+	}
+	result = true
+	return result
 }

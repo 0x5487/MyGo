@@ -62,28 +62,32 @@ type Collection struct {
 }
 
 type Product struct {
-	Id                        int `xorm:"PK SERIAL index"`
-	StoreId                   int `xorm:"INT not null index" form:"-" json:"-"`
-	Sku                       string
-	ResourceId                string
-	DisplayName               string
+	Id                        int    `xorm:"PK SERIAL index"`
+	StoreId                   int    `xorm:"INT not null unique(resourceId) unique(name) unique(Sku)" form:"-" json:"-"`
+	Sku                       string `xorm:"not null unique(Sku)"`
+	SkuEx                     string `xorm:"not null unique(Sku)" form:"-" json:"-"`
+	ResourceId                string `xorm:"not null unique(resourceId)"`
+	Name                      string `xorm:"not null unique(name)"`
 	IsPurchasable             bool
 	IsVisible                 bool
 	IsBackOrderEnabled        bool
 	IsPreOrderEnabled         bool
 	IsShippingAddressRequired bool
-	Tags                      string
-	ListPrice                 Money `xorm:"INT index"`
-	Price                     Money `xorm:"INT index"`
-	Description               string
-	Vendor                    string
-	InventoryQuantity         int `xorm:"INT"`
-	ManageInventoryMethod     ManageInventoryMethod
+	Tags                      string `xorm:"not null"`
+	ListPrice                 Money  `xorm:"INT index"`
+	Price                     Money  `xorm:"INT index"`
+	Content                   string `xorm:"not null"`
+	Vendor                    string `xorm:"not null"`
+	InventoryQuantity         int    `xorm:"INT"`
 	Weight                    int
-	OptionSetId               int       `xorm:"INT"`
-	Variations                LinkModel `xorm:"-"`
-	Images                    LinkModel `xorm:"-"`
-	CustomFields              LinkModel `xorm:"-"`
+	ManageInventoryMethod     ManageInventoryMethod
+	OptionSetId               int         `xorm:"INT"`
+	PageTitle                 string      `xorm:"not null"`
+	MetaDescription           string      `xorm:"not null"`
+	Variations                interface{} `xorm:"-"`
+	Images                    interface{} `xorm:"-"`
+	CustomFields              interface{} `xorm:"-"`
+	All                       interface{} `xorm:"-"`
 	CreatedAt                 time.Time
 	UpdatedAt                 time.Time `xorm:"index"`
 }

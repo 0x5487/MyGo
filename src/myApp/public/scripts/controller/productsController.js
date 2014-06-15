@@ -1,15 +1,26 @@
+/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../typings/jquery.fileupload/jquery.fileupload.d.ts" />
+/// <reference path="../models.ts" />
 function products($scope) {
     $scope.viewClass = "cl-mcont";
 }
 
-function productAdd($scope) {
+function displayProductCtrl($scope, $routeParams) {
     $scope.viewClass = "cl-mcont";
-    $scope.selectedInvertoryMethod = 0;
+}
 
-    $scope.product = {};
+function productAddCtrl($scope) {
+    $scope.viewClass = "cl-mcont";
 
+    $scope.product = new Product();
+
+    //events
     $scope.create = function () {
         console.log($scope.product);
+    };
+
+    $scope.nameChange = function () {
     };
 
     $scope.fileList = [];
