@@ -21,16 +21,42 @@ function productAddCtrl($scope){
     $scope.viewClass = "cl-mcont";
 
 
-    $scope.product = new Product();
+    var product = new Product();
+
+    var field1 = new CustomField();
+    field1.Id = 1;
+    field1.Name = "Jason1";
+    field1.Value = "abc1";
+
+    var field2 = new CustomField();
+    field2.Id = 2;
+    field2.Name = "Jason2";
+    field2.Value = "abc2";
+
+    var field3 = new CustomField();
+    field3.Id = 3;
+    field3.Name = "Jason3";
+    field3.Value = "abc3";
+
+    product.CustomFields = [field1,field2,field3];
+
+    $scope.product = product;
 
     //events
     $scope.create = function(){
         console.log($scope.product);
     };
 
-    $scope.nameChange = function(){
+    $scope.createCustomField = function(){
+        var newCustomField = new CustomField();
+        newCustomField.UIState = UIState.Editing;
+        product.CustomFields.push(newCustomField);
+    };
 
-    }
+    $scope.editCustomField = function(index: number){
+        product.CustomFields[index].UIState = UIState.Editing;
+    };
+
 
     $scope.fileList = [];
 

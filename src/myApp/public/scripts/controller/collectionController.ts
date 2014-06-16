@@ -2,6 +2,8 @@
 
 function collectionController($scope){
 
+    $scope.viewClass = "cl-mcont";
+
     $scope.collections = [
         { Id:1, Name: "Man", Description: "well....", IsSelected: false },
         { Id:2, Name: "Women", Description: "blah...blah...", IsSelected: false },

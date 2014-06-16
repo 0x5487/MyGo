@@ -10,6 +10,12 @@ var WeightUnit;
     WeightUnit[WeightUnit["LBL"] = 2] = "LBL";
 })(WeightUnit || (WeightUnit = {}));
 
+var UIState;
+(function (UIState) {
+    UIState[UIState["Normal"] = 1] = "Normal";
+    UIState[UIState["Editing"] = 2] = "Editing";
+})(UIState || (UIState = {}));
+
 var Product = (function () {
     function Product() {
         this.ManageInventoryMethod = 1 /* NoTrack */;
@@ -283,6 +289,7 @@ var Product = (function () {
 
 var CustomField = (function () {
     function CustomField() {
+        this._uistate = 1 /* Normal */;
     }
     Object.defineProperty(CustomField.prototype, "Id", {
         get: function () {
@@ -314,6 +321,18 @@ var CustomField = (function () {
         },
         set: function (value) {
             this._value = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(CustomField.prototype, "UIState", {
+        get: function () {
+            return this._uistate;
+        },
+        set: function (value) {
+            this._uistate = value;
         },
         enumerable: true,
         configurable: true

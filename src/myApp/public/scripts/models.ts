@@ -8,6 +8,12 @@ enum WeightUnit {
     LBL = 2
 }
 
+enum UIState {
+    Normal = 1,
+    Editing = 2
+}
+
+
 class Product {
 
     private _id: number;
@@ -244,37 +250,53 @@ class Product {
     }
 }
 
-class CustomField{
+class CustomField {
 
-    private _id: number;
+    private _id:number;
 
-    public get Id(): number {
+    public get Id():number {
         return this._id;
     }
 
-    public set Id(value: number) {
+    public set Id(value:number) {
         this._id = value;
     }
 
 
-    private _name: string;
+    private _name:string;
 
-    public get Name() :string {
+    public get Name():string {
         return this._name;
     }
 
-    public set Name(value: string) {
+    public set Name(value:string) {
         this._name = value;
     }
 
 
-    private _value: string;
+    private _value:string;
 
-    public get Value() :string {
+    public get Value():string {
         return this._value;
     }
 
-    public set Value(value: string) {
+    public set Value(value:string) {
         this._value = value;
     }
+
+
+    private _uistate:UIState;
+
+    public get UIState():UIState {
+        return this._uistate;
+    }
+
+    public set UIState(value:UIState) {
+        this._uistate = value;
+    }
+
+    constructor(){
+        this._uistate = UIState.Normal;
+    }
+
 }
