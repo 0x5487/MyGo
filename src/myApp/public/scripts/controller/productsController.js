@@ -1,6 +1,7 @@
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../../typings/jquery.fileupload/jquery.fileupload.d.ts" />
+/// <reference path="../../../typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="../models.ts" />
 function products($scope) {
     $scope.viewClass = "cl-mcont";
@@ -35,7 +36,14 @@ function productAddCtrl($scope) {
     $scope.product = product;
 
     //events
-    $scope.create = function () {
+    $scope.save = function () {
+        $scope.isSubmitted = true;
+
+        //redirect to error tab
+        if ($scope.productDetailsForm.$invalid) {
+            $('#detailTab').tab('show');
+        }
+
         console.log($scope.product);
     };
 

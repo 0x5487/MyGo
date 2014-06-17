@@ -5,8 +5,8 @@
 
     <div class="tab-container">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#details" data-toggle="tab" target="_self">Details</a></li>
-                <li><a href="#options" data-toggle="tab" target="_self">Options</a></li>
+                <li class="active"><a id="detailTab" href="#details" data-toggle="tab" target="_self">Details</a></li>
+                <li><a id="optionTab" href="#options" data-toggle="tab" target="_self">Options</a></li>
                 <li><a href="#customFields" data-toggle="tab" target="_self">Custom Fields</a></li>
                 <li><a href="#images" data-toggle="tab" target="_self">Images</a></li>
                 <li><a href="#collections" data-toggle="tab" target="_self">Collections</a></li>
@@ -14,12 +14,13 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active content" id="details">
-                    <form name="productDetailsForm" class="" role="form">
-                    <div class="form-group" ng-class="{'has-error' : productDetailsForm.name.$invalid && !productDetailsForm.name.$pristine}">
-                        <label>*Name&nbsp;<span class="text-danger" ng-show="productDetailsForm.name.$invalid && !productDetailsForm.name.$pristine"><strong>Name can't be empty</strong></span></label>
+                    <form name="productDetailsForm" class="" role="form" novalidate>
+                    <div class="form-group" ng-class="{'has-error' : isSubmitted && productDetailsForm.name.$invalid}">
+                        <label>*Name&nbsp;</label><span class="text-danger" ng-show="isSubmitted && productDetailsForm.name.$error.required"><strong>Name can't be empty</strong></span>
                         <div>
-                            <input type="text" name="name" class="form-control" ng-model="product.Name" ng-change="nameChange()" required>
+                            <input type="text" name="name" class="form-control" ng-model="product.Name" ng-change="nameChange()" required/>
                         </div>
+
                     </div>
                     <div class="form-group">
                         <label>Content</label>
@@ -30,7 +31,7 @@
                     <div class="form-group">
                         <label>Tags</label>
                         <div>
-                            <input type="text" class="form-control" name="tags" ng-model="product.Tags">
+                            <input type="text" class="form-control" name="tags" ng-model="product.Tags"/>
                         </div>
                     </div>
 
@@ -39,27 +40,28 @@
                             <div class="col-sm-6 col-md-6">
                             <label>SKU</label>
                             <div>
-                                <input type="text" class="form-control" name="sku" ng-model="product.Sku">
+                                <input type="text" class="form-control" name="sku" ng-model="product.Sku"/>
                             </div>
                                 </div>
                             <div class="col-sm-6 col-md-6">
                             <label>Vendor</label>
                             <div >
-                                <input type="text" class="form-control" name="vendor" ng-model="product.Vendor">
+                                <input type="text" class="form-control" name="vendor" ng-model="product.Vendor"/>
                             </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-sm-6 col-md-6" ng-class="{'has-error' : productDetailsForm.price.$invalid && !productDetailsForm.price.$pristine}">
-                                <label>*Price</label>&nbsp;<span class="text-danger" ng-show="productDetailsForm.price.$invalid && !productDetailsForm.price.$pristine"><strong>Price can't be empty</strong></span>
+                            <div class="col-sm-6 col-md-6" ng-class="{'has-error' : isSubmitted && productDetailsForm.price.$invalid }">
+                                <label>*Price</label>&nbsp;<span class="text-danger" ng-show=" isSubmitted && productDetailsForm.price.$invalid"><strong>Price can't be empty</strong></span>
                                 <div>
                                     <input type="number" name="price" class="form-control" ng-model="product.Price"/>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6" ng-class="{'has-error' : productDetailsForm.regularPrice.$invalid && !productDetailsForm.regularPrice.$pristine}">
-                                <label>Regular Price</label>&nbsp;<span class="text-danger bold" ng-show="productDetailsForm.regularPrice.$invalid && !productDetailsForm.regularPrice.$pristine"><strong>Regular price can't be empty</strong></span>
+                            <div class="col-sm-6 col-md-6" ng-class="{'has-error' : isSubmitted && productDetailsForm.regularPrice.$invalid }">
+                                <label>Regular Price</label>&nbsp;<span class="text-danger bold" ng-show="isSubmitted && productDetailsForm.regularPrice.$invalid"><strong>Regular price can't be empty</strong></span>
                                 <div>
                                     <input type="number" name="regularPrice" class="form-control" ng-model="product.RegularPrice"/>
                                 </div>
@@ -80,13 +82,13 @@
                                         <div class="form-inline">
                                             <p>
                                             <label class="control-label">Invertory quantity</label>
-                                            <input type="text" class="form-control" name="invertoryQuantity" ng-model="product.InventoryQuantity">
+                                            <input type="text" class="form-control" name="invertoryQuantity" ng-model="product.InventoryQuantity"/>
                                             </p>
                                         </div>
                                         <div class="form-inline">
                                             <p>
                                             <label class="control-label">Low level quantity</label>
-                                            <input type="text" class="form-control" name="lowLevelQuantity" ng-model="product.LowLevelQuantity">
+                                            <input type="text" class="form-control" name="lowLevelQuantity" ng-model="product.LowLevelQuantity"/>
                                             </p>
                                         </div>
                                     </div>
@@ -100,11 +102,11 @@
                                         <div class="form-inline">
                                             <p>
                                                 <label class="control-label">Weight</label>
-                                                <input type="text" class="form-control" name="weight" ng-model="product.Weight">
-                                            <select id="selWeight" class="form-control" ng-model="product.WeightUnit">
-                                                <option value="1" selected>KG</option>
-                                                <option value="2">LBS</option>
-                                            </select>
+                                                <input type="text" class="form-control" name="weight" ng-model="product.Weight"/>
+                                                <select id="selWeight" class="form-control" ng-model="product.WeightUnit">
+                                                    <option value="1" selected>KG</option>
+                                                    <option value="2">LBS</option>
+                                                </select>
                                             </p>
                                         </div>
 
@@ -249,19 +251,19 @@
                     <div class="form-group">
                         <label>Page Title</label>
                         <div>
-                            <input type="text" class="form-control" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required>
+                            <input type="text" class="form-control" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Meta Description</label>
                         <div>
-                            <input type="text" class="form-control" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required>
+                            <input type="text" class="form-control" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required/>
                         </div>
                     </div>
                 </div>
             </div>
             <button type="button" class="btn btn-default">Preview</button>
-            <button type="submit" data-ng-click="save()" class="btn btn-primary" ng-disabled="productDetailsForm.$invalid">Save</button>
+            <button type="submit" ng-click="save()" class="btn btn-primary">Save</button>
     </div>
 
     <!-- variation modal -->
