@@ -132,13 +132,10 @@
                 <div class="tab-pane cont" id="options">
                     <div style="border-bottom: 1px">
                         <label>OptionSet</label>
-                        <select>
-                            <option>None</option>
-                            <option>Phone</option>
-                            <option>Clothes</option>
+                        <select id="selOptionSet" ng-model="selectedOptionSet" ng-options="o.Name for o in optionSet" ng-change="optionSetChange()">
                         </select>
                     </div>
-                    <div id="optionPanel">
+                    <div id="optionPanel" ng-show="selectedOptionSet.Id > 0">
                         <div>
                             <button class="btn btn-default">Auto Generation</button>
                             <button class="btn btn-default" data-toggle="modal" data-target="#md-variation" target="_self">Create</button>

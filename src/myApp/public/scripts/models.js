@@ -1,8 +1,8 @@
-var ManageInvertoryMethod;
-(function (ManageInvertoryMethod) {
-    ManageInvertoryMethod[ManageInvertoryMethod["NoTrack"] = 1] = "NoTrack";
-    ManageInvertoryMethod[ManageInvertoryMethod["Tracking"] = 2] = "Tracking";
-})(ManageInvertoryMethod || (ManageInvertoryMethod = {}));
+var ManageInventoryMethod;
+(function (ManageInventoryMethod) {
+    ManageInventoryMethod[ManageInventoryMethod["NoTrack"] = 1] = "NoTrack";
+    ManageInventoryMethod[ManageInventoryMethod["Tracking"] = 2] = "Tracking";
+})(ManageInventoryMethod || (ManageInventoryMethod = {}));
 
 var WeightUnit;
 (function (WeightUnit) {
@@ -237,6 +237,18 @@ var Product = (function () {
     });
 
 
+    Object.defineProperty(Product.prototype, "OptionSetId", {
+        get: function () {
+            return this._optionSetId;
+        },
+        set: function (value) {
+            this._optionSetId = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
     Object.defineProperty(Product.prototype, "ResourceId", {
         get: function () {
             return this._resourceId;
@@ -279,6 +291,18 @@ var Product = (function () {
         },
         set: function (value) {
             this._customFields = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Product.prototype, "Variations", {
+        get: function () {
+            return this._variations;
+        },
+        set: function (value) {
+            this._variations = value;
         },
         enumerable: true,
         configurable: true
@@ -339,5 +363,111 @@ var CustomField = (function () {
     });
 
     return CustomField;
+})();
+
+var Variation = (function () {
+    function Variation() {
+    }
+    Object.defineProperty(Variation.prototype, "Id", {
+        get: function () {
+            return this._id;
+        },
+        set: function (value) {
+            this._id = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Variation.prototype, "Sku", {
+        get: function () {
+            return this._sku;
+        },
+        set: function (value) {
+            this._sku = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Variation.prototype, "Price", {
+        get: function () {
+            return this._price;
+        },
+        set: function (value) {
+            this._price = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Variation.prototype, "ManageInventoryMethod", {
+        get: function () {
+            return this._manageInvertoryMethod;
+        },
+        set: function (value) {
+            this._manageInvertoryMethod = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Variation.prototype, "InventoryQuantity", {
+        get: function () {
+            return this._inventoryQuantity;
+        },
+        set: function (value) {
+            this._inventoryQuantity = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Variation.prototype, "LowLevelQuantity", {
+        get: function () {
+            return this._lowLevelQuantity;
+        },
+        set: function (value) {
+            this._lowLevelQuantity = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    return Variation;
+})();
+
+var OptionSet = (function () {
+    function OptionSet() {
+    }
+    Object.defineProperty(OptionSet.prototype, "Id", {
+        get: function () {
+            return this._id;
+        },
+        set: function (value) {
+            this._id = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(OptionSet.prototype, "Name", {
+        get: function () {
+            return this._name;
+        },
+        set: function (value) {
+            this._name = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    return OptionSet;
 })();
 //# sourceMappingURL=models.js.map

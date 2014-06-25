@@ -4,25 +4,42 @@
 /// <reference path="../../../typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="../models.ts" />
 
-function products($scope){
+function displayProductsController($scope){
 
     $scope.viewClass = "cl-mcont";
 
 }
 
 
-function displayProductCtrl($scope, $routeParams){
+function displayProductController($scope, $routeParams){
 
     $scope.viewClass = "cl-mcont";
 
 }
 
-function productAddCtrl($scope){
+function productAddController($scope){
 
     $scope.viewClass = "cl-mcont";
-
 
     var product = new Product();
+
+    var optionSet1 = new OptionSet();
+    optionSet1.Id = 0;
+    optionSet1.Name = "None";
+
+    var optionSet2 = new OptionSet();
+    optionSet2.Id = 23;
+    optionSet2.Name = "Phone";
+
+    var optionSet3 = new OptionSet();
+    optionSet3.Id = 24;
+    optionSet3.Name = "NoteBook";
+
+    $scope.optionSet = [optionSet1, optionSet2, optionSet3];
+    $scope.selectedOptionSet = optionSet1;
+    $scope.optionSetChange = function(){
+        product.OptionSetId = $scope.selectedOptionSet.Id;
+    };
 
     var field1 = new CustomField();
     field1.Id = 1;
@@ -40,6 +57,7 @@ function productAddCtrl($scope){
     field3.Value = "abc3";
 
     product.CustomFields = [field1,field2,field3];
+
 
     $scope.product = product;
 

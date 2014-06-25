@@ -36,7 +36,6 @@ func createFakeData() {
 			    <title>{{.Page.Title}}</title>
 			</head>
 			<body>		
-				{{.Collections}}
 				{{.Page.Content}}
 			</body>
 		</html>`

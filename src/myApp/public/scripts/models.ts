@@ -1,4 +1,4 @@
-enum ManageInvertoryMethod {
+enum ManageInventoryMethod {
     NoTrack = 1,
     Tracking = 2
 }
@@ -12,7 +12,6 @@ enum UIState {
     Normal = 1,
     Editing = 2
 }
-
 
 class Product {
 
@@ -97,13 +96,13 @@ class Product {
         this._regularPrice = value;
     }
 
-    private _manageInvertoryMethod: ManageInvertoryMethod;
+    private _manageInvertoryMethod: ManageInventoryMethod;
 
-    public get ManageInventoryMethod(): ManageInvertoryMethod {
+    public get ManageInventoryMethod(): ManageInventoryMethod {
         return this._manageInvertoryMethod;
     }
 
-    public set ManageInventoryMethod(value: ManageInvertoryMethod) {
+    public set ManageInventoryMethod(value: ManageInventoryMethod) {
         this._manageInvertoryMethod = value;
     }
 
@@ -200,6 +199,16 @@ class Product {
         this._isPreOrder = value;
     }
 
+    private _optionSetId: number;
+
+    public get OptionSetId(): number {
+        return this._optionSetId;
+    }
+
+    public set OptionSetId(value: number) {
+        this._optionSetId = value;
+    }
+
 
     private _resourceId: string;
 
@@ -244,8 +253,18 @@ class Product {
         this._customFields = value;
     }
 
-    public constructor() {
-        this.ManageInventoryMethod = ManageInvertoryMethod.NoTrack;
+    private _variations: Variation[];
+
+    public get Variations(): Variation[] {
+        return this._variations;
+    }
+
+    public set Variations(value: Variation[]) {
+        this._variations = value;
+    }
+
+    constructor() {
+        this.ManageInventoryMethod = ManageInventoryMethod.NoTrack;
         this.WeightUnit = WeightUnit.KG;
     }
 }
@@ -300,3 +319,97 @@ class CustomField {
     }
 
 }
+
+class Variation {
+
+    private _id:number;
+
+    public get Id():number {
+        return this._id;
+    }
+
+    public set Id(value:number) {
+        this._id = value;
+    }
+
+
+    private _sku: string;
+
+    public get Sku(): string {
+        return this._sku;
+    }
+
+    public set Sku(value: string) {
+        this._sku = value;
+    }
+
+
+    private _price: number;
+
+    public get Price(): number {
+        return this._price;
+    }
+
+    public set Price(value: number) {
+        this._price = value;
+    }
+
+
+    private _manageInvertoryMethod: ManageInventoryMethod;
+
+    public get ManageInventoryMethod(): ManageInventoryMethod {
+        return this._manageInvertoryMethod;
+    }
+
+    public set ManageInventoryMethod(value: ManageInventoryMethod) {
+        this._manageInvertoryMethod = value;
+    }
+
+
+    private _inventoryQuantity: number;
+
+    public get InventoryQuantity(): number {
+        return this._inventoryQuantity;
+    }
+
+    public set InventoryQuantity(value: number) {
+        this._inventoryQuantity = value;
+    }
+
+
+    private _lowLevelQuantity: number;
+
+    public get LowLevelQuantity(): number {
+        return this._lowLevelQuantity;
+    }
+
+    public set LowLevelQuantity(value: number) {
+        this._lowLevelQuantity = value;
+    }
+}
+
+class OptionSet {
+
+    private _id:number;
+
+    public get Id():number {
+        return this._id;
+    }
+
+    public set Id(value:number) {
+        this._id = value;
+    }
+
+
+    private _name: string;
+
+    public get Name() :string {
+        return this._name;
+    }
+
+    public set Name(value: string) {
+        this._name = value;
+    }
+}
+
+

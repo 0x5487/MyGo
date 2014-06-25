@@ -15,13 +15,13 @@ catalogApp.config([
             controller: 'collectionController'
         }).when('/products/add', {
             templateUrl: '/views/add_product.html',
-            controller: 'productAddCtrl'
+            controller: 'productAddController'
         }).when('/products/:productId', {
             templateUrl: '/views/product_list.html',
-            controller: 'displayProductCtrl'
+            controller: 'displayProductController'
         }).when('/products', {
             templateUrl: '/views/product_list.html',
-            controller: 'products'
+            controller: 'displayProductsController'
         }).when('/pages', {
             templateUrl: '/views/pages.html',
             controller: 'pagesController'
