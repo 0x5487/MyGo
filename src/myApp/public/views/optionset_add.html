@@ -1,0 +1,73 @@
+<p>Add Option</p>
+
+<div class="block-flat">
+    <form name="variationForm" class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-md-2 control-label">Name</label>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="inputEmail3">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-md-2 control-label">Options In This Set</label>
+            <div class="col-md-6">
+                <select id='custom-headers' multiple='multiple'>
+                    <option value='elem_1'>elem 1</option>
+                    <option value='elem_2'>elem 2</option>
+                    <option value='elem_3'>elem 3</option>
+                    <option value='elem_4'>elem 4</option>
+                    <option value='elem_5'>elem 5</option>
+                    <option value='elem_6'>elem 6</option>
+                    <option value='elem_7'>elem 7</option>
+                    <option value='elem_8'>elem 8</option>
+                    <option value='elem_9'>elem 9</option>
+                    <option value='elem_10'>elem 10</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <span class="col-md-2"></span>
+            <div class="col-md-6">
+                <a href="#/products/add" class="btn btn-primary">Save</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $('#custom-headers').multiSelect({
+            selectableHeader: "<div class='custom-header'>Selectable collections</div>",
+            selectionHeader: "<div class='custom-header'>Selection collections</div>"
+        });
+
+        $('#md-variation').on('shown.bs.modal', function() {
+            var initModalHeight = $('#modal-dialog').outerHeight(); //give an id to .mobile-dialog
+            var userScreenHeight = $(document).outerHeight();
+            if (initModalHeight > userScreenHeight) {
+                $('#modal-dialog').css('overflow', 'auto'); //set to overflow if no fit
+            } else {
+                $('#modal-dialog').css('margin-top', (userScreenHeight / 2) - (initModalHeight/2)); //center it if it does fit
+            }
+
+        });
+
+        $('#fileupload').fileupload({
+            url: "/upload",
+            dataType: 'json',
+            autoUpload: true,
+            disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+            previewMaxWidth: 200,
+            previewMaxHeight: 200,
+            previewCrop: true
+        });
+    });
+
+</script>
+
+
+

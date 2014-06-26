@@ -1,8 +1,6 @@
 <div>
     <p>Add Product</p>
 
-
-
     <div class="tab-container">
             <ul class="nav nav-tabs">
                 <li class="active"><a id="detailTab" href="#details" data-toggle="tab" target="_self">Details</a></li>
@@ -109,7 +107,6 @@
                                                 </select>
                                             </p>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +115,7 @@
 
                     <div class="form-group">
                         <label>Setting</label>
-                        <div class="content">
+                        <div>
                             <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsVisible"/>Is visible</label>
                             <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsPurchasable"/>Is purchasable</label>
                             <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsBackOrder"/>Is back order enabled</label>
@@ -129,11 +126,14 @@
                     <div class="clearfix"></div>
                      </form>
                 </div>
-                <div class="tab-pane cont" id="options">
-                    <div style="border-bottom: 1px">
-                        <label>OptionSet</label>
-                        <select id="selOptionSet" ng-model="selectedOptionSet" ng-options="o.Name for o in optionSet" ng-change="optionSetChange()">
-                        </select>
+                <div class="tab-pane" id="options">
+                    <div class="control-group">
+                        <label class="control-label">OptionSet</label>
+                        <div class="controls">
+                            <select id="selOptionSet" ng-model="selectedOptionSet" class="controls" ng-options="o.Name for o in optionSet" ng-change="optionSetChange()">
+                            </select>
+                        </div>
+                        <button class="btn btn-default">Setting</button>
                     </div>
                     <div id="optionPanel" ng-show="selectedOptionSet.Id > 0">
                         <div>
@@ -242,19 +242,18 @@
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button">Reset</button>
                             </span>
-
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Page Title</label>
                         <div>
-                            <input type="text" class="form-control" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required/>
+                            <input type="text" class="form-control" ng-model="product.PageTitle"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Meta Description</label>
                         <div>
-                            <input type="text" class="form-control" ng-model="product.Name" ng-minlength="3" ng-maxlength="8" required/>
+                            <textarea class="form-control" rows="3" ng-model="product.MetaDescription"/>
                         </div>
                     </div>
                 </div>

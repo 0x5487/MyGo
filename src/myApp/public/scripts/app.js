@@ -14,7 +14,7 @@ catalogApp.config([
             templateUrl: '/views/collection_list.html',
             controller: 'collectionController'
         }).when('/products/add', {
-            templateUrl: '/views/add_product.html',
+            templateUrl: '/views/product_add.html',
             controller: 'productAddController'
         }).when('/products/:productId', {
             templateUrl: '/views/product_list.html',
@@ -22,6 +22,15 @@ catalogApp.config([
         }).when('/products', {
             templateUrl: '/views/product_list.html',
             controller: 'displayProductsController'
+        }).when('/options/add', {
+            templateUrl: '/views/option_add.html',
+            controller: 'addOptionController'
+        }).when('/options', {
+            templateUrl: '/views/option_list.html',
+            controller: 'displayOptionsController'
+        }).when('/optionset/add', {
+            templateUrl: '/views/optionset_add.html',
+            controller: 'addOptionSetController'
         }).when('/pages', {
             templateUrl: '/views/pages.html',
             controller: 'pagesController'

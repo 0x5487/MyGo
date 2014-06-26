@@ -1,0 +1,44 @@
+<p>Add Option</p>
+
+<div class="block-flat">
+    <form name="variationForm" class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-md-2 control-label">Name</label>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="inputEmail3">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-md-2 control-label">Display Name</label>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="inputEmail3">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-md-2 control-label">List of values</label>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="inputEmail3">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-md-2 control-label">Include In these option sets</label>
+            <div class="col-md-6">
+                <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsVisible"/>Is visible</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsPurchasable"/>Is purchasable</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsBackOrder"/>Is back order enabled</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsPreOrder"/>Is pre-order enabled</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <span class="col-md-2"></span>
+            <div class="col-md-6">
+                <a href="#/products/add" class="btn btn-primary">Save</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+
+
