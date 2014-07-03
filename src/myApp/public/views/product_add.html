@@ -11,7 +11,7 @@
                 <li><a href="#seo" data-toggle="tab" target="_self">SEO</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active content" id="details">
+                <div class="tab-pane active" id="details">
                     <form name="productDetailsForm" class="" role="form" novalidate>
                     <div class="form-group" ng-class="{'has-error' : isSubmitted && productDetailsForm.name.$invalid}">
                         <label>*Name&nbsp;</label><span class="text-danger" ng-show="isSubmitted && productDetailsForm.name.$error.required"><strong>Name can't be empty</strong></span>
@@ -23,7 +23,7 @@
                     <div class="form-group">
                         <label>Content</label>
                         <div>
-                            <textarea class="form-control" rows="10" ng-model="product.Content"></textarea>
+                            <textarea class="form-control" rows="20" ng-model="product.Content"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -126,101 +126,127 @@
                     <div class="clearfix"></div>
                      </form>
                 </div>
-                <div class="tab-pane" id="options">
-                    <div class="control-group">
-                        <label class="control-label">OptionSet</label>
-                        <div class="controls">
-                            <select id="selOptionSet" ng-model="selectedOptionSet" class="controls" ng-options="o.Name for o in optionSet" ng-change="optionSetChange()">
-                            </select>
-                        </div>
-                        <button class="btn btn-default">Setting</button>
+                <div class="tab-pane content" id="options">
+                    <div class="form-inline">
+                        <label>How many options do this product have?</label>
+                        <select id="selOptionNumber" class="form-control" ng-model="optionNumber" ng-change="optionNumberChange()">
+                            <option value="0" selected>None</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
                     </div>
-                    <div id="optionPanel" ng-show="selectedOptionSet.Id > 0">
-                        <div>
-                            <button class="btn btn-default">Auto Generation</button>
-                            <button class="btn btn-default" data-toggle="modal" data-target="#md-variation" target="_self">Create</button>
-                            <button class="btn btn-default">Delete</button>
-                        </div>
-                        <div class="content">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="datatable">
-                                    <thead>
-                                    <tr>
-                                        <th style="width:2%; vertical-align: middle;"><input type="checkbox" value="on"></th>
-                                        <th>SKU</th>
-                                        <th>Options</th>
-                                        <th>Price</th>
-                                        <th>Invertory Quantity</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr class="odd gradeX">
-                                        <th class="vertical-align"><input type="checkbox" value="on"></th>
-                                        <td class="vertical-align">Trident</td>
-                                        <td>
-                                            <strong>Color:</strong> Blue<br/>
-                                            <strong>Size:</strong> 8G
-                                        </td>
-                                        <td>
-
-                                        </td>
-                                        <td>
-                                            9
-                                        </td>
-                                    </tr>
-                                    <tr class="odd gradeX">
-                                        <th class="vertical-align"><input type="checkbox" value="on"></th>
-                                        <td class="vertical-align">Trident</td>
-                                        <td>
-                                            <strong>Color:</strong> Blue<br/>
-                                            <strong>Size:</strong> 8G
-                                        </td>
-                                        <td>
-                                            same as default
-                                        </td>
-                                        <td>
-                                            9
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                    <div id="optionPanel">
+                        <div class="form-horizontal" ng-show="optionNumber >= 1">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Option1 Label</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control" ng-model="product.Options[0].Name"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Option1 Values</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control" ng-model="product.Options[0].Values"/>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="optionNumber >= 2">
+                                <label class="col-sm-1 control-label">Option2 Label</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control" ng-model="product.Options[1].Name"/>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="optionNumber >= 2">
+                                <label class="col-sm-1 control-label">Option2 Values</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control" ng-model="product.Options[1].Values"/>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="optionNumber >= 3">
+                                <label class="col-sm-1 control-label" >Option3 Label</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control" ng-model="product.Options[2].Name"/>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="optionNumber >= 3">
+                                <label class="col-sm-1 control-label">Option3 Values</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control" ng-model="product.Options[2].Values"/>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-default" ng-click="generateSKUs()">Generate SKUs</button>
+                                <button class="btn btn-default" data-toggle="modal" data-target="#md-variation" target="_self">Create</button>
+                                <button class="btn btn-default">Delete</button>
+                            </div>
+                            <div class="content">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="datatable">
+                                        <thead>
+                                        <tr>
+                                            <th style="width:2%; vertical-align: middle;"><input type="checkbox" value="on"></th>
+                                            <th>SKU</th>
+                                            <th>Options</th>
+                                            <th>Price</th>
+                                            <th>Invertory Quantity</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="odd gradeX" ng-repeat="variation in product.Variations">
+                                            <th class="vertical-align"><input type="checkbox" value="on"></th>
+                                            <td class="vertical-align">{{ variation.Sku }}</td>
+                                            <td>
+                                                <span ng-repeat="option in variation.Options">
+                                                    <strong>{{ option.Name}}:</strong> {{ option.Values}}<br/>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {{ variation.Price }}
+                                            </td>
+                                            <td>
+                                                {{ variation.InventoryQuantity }}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                </div>
-                <div class="tab-pane" id="customFields">
-                    <button class="btn btn-default" ng-click="createCustomField()">Create</button>
-                    <div class="content">
-                        <table class="no-border">
-                            <thead class="no-border">
-                            <tr>
-                                <th style="width:45%;">Name</th>
-                                <th>Value</th>
-                                <th class="text-right">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody class="no-border-x no-border-y">
-                            <tr ng-repeat="customField in product.CustomFields">
-                                <!-- Normal mode -->
-                                <td ng-if="customField.UIState == 1">{{ customField.Name }}</td>
-                                <td ng-if="customField.UIState == 1">{{ customField.Value }}</td>
-                                <td ng-if="customField.UIState == 1" class="text-right" ><a class="label label-default" ng-click="customField.UIState = 2"><i class="fa fa-pencil"></i></a> <a class="label label-danger" href="#"><i class="fa fa-times"></i></a></td>
-                                <!-- Editing mode -->
-                                <td ng-if="customField.UIState == 2"><input type="text" ng-model="customField.Name" ngRequired="true" ngTrim="true"/> </td>
-                                <td ng-if="customField.UIState == 2"><input type="text" ng-model="customField.Value" required ngTrim="true"/></td>
-                                <td ng-if="customField.UIState == 2" class="text-right"><a class="label label-default"><i class="fa fa-save"></i></a> <a class="label label-danger" href="#"><i class="fa fa-times"></i></a></td>
-                            </tr>
-                            </tbody>
-                        </table>
+
                     </div>
+                </div>
+                <div class="tab-pane content" id="customFields">
+                    <button class="btn btn-default" ng-click="createCustomField()">Create</button>
+                    <table class="no-border">
+                        <thead class="no-border">
+                        <tr>
+                            <th style="width:45%;">Name</th>
+                            <th>Value</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody class="no-border-x no-border-y">
+                        <tr ng-repeat="customField in product.CustomFields">
+                            <!-- Normal mode -->
+                            <td ng-if="customField.UIState == 1">{{ customField.Name }}</td>
+                            <td ng-if="customField.UIState == 1">{{ customField.Value }}</td>
+                            <td ng-if="customField.UIState == 1" class="text-right" ><a class="label label-default" ng-click="customField.UIState = 2"><i class="fa fa-pencil"></i></a> <a class="label label-danger" href="#"><i class="fa fa-times"></i></a></td>
+                            <!-- Editing mode -->
+                            <td ng-if="customField.UIState == 2"><input type="text" ng-model="customField.Name" ngRequired="true" ngTrim="true"/> </td>
+                            <td ng-if="customField.UIState == 2"><input type="text" ng-model="customField.Value" required ngTrim="true"/></td>
+                            <td ng-if="customField.UIState == 2" class="text-right"><a class="label label-default"><i class="fa fa-save"></i></a> <a class="label label-danger" href="#"><i class="fa fa-times"></i></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
                 </div>
                 <div class="tab-pane" id="images">
                     <input id="fileupload" type="file" name="myfiles" multiple/>
                     <div id="files" class="files"></div>
                 </div>
                 <div class="tab-pane" id="collections">
-                    <select id='custom-headers' multiple='multiple'>
+                    <select id='selCollections' multiple='multiple'>
                         <option value='elem_1'>elem 1</option>
                         <option value='elem_2'>elem 2</option>
                         <option value='elem_3'>elem 3</option>
@@ -258,8 +284,8 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-default">Preview</button>
             <button type="submit" ng-click="save()" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-default">Preview</button>
     </div>
 
     <!-- variation modal -->
@@ -273,7 +299,7 @@
                 <div class="modal-body">
                     <form name="variationForm" class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-4 control-label">SKU</label>
+                            <label for="inputEmail3" class="col-sm-4 control-label">*SKU</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" id="inputEmail3">
                             </div>
@@ -349,7 +375,7 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
-        $('#custom-headers').multiSelect({
+        $('#selCollections').multiSelect({
             selectableHeader: "<div class='custom-header'>Selectable collections</div>",
             selectionHeader: "<div class='custom-header'>Selection collections</div>"
         });
@@ -364,6 +390,7 @@
             }
 
         });
+
 
         $('#fileupload').fileupload({
             url: "/upload",

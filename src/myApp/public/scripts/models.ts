@@ -209,6 +209,16 @@ class Product {
         this._optionSetId = value;
     }
 
+    private _options: Option[];
+
+    public get Options(): Option[] {
+        return this._options;
+    }
+
+    public set Options(value: Option[]) {
+        this._options = value;
+    }
+
 
     private _resourceId: string;
 
@@ -354,6 +364,16 @@ class Variation {
         this._price = value;
     }
 
+    private _options: Option[];
+
+    public get Options(): Option[] {
+        return this._options;
+    }
+
+    public set Options(value: Option[]) {
+        this._options = value;
+    }
+
 
     private _manageInvertoryMethod: ManageInventoryMethod;
 
@@ -410,6 +430,31 @@ class OptionSet {
     public set Name(value: string) {
         this._name = value;
     }
+}
+
+
+class Option {
+
+    private _name: string;
+
+    public get Name() :string {
+        return this._name;
+    }
+
+    public set Name(value: string) {
+        this._name = value;
+    }
+
+    private _values: string;
+
+    public get Values() :string {
+        return this._values;
+    }
+
+    public set Values(value: string) {
+        this._values = value;
+    }
+
 }
 
 

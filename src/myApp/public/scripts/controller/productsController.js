@@ -2,6 +2,7 @@
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../../typings/jquery.fileupload/jquery.fileupload.d.ts" />
 /// <reference path="../../../typings/bootstrap/bootstrap.d.ts" />
+/// <reference path="../../../typings/underscore/underscore.d.ts" />
 /// <reference path="../models.ts" />
 function displayProductsController($scope) {
     $scope.viewClass = "cl-mcont";
@@ -34,6 +35,21 @@ function productAddController($scope) {
         product.OptionSetId = $scope.selectedOptionSet.Id;
     };
 
+    $scope.optionNumber = 1;
+
+    var option1 = new Option();
+    option1.Name = "Jason1";
+
+    var option2 = new Option();
+    option2.Name = "Jason2";
+
+    var option3 = new Option();
+    option3.Name = "Jason3";
+
+    product.Options = [option1, option2, option3];
+    $scope.optionNumberChange = function () {
+    };
+
     var field1 = new CustomField();
     field1.Id = 1;
     field1.Name = "Jason1";
@@ -51,6 +67,20 @@ function productAddController($scope) {
 
     product.CustomFields = [field1, field2, field3];
 
+    var variation1 = new Variation();
+    variation1.Sku = "SKU-123";
+
+    var variation_option1 = new Option();
+    variation_option1.Name = "Color";
+    variation_option1.Values = "Black";
+
+    var variation_option2 = new Option();
+    variation_option2.Name = "Size";
+    variation_option2.Values = "8G";
+
+    variation1.Options = [variation_option1, variation_option2];
+    product.Variations = [variation1];
+
     $scope.product = product;
 
     //events
@@ -63,6 +93,74 @@ function productAddController($scope) {
         }
 
         console.log($scope.product);
+    };
+
+    $scope.generateSKUs = function () {
+        var options = [];
+        var opt1, opt2, opt3;
+
+        var opt1Name = $.trim(product.Options[0].Name);
+        var opt2Name = $.trim(product.Options[1].Name);
+        var opt3Name = $.trim(product.Options[2].Name);
+
+        var optionValues1 = $.trim(product.Options[0].Values).split(',');
+        _.each(optionValues1, function (element1) {
+            opt1 = new Option();
+            opt1.Name = opt1Name;
+            opt1.Values = $.trim(element1);
+
+            if ($scope.optionNumber == 1) {
+                var tmpOption = [opt1];
+                options.push(tmpOption);
+            }
+            ;
+
+            if ($scope.optionNumber >= 2) {
+                var optionValues2 = $.trim(product.Options[1].Values).split(',');
+
+                _.each(optionValues2, function (element2) {
+                    opt2 = new Option();
+                    opt2.Name = opt2Name;
+                    opt2.Values = $.trim(element2);
+                    if ($scope.optionNumber == 2) {
+                        var tmpOption = [opt1, opt2];
+                        options.push(tmpOption);
+                    }
+                    ;
+
+                    if ($scope.optionNumber >= 3) {
+                        var optionValues3 = $.trim(product.Options[2].Values).split(',');
+
+                        _.each(optionValues3, function (element3) {
+                            opt3 = new Option();
+                            opt3.Name = opt3Name;
+                            opt3.Values = $.trim(element3);
+
+                            if ($scope.optionNumber == 3) {
+                                var tmpOption = [opt1, opt2, opt3];
+                                options.push(tmpOption);
+                            }
+                            ;
+                        });
+                    }
+                });
+            }
+        });
+
+        if (options.length > 0) {
+            if ($scope.product.Variations == null) {
+                $scope.product.Variations = [];
+            }
+
+            _.each(options, function (element, index) {
+                var variation = new Variation();
+                variation.Sku = "sku" + index;
+                variation.Options = element;
+                $scope.product.Variations.push(variation);
+            });
+        }
+
+        console.log(options.length);
     };
 
     $scope.createCustomField = function () {

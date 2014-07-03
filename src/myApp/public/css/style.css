@@ -4878,7 +4878,7 @@ body.modal-open,
 .ms-container .ms-selection li.ms-hover {
     background: #7761a7;
 }
-#ms-custom-headers .custom-header {
+.custom-header {
     background: #7761a7;
     color: #FFFFFF;
     padding: 7px 10px;

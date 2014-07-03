@@ -249,6 +249,18 @@ var Product = (function () {
     });
 
 
+    Object.defineProperty(Product.prototype, "Options", {
+        get: function () {
+            return this._options;
+        },
+        set: function (value) {
+            this._options = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
     Object.defineProperty(Product.prototype, "ResourceId", {
         get: function () {
             return this._resourceId;
@@ -404,6 +416,18 @@ var Variation = (function () {
     });
 
 
+    Object.defineProperty(Variation.prototype, "Options", {
+        get: function () {
+            return this._options;
+        },
+        set: function (value) {
+            this._options = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
     Object.defineProperty(Variation.prototype, "ManageInventoryMethod", {
         get: function () {
             return this._manageInvertoryMethod;
@@ -469,5 +493,34 @@ var OptionSet = (function () {
     });
 
     return OptionSet;
+})();
+
+var Option = (function () {
+    function Option() {
+    }
+    Object.defineProperty(Option.prototype, "Name", {
+        get: function () {
+            return this._name;
+        },
+        set: function (value) {
+            this._name = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Option.prototype, "Values", {
+        get: function () {
+            return this._values;
+        },
+        set: function (value) {
+            this._values = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    return Option;
 })();
 //# sourceMappingURL=models.js.map

@@ -23,10 +23,18 @@
         <div class="form-group">
             <label for="inputEmail3" class="col-md-2 control-label">Include In these option sets</label>
             <div class="col-md-6">
-                <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsVisible"/>Is visible</label>
-                <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsPurchasable"/>Is purchasable</label>
-                <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsBackOrder"/>Is back order enabled</label>
-                <label class="checkbox-inline"><input type="checkbox" ng-model="product.IsPreOrder"/>Is pre-order enabled</label>
+                <select id='selOptionsets' multiple='multiple'>
+                    <option value='elem_1'>elem 1</option>
+                    <option value='elem_2'>elem 2</option>
+                    <option value='elem_3'>elem 3</option>
+                    <option value='elem_4'>elem 4</option>
+                    <option value='elem_5'>elem 5</option>
+                    <option value='elem_6'>elem 6</option>
+                    <option value='elem_7'>elem 7</option>
+                    <option value='elem_8'>elem 8</option>
+                    <option value='elem_9'>elem 9</option>
+                    <option value='elem_10'>elem 10</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
@@ -39,6 +47,17 @@
     </form>
 </div>
 
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $('#selOptionsets').multiSelect({
+            selectableHeader: "<div class='custom-header'>Selectable option sets</div>",
+            selectionHeader: "<div class='custom-header'>Selection option sets</div>"
+        });
+    });
+
+</script>
 
 
 
