@@ -13,42 +13,21 @@ function displayProductController($scope, $routeParams) {
 }
 
 function productAddController($scope) {
-    $scope.viewClass = "cl-mcont";
-
     var product = new Product();
 
-    var optionSet1 = new OptionSet();
-    optionSet1.Id = 0;
-    optionSet1.Name = "None";
-
-    var optionSet2 = new OptionSet();
-    optionSet2.Id = 23;
-    optionSet2.Name = "Phone";
-
-    var optionSet3 = new OptionSet();
-    optionSet3.Id = 24;
-    optionSet3.Name = "NoteBook";
-
-    $scope.optionSet = [optionSet1, optionSet2, optionSet3];
-    $scope.selectedOptionSet = optionSet1;
-    $scope.optionSetChange = function () {
-        product.OptionSetId = $scope.selectedOptionSet.Id;
-    };
-
-    $scope.optionNumber = 1;
-
     var option1 = new Option();
-    option1.Name = "Jason1";
+    option1.Name = "Color";
+    option1.Values = "Black, White";
 
     var option2 = new Option();
-    option2.Name = "Jason2";
+    option2.Name = "Size";
+    option2.Values = "8GB, 16GB, 32GB";
 
     var option3 = new Option();
-    option3.Name = "Jason3";
+    option3.Name = "LCD Size";
+    option3.Values = "4.7, 5.5";
 
     product.Options = [option1, option2, option3];
-    $scope.optionNumberChange = function () {
-    };
 
     var field1 = new CustomField();
     field1.Id = 1;
@@ -67,24 +46,19 @@ function productAddController($scope) {
 
     product.CustomFields = [field1, field2, field3];
 
-    var variation1 = new Variation();
-    variation1.Sku = "SKU-123";
-
-    var variation_option1 = new Option();
-    variation_option1.Name = "Color";
-    variation_option1.Values = "Black";
-
-    var variation_option2 = new Option();
-    variation_option2.Name = "Size";
-    variation_option2.Values = "8G";
-
-    variation1.Options = [variation_option1, variation_option2];
-    product.Variations = [variation1];
-
+    //page properties
+    $scope.viewClass = "cl-mcont";
+    $scope.optionNumber = 1;
+    $scope.checkAllVariations = false;
     $scope.product = product;
 
-    //events
-    $scope.save = function () {
+    //*page properties
+    //page events
+    $scope.optionNumberChange = function () {
+        product.Variations = null;
+    };
+
+    $scope.saveProduct = function () {
         $scope.isSubmitted = true;
 
         //redirect to error tab
@@ -163,16 +137,60 @@ function productAddController($scope) {
         console.log(options.length);
     };
 
+    $scope.selectedAllVariations = function (e) {
+        var $chkAll = angular.element($(e.target));
+        var isChecked = $chkAll.is(':checked');
+
+        for (var i = 0; i < product.Variations.length; i++) {
+            if (isChecked)
+                product.Variations[i].IsSelected = true;
+            else
+                product.Variations[i].IsSelected = false;
+        }
+    };
+
+    $scope.removeSelectedVariations = function () {
+        var newVariations = product.Variations.slice(0);
+
+        for (var i = 0; i < newVariations.length; i++) {
+            var newVariation = newVariations[i];
+
+            if (newVariation.IsSelected == true) {
+                var newTemp = [];
+
+                for (var j = 0; j < product.Variations.length; j++) {
+                    var scopeVariation = product.Variations[j];
+
+                    if (scopeVariation.Sku != newVariation.Sku) {
+                        newTemp.push(scopeVariation);
+                    }
+                }
+
+                product.Variations = newTemp;
+            }
+        }
+
+        $scope.checkAllVariations = false;
+    };
+
     $scope.createCustomField = function () {
         var newCustomField = new CustomField();
-        newCustomField.UIState = 2 /* Editing */;
+        newCustomField.IsEditingMode = true;
         product.CustomFields.push(newCustomField);
     };
 
-    $scope.editCustomField = function (index) {
-        product.CustomFields[index].UIState = 2 /* Editing */;
+    $scope.saveCustomField = function (index) {
+        product.CustomFields[index].IsEditingMode = false;
     };
 
+    $scope.removeCustomField = function (index) {
+        product.CustomFields.splice(index, 1);
+    };
+
+    $scope.validatePage = function () {
+    };
+
+    //*page events
     $scope.fileList = [];
 
     var uploadButton = $('<button/>').addClass('btn btn-primary').prop('disabled', true).text('Processing...').on('click', function () {

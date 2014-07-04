@@ -8,10 +8,6 @@ enum WeightUnit {
     LBL = 2
 }
 
-enum UIState {
-    Normal = 1,
-    Editing = 2
-}
 
 class Product {
 
@@ -314,18 +310,18 @@ class CustomField {
     }
 
 
-    private _uistate:UIState;
+    private _isEditingMode:boolean;
 
-    public get UIState():UIState {
-        return this._uistate;
+    public get IsEditingMode():boolean {
+        return this._isEditingMode;
     }
 
-    public set UIState(value:UIState) {
-        this._uistate = value;
+    public set IsEditingMode(value:boolean) {
+        this._isEditingMode = value;
     }
 
     constructor(){
-        this._uistate = UIState.Normal;
+        this._isEditingMode = false;
     }
 
 }
@@ -406,6 +402,17 @@ class Variation {
     public set LowLevelQuantity(value: number) {
         this._lowLevelQuantity = value;
     }
+
+    private _isSelected: boolean;
+
+    public get IsSelected(): boolean {
+        return this._isSelected;
+    }
+
+    public set IsSelected(value: boolean) {
+        this._isSelected = value;
+    }
+
 }
 
 class OptionSet {

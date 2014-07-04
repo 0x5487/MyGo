@@ -10,12 +10,6 @@ var WeightUnit;
     WeightUnit[WeightUnit["LBL"] = 2] = "LBL";
 })(WeightUnit || (WeightUnit = {}));
 
-var UIState;
-(function (UIState) {
-    UIState[UIState["Normal"] = 1] = "Normal";
-    UIState[UIState["Editing"] = 2] = "Editing";
-})(UIState || (UIState = {}));
-
 var Product = (function () {
     function Product() {
         this.ManageInventoryMethod = 1 /* NoTrack */;
@@ -325,7 +319,7 @@ var Product = (function () {
 
 var CustomField = (function () {
     function CustomField() {
-        this._uistate = 1 /* Normal */;
+        this._isEditingMode = false;
     }
     Object.defineProperty(CustomField.prototype, "Id", {
         get: function () {
@@ -363,12 +357,12 @@ var CustomField = (function () {
     });
 
 
-    Object.defineProperty(CustomField.prototype, "UIState", {
+    Object.defineProperty(CustomField.prototype, "IsEditingMode", {
         get: function () {
-            return this._uistate;
+            return this._isEditingMode;
         },
         set: function (value) {
-            this._uistate = value;
+            this._isEditingMode = value;
         },
         enumerable: true,
         configurable: true
@@ -458,6 +452,18 @@ var Variation = (function () {
         },
         set: function (value) {
             this._lowLevelQuantity = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Variation.prototype, "IsSelected", {
+        get: function () {
+            return this._isSelected;
+        },
+        set: function (value) {
+            this._isSelected = value;
         },
         enumerable: true,
         configurable: true
