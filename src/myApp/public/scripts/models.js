@@ -231,18 +231,6 @@ var Product = (function () {
     });
 
 
-    Object.defineProperty(Product.prototype, "OptionSetId", {
-        get: function () {
-            return this._optionSetId;
-        },
-        set: function (value) {
-            this._optionSetId = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-
-
     Object.defineProperty(Product.prototype, "Options", {
         get: function () {
             return this._options;
@@ -472,35 +460,6 @@ var Variation = (function () {
     return Variation;
 })();
 
-var OptionSet = (function () {
-    function OptionSet() {
-    }
-    Object.defineProperty(OptionSet.prototype, "Id", {
-        get: function () {
-            return this._id;
-        },
-        set: function (value) {
-            this._id = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-
-
-    Object.defineProperty(OptionSet.prototype, "Name", {
-        get: function () {
-            return this._name;
-        },
-        set: function (value) {
-            this._name = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-
-    return OptionSet;
-})();
-
 var Option = (function () {
     function Option() {
     }
@@ -528,5 +487,34 @@ var Option = (function () {
     });
 
     return Option;
+})();
+
+var Collection = (function () {
+    function Collection() {
+    }
+    Object.defineProperty(Collection.prototype, "Id", {
+        get: function () {
+            return this._id;
+        },
+        set: function (value) {
+            this._id = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Collection.prototype, "Title", {
+        get: function () {
+            return this._title;
+        },
+        set: function (value) {
+            this._title = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    return Collection;
 })();
 //# sourceMappingURL=models.js.map

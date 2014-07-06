@@ -72,11 +72,11 @@
                             <div class="col-sm-6 col-md-6">
                                 <label>Manage Inventory Method</label>
                                 <div>
-                                    <select id="selInvertoryMethod" class="form-control" ng-model="product.ManageInventoryMethod">
+                                    <select id="selInventoryMethod" class="form-control" ng-model="product.ManageInventoryMethod">
                                         <option value="1">No Track</option>
                                         <option value="2">Tracking</option>
                                     </select>
-                                    <div id="invertoryMethodPanel" style="padding-top: 20px; padding-left: 20px;" ng-show="product.ManageInventoryMethod == 2">
+                                    <div id="inventoryMethodPanel" style="padding-top: 20px; padding-left: 20px;" ng-show="product.ManageInventoryMethod == 2">
                                         <div class="form-inline">
                                             <p>
                                             <label class="control-label">Invertory quantity</label>
@@ -247,16 +247,6 @@
                 </div>
                 <div class="tab-pane" id="collections">
                     <select id='selCollections' multiple='multiple'>
-                        <option value='elem_1'>elem 1</option>
-                        <option value='elem_2'>elem 2</option>
-                        <option value='elem_3'>elem 3</option>
-                        <option value='elem_4'>elem 4</option>
-                        <option value='elem_5'>elem 5</option>
-                        <option value='elem_6'>elem 6</option>
-                        <option value='elem_7'>elem 7</option>
-                        <option value='elem_8'>elem 8</option>
-                        <option value='elem_9'>elem 9</option>
-                        <option value='elem_10'>elem 10</option>
                     </select>
                 </div>
                 <div class="tab-pane cont" id="seo">
@@ -264,7 +254,7 @@
                         <label>*Url</label>
                         <div class="input-group">
                             <span class="input-group-addon">http://www.jasonstore.com/products/</span>
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" ng-model="product.ResourceId">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button">Reset</button>
                             </span>
@@ -374,10 +364,19 @@
 
 <script type="text/javascript">
 
+    var _selectedCollections = [];
+
     $(document).ready(function(){
+
         $('#selCollections').multiSelect({
             selectableHeader: "<div class='custom-header'>Selectable collections</div>",
-            selectionHeader: "<div class='custom-header'>Selection collections</div>"
+            selectionHeader: "<div class='custom-header'>Selection collections</div>",
+            afterSelect: function(values){
+                _selectedCollections.push(values);
+            },
+            afterDeselect: function(values){
+                _selectedCollections.pop(values);
+            }
         });
 
         $('#md-variation').on('shown.bs.modal', function() {

@@ -195,16 +195,6 @@ class Product {
         this._isPreOrder = value;
     }
 
-    private _optionSetId: number;
-
-    public get OptionSetId(): number {
-        return this._optionSetId;
-    }
-
-    public set OptionSetId(value: number) {
-        this._optionSetId = value;
-    }
-
     private _options: Option[];
 
     public get Options(): Option[] {
@@ -415,31 +405,6 @@ class Variation {
 
 }
 
-class OptionSet {
-
-    private _id:number;
-
-    public get Id():number {
-        return this._id;
-    }
-
-    public set Id(value:number) {
-        this._id = value;
-    }
-
-
-    private _name: string;
-
-    public get Name() :string {
-        return this._name;
-    }
-
-    public set Name(value: string) {
-        this._name = value;
-    }
-}
-
-
 class Option {
 
     private _name: string;
@@ -462,6 +427,29 @@ class Option {
         this._values = value;
     }
 
+}
+
+class Collection {
+
+    private _id: number;
+
+    public get Id(): number {
+        return this._id;
+    }
+
+    public set Id(value: number) {
+        this._id = value;
+    }
+
+    private _title: string;
+
+    public get Title() :string {
+        return this._title;
+    }
+
+    public set Title(value: string) {
+        this._title = value;
+    }
 }
 
 

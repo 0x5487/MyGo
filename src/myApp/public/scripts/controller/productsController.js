@@ -12,8 +12,20 @@ function displayProductController($scope, $routeParams) {
     $scope.viewClass = "cl-mcont";
 }
 
-function productAddController($scope) {
+function productAddController($scope, $http) {
     var product = new Product();
+
+    var collection1 = new Collection();
+    collection1.Id = 1;
+    collection1.Title = "Men";
+
+    var collection2 = new Collection();
+    collection2.Id = 2;
+    collection2.Title = "Women";
+
+    var collection3 = new Collection();
+    collection3.Id = 3;
+    collection3.Title = "Kids";
 
     var option1 = new Option();
     option1.Name = "Color";
@@ -51,6 +63,7 @@ function productAddController($scope) {
     $scope.optionNumber = 1;
     $scope.checkAllVariations = false;
     $scope.product = product;
+    $scope.collections = [collection1, collection2, collection3];
 
     //*page properties
     //page events
@@ -244,5 +257,12 @@ function productAddController($scope) {
             $(data.context.children()[index]).append('<br>').append(error);
         });
     }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+    //page loaded
+    _.each($scope.collections, function (element) {
+        $('#selCollections').multiSelect('addOption', { value: element.Id, text: element.Title, selected: true });
+    });
+
+    $('#selCollections').multiSelect('select', ['1', '2']);
 }
 //# sourceMappingURL=productsController.js.map
