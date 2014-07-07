@@ -81,6 +81,16 @@ class Product {
         this._price = value;
     }
 
+    private _priceWithSymbol: string;
+
+    public get PriceWithSymbol(): string {
+        return this._priceWithSymbol;
+    }
+
+    public set PriceWithSymbol(value: string) {
+        this._priceWithSymbol = value;
+    }
+
 
     private _regularPrice: number;
 
@@ -236,6 +246,16 @@ class Product {
 
     public set MetaDescription(value: string) {
         this._metaDescription = value;
+    }
+
+    private _updateAt: Date;
+
+    public get UpdateAt(): Date {
+        return this._updateAt;
+    }
+
+    public set UpdateAt(value: Date) {
+        this._updateAt = value;
     }
 
     //navigation

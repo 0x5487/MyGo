@@ -99,6 +99,18 @@ var Product = (function () {
     });
 
 
+    Object.defineProperty(Product.prototype, "PriceWithSymbol", {
+        get: function () {
+            return this._priceWithSymbol;
+        },
+        set: function (value) {
+            this._priceWithSymbol = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
     Object.defineProperty(Product.prototype, "RegularPrice", {
         get: function () {
             return this._regularPrice;
@@ -273,6 +285,18 @@ var Product = (function () {
         },
         set: function (value) {
             this._metaDescription = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Product.prototype, "UpdateAt", {
+        get: function () {
+            return this._updateAt;
+        },
+        set: function (value) {
+            this._updateAt = value;
         },
         enumerable: true,
         configurable: true

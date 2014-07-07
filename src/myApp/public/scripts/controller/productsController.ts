@@ -5,9 +5,33 @@
 /// <reference path="../../../typings/underscore/underscore.d.ts" />
 /// <reference path="../models.ts" />
 
-function displayProductsController($scope){
+function displayProductsController($scope, $http){
 
     $scope.viewClass = "cl-mcont";
+
+    var products = [];
+
+    for(var i=0; i < 20; i++){
+        var product1 = new Product();
+        product1.Id = i;
+        product1.Name = "IPhone";
+        product1.ManageInventoryMethod = ManageInventoryMethod.NoTrack;
+        product1.Price = 399;
+        product1.PriceWithSymbol = "USD 399";
+        product1.InventoryQuantity = i;
+        product1.UpdateAt = new Date();
+        products.push(product1);
+    }
+
+    $scope.products = products;
+
+
+    //page loaded
+    setTimeout(function(){
+        $('.dataTables_filter input').addClass('form-control').attr('placeholder','Search');
+        $('.dataTables_length select').addClass('form-control');
+        console.log("controller loaded");
+    }, 500);
 
 }
 

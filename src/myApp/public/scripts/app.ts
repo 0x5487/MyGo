@@ -1,7 +1,7 @@
 /// <reference path="../../typings/angularjs/angular.d.ts" />
 
 
-var catalogApp = angular.module('catalogApp', ['ngRoute']);
+var catalogApp = angular.module('catalogApp', ['ngRoute', 'datatables']);
 
 
 catalogApp.config(['$routeProvider',
