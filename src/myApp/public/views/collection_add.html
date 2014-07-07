@@ -10,7 +10,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="details">
-                    <form name="productDetailsForm" class="" role="form" novalidate>
+                    <form name="collectionDetailsForm" class="" role="form" novalidate>
                     <div class="form-group" ng-class="{'has-error' : isSubmitted && productDetailsForm.name.$invalid}">
                         <label>*Name&nbsp;</label><span class="text-danger" ng-show="isSubmitted && productDetailsForm.name.$error.required"><strong>Name can't be empty</strong></span>
                         <div>
@@ -25,19 +25,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Thumbnail Input</label>
-                        <div class="col-sm-6">
-                            <div class="fileinput fileinput-new" data-provides="fileinput">
-                                <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
-                                    <img src="http://placehold.it/190x140/7761A7/ffffff" alt="...">
-                                </div>
-                                <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
-                                <div>
-                                    <span class="btn btn-primary btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
-                                    <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
-                                </div>
+                        <label>Thumbnail</label>
+                        <div>
+                            <div style="width: 200px; height: 150px; border: 2px #808080; border-style:double; ">
+
                             </div>
+                            <input type="file" name="" />
+                            <button class="btn btn-default">Select image</button>
                         </div>
+
+                        <div class="clearfix"></div>
                     </div>
                     <div class="form-group">
                         <label>Setting</label>
