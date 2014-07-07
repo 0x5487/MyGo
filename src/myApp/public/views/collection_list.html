@@ -1,137 +1,47 @@
-
-    <div class="page-head">
-        <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Tables</a></li>
-            <li class="active">Data Tables</li>
-        </ol>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="block-flat">
+<div class="page-head">
+    <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Tables</a></li>
+        <li class="active">Data Tables</li>
+    </ol>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="block-flat">
             <div class="header">
                 <h3 class="pull-left">Collections</h3>
-                <span class="pull-right">
-                    <a href="#/pages/add" class="btn btn-primary">Add</a>
-                    <a href="#" class="btn btn-default">Remove</a>
-                </span>
+            <span class="pull-right">
+                <a href="#/collections/add" class="btn btn-primary" target="_self">Add</a>
+                <a href="#" class="btn btn-default">Remove</a>
+            </span>
+
                 <div class="clearfix"></div>
             </div>
             <div class="content">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="datatable">
-                <thead>
-                <tr>
-                    <th style="width:2%;" class="text-center"><input type="checkbox" value="on"></th>
-                    <th>Title</th>
-                    <th>Products are assigned to this collection</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="odd gradeX">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Trident</td>
-                    <td>8</td>
-                </tr>
-                <tr class="even gradeC">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Trident</td>
-                    <td>8</td>
-                </tr>
-                <tr class="odd gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Trident</td>
-                    <td>8</td>
-                </tr>
-                <tr class="even gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Trident</td>
-                    <td>8</td>
-                </tr>
-                <tr class="odd gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Trident</td>
-                    <td>8</td>
-                </tr>
-                <tr class="even gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Trident</td>
-                    <td>8</td>
-                </tr>
-                <tr class="gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Gecko</td>
-                    <td>8</td>
-                </tr>
-                <tr class="gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Gecko</td>
-                    <td>8</td>
-                </tr>
-                <tr class="gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Gecko</td>
-                    <td>8</td>
-                </tr>
-                <tr class="gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Gecko</td>
-                    <td>8</td>
-                </tr>
-                <tr class="gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Gecko</td>
-                    <td>8</td>
-                </tr>
-                <tr class="gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Gecko</td>
-                    <td>8</td>
-                </tr>
-                <tr class="gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Gecko</td>
-                    <td>8</td>
-                </tr>
-                <tr class="gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Gecko</td>
-                    <td>8</td>
-                </tr>
-                <tr class="gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Gecko</td>
-                    <td>8</td>
-                </tr>
-                <tr class="gradeA">
-                    <th class="text-center"><input type="checkbox" value="on"></th>
-                    <td>Gecko</td>
-                    <td>8</td>
-                </tr>
-                </tbody>
-                </table>
+                    <table id="datatable" datatable="ng">
+                        <thead class="no-border">
+                        <tr>
+                            <th style="width:100px;" class="text-center"><input type="checkbox"></th>
+                            <th style="width:150px;" class="text-center"></th>
+                            <th class="text-center"><strong>Name</strong></th>
+                            <th class="text-center"><strong>Products are assigned to this collection</strong></th>
+                        </tr>
+                        </thead>
+                        <tbody class="no-border-y">
+                        <tr ng-repeat="collection in collections" dt-rows>
+                            <td class="text-center"><input type="checkbox" value="on"></td>
+                            <td class="text-center"><img src="/images/question.jpg" style="width: 60px; height: 45px"/>
+                            </td>
+                            <td class="text-center"><a href="#/collections/{{collection.Id}}">{{ collection.Name }}</a>
+                            </td>
+                            <td class="text-center"><a href="#/products?collectionId={{collection.Id}}">{{
+                                collection.ProductCount }}</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            </div>
-            </div>
+        </div>
     </div>
-
-
-
-
-<script type="text/javascript">
-
-
-    $(document).ready(function(){
-        //initialize the javascript
-        //Basic Instance
-        $("#datatable").dataTable();
-
-        //Search input style
-        $('.dataTables_filter input').addClass('form-control').attr('placeholder','Search');
-        $('.dataTables_length select').addClass('form-control');
-
-
-
-    });
-</script>
+</div>

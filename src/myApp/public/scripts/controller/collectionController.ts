@@ -1,14 +1,30 @@
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../typings/jquery.fileupload/jquery.fileupload.d.ts" />
+/// <reference path="../../../typings/bootstrap/bootstrap.d.ts" />
+/// <reference path="../../../typings/underscore/underscore.d.ts" />
+/// <reference path="../models.ts" />
 
-function collectionController($scope){
+function displayCollectionsController($scope, $http){
 
+    var collections = [];
+    for(var i=0; i < 20; i++){
+
+        var collection = new Collection();
+        collection.Id = i;
+        collection.Name = "Men";
+        collection.ProductCount = 50;
+
+        if(i> 10){
+            collection.Name = "Kids";
+        }
+        collections.push(collection);
+    }
+
+
+    //page properties
     $scope.viewClass = "cl-mcont";
-
-    $scope.collections = [
-        { Id:1, Name: "Man", Description: "well....", IsSelected: false },
-        { Id:2, Name: "Women", Description: "blah...blah...", IsSelected: false },
-        { Id:3, Name: "Kids", Description: "for your kids", IsSelected: false }
-    ];
+    $scope.collections = collections;
 
     $scope.remove = function(e){
 
@@ -50,26 +66,28 @@ function collectionController($scope){
                 $scope.collections[i].IsSelected = false;
         }
     }
+
+    //page loaded
+    setTimeout(function(){
+        $('.dataTables_filter input').addClass('form-control').attr('placeholder','Search');
+        $('.dataTables_length select').addClass('form-control');
+        console.log("controller loaded");
+    }, 300);
 }
 
 
 
 
-function addCollectionController($scope){
+function collectionAddController($scope){
 
-    $scope.collection = {};
-
-    $scope.create = function(){
-        console.log($scope.collection);
-    }
-
-    console.log("addCollectionController");
+    $scope.viewClass = "cl-mcont";
 }
 
 
 
 function displayCollectionController($scope, $routeParams){
 
+    $scope.viewClass = "cl-mcont";
     $scope.Id = $routeParams.collectionId;
 }
 

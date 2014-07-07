@@ -1,18 +1,18 @@
 /// <reference path="../../typings/angularjs/angular.d.ts" />
-var catalogApp = angular.module('catalogApp', ['ngRoute', 'datatables']);
+var ecApp = angular.module('catalogApp', ['ngRoute', 'datatables']);
 
-catalogApp.config([
+ecApp.config([
     '$routeProvider',
     function ($routeProvider) {
-        $routeProvider.when('/collection/add', {
-            templateUrl: '/views/add_collection.html',
-            controller: 'addCollection'
-        }).when('/collection/:collectionId', {
+        $routeProvider.when('/collections/add', {
+            templateUrl: '/views/collection_add.html',
+            controller: 'collectionAddController'
+        }).when('/collections/:collectionId', {
             templateUrl: '/views/display_collection.html',
             controller: 'displayCollectionController'
         }).when('/collections', {
             templateUrl: '/views/collection_list.html',
-            controller: 'collectionController'
+            controller: 'displayCollectionsController'
         }).when('/products/add', {
             templateUrl: '/views/product_add.html',
             controller: 'productAddController'

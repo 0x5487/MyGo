@@ -5,9 +5,13 @@
 /// <reference path="../../../typings/underscore/underscore.d.ts" />
 /// <reference path="../models.ts" />
 
-function displayProductsController($scope, $http){
+function displayProductsController($scope, $http, $routeParams){
 
-    $scope.viewClass = "cl-mcont";
+
+    if($routeParams.collectionId){
+        $scope.collectionId = $routeParams.collectionId;
+    }
+
 
     var products = [];
 
@@ -23,7 +27,10 @@ function displayProductsController($scope, $http){
         products.push(product1);
     }
 
+    $scope.viewClass = "cl-mcont";
     $scope.products = products;
+
+
 
 
     //page loaded
@@ -31,7 +38,7 @@ function displayProductsController($scope, $http){
         $('.dataTables_filter input').addClass('form-control').attr('placeholder','Search');
         $('.dataTables_length select').addClass('form-control');
         console.log("controller loaded");
-    }, 500);
+    }, 300);
 
 }
 
@@ -49,15 +56,15 @@ function productAddController($scope, $http){
 
     var collection1 = new Collection();
     collection1.Id = 1;
-    collection1.Title = "Men";
+    collection1.Name = "Men";
 
     var collection2 = new Collection();
     collection2.Id = 2;
-    collection2.Title = "Women";
+    collection2.Name = "Women";
 
     var collection3 = new Collection();
     collection3.Id = 3;
-    collection3.Title = "Kids";
+    collection3.Name = "Kids";
 
 
     var option1 = new Option();
@@ -330,7 +337,7 @@ function productAddController($scope, $http){
 
     //page loaded
     _.each($scope.collections, function(element: Collection){
-        $('#selCollections').multiSelect('addOption', { value: element.Id, text: element.Title, selected: true});
+        $('#selCollections').multiSelect('addOption', { value: element.Id, text: element.Name, selected: true});
     });
 
     $('#selCollections').multiSelect('select', ['1','2']);

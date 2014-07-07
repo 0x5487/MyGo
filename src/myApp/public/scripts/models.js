@@ -528,12 +528,60 @@ var Collection = (function () {
     });
 
 
-    Object.defineProperty(Collection.prototype, "Title", {
+    Object.defineProperty(Collection.prototype, "Name", {
         get: function () {
-            return this._title;
+            return this._name;
         },
         set: function (value) {
-            this._title = value;
+            this._name = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Collection.prototype, "ProductCount", {
+        get: function () {
+            return this._productCount;
+        },
+        set: function (value) {
+            this._productCount = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Collection.prototype, "ResourceId", {
+        get: function () {
+            return this._resourceId;
+        },
+        set: function (value) {
+            this._resourceId = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Collection.prototype, "PageTitle", {
+        get: function () {
+            return this._pageTitle;
+        },
+        set: function (value) {
+            this._pageTitle = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Collection.prototype, "MetaDescription", {
+        get: function () {
+            return this._metaDescription;
+        },
+        set: function (value) {
+            this._metaDescription = value;
         },
         enumerable: true,
         configurable: true

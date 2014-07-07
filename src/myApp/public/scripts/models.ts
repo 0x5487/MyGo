@@ -461,14 +461,56 @@ class Collection {
         this._id = value;
     }
 
-    private _title: string;
+    private _name: string;
 
-    public get Title() :string {
-        return this._title;
+    public get Name() :string {
+        return this._name;
     }
 
-    public set Title(value: string) {
-        this._title = value;
+    public set Name(value: string) {
+        this._name = value;
+    }
+
+    private _productCount: number;
+
+    public get ProductCount(): number {
+        return this._productCount;
+    }
+
+    public set ProductCount(value: number) {
+        this._productCount = value;
+    }
+
+    private _resourceId: string;
+
+    public get ResourceId(): string {
+        return this._resourceId;
+    }
+
+    public set ResourceId(value: string) {
+        this._resourceId = value;
+    }
+
+
+    private _pageTitle: string;
+
+    public get PageTitle(): string {
+        return this._pageTitle;
+    }
+
+    public set PageTitle(value: string) {
+        this._pageTitle = value;
+    }
+
+
+    private _metaDescription: string;
+
+    public get MetaDescription(): string {
+        return this._metaDescription;
+    }
+
+    public set MetaDescription(value: string) {
+        this._metaDescription = value;
     }
 }
 
