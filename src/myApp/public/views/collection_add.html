@@ -2,106 +2,142 @@
     <p>Add Collection</p>
 
     <div class="tab-container">
-            <ul class="nav nav-tabs">
-                <li class="active"><a id="detailTab" href="#details" data-toggle="tab" target="_self">Details</a></li>
-                <li><a href="#customFields" data-toggle="tab" target="_self">Custom Fields</a></li>
-                <li><a href="#products" data-toggle="tab" target="_self">Products</a></li>
-                <li><a href="#seo" data-toggle="tab" target="_self">SEO</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" id="details">
-                    <form name="collectionDetailsForm" class="" role="form" novalidate>
-                    <div class="form-group" ng-class="{'has-error' : isSubmitted && productDetailsForm.name.$invalid}">
-                        <label>*Name&nbsp;</label><span class="text-danger" ng-show="isSubmitted && productDetailsForm.name.$error.required"><strong>Name can't be empty</strong></span>
-                        <div>
-                            <input type="text" name="name" class="form-control" ng-model="collection.Name" ng-change="nameChange()" required/>
-                        </div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a id="detailTab" href="#details" data-toggle="tab" target="_self">Details</a></li>
+            <li><a href="#customFields" data-toggle="tab" target="_self">Custom Fields</a></li>
+            <li><a href="#products" data-toggle="tab" target="_self">Products</a></li>
+            <li><a href="#seo" data-toggle="tab" target="_self">SEO</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="details">
+                <form name="collectionDetailsForm" class="" role="form" novalidate>
+                    <div class="form-group"
+                         ng-class="{'has-error' : isSubmitted && collectionDetailsForm.name.$invalid}">
+                        <label>*Name&nbsp;</label>
+                        <span class="text-danger"
+                              ng-show="isSubmitted && collectionDetailsForm.name.$error.required"><strong>Name can't be
+                            empty</strong></span>
 
+                        <div>
+                            <input type="text" name="name" class="form-control" ng-model="collection.Name"
+                                   ng-change="nameChange()" required/>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Content</label>
+
                         <div>
                             <textarea class="form-control" rows="20" ng-model="collection.Content"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Thumbnail</label>
-                        <div>
-                            <div style="width: 200px; height: 150px; border: 2px #808080; border-style:double; ">
+                        <label>Tags</label>
 
+                        <div>
+                            <input type="text" class="form-control" name="tags" ng-model="collection.Tags"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6">
+                                <label>Thumbnail</label>
+
+                                <div>
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div id="imagePreview" class="fileinput-preview thumbnail"
+                                             data-trigger="fileinput" style="width: 200px; height: 150px;"></div>
+                                        <div>
+                                            <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span
+                                                    class="fileinput-exists">Change</span><input id="imageUpload"
+                                                                                                 type="file" name="..."></span>
+                                            <a href="#" class="btn btn-default fileinput-exists"
+                                               data-dismiss="fileinput">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <input type="file" name="" />
-                            <button class="btn btn-default">Select image</button>
-                        </div>
+                            <div class="col-sm-6 col-md-6">
+                                <label>Setting</label>
 
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Setting</label>
-                        <div>
-                            <label class="checkbox-inline"><input type="checkbox" ng-model="collection.IsVisible"/>Is visible</label>
+                                <div>
+                                    <label class="checkbox-inline"><input type="checkbox"
+                                                                          ng-model="collection.IsVisible"/>Is
+                                        visible</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </form>
+            </div>
+            <div class="tab-pane content" id="customFields">
+                <button class="btn btn-default" ng-click="createCustomField()">Create</button>
+                <table class="no-border">
+                    <thead class="no-border">
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th style="width:100px;" class="text-right">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody class="no-border-x no-border-y">
+                    <tr ng-repeat="customField in collection.CustomFields">
+                        <!-- Normal mode -->
+                        <td ng-if="customField.IsEditingMode == false">{{ customField.Name }}</td>
+                        <td ng-if="customField.IsEditingMode == false">{{ customField.Value }}</td>
+                        <td ng-if="customField.IsEditingMode == false" class="text-right"><a class="label label-default"
+                                                                                             ng-click="customField.IsEditingMode = true"><i
+                                class="fa fa-pencil"></i></a> <a class="label label-danger"
+                                                                 ng-click="removeCustomField($index)"><i
+                                class="fa fa-times"></i></a></td>
+                        <!-- Editing mode -->
+                        <td ng-if="customField.IsEditingMode" ng-class="{'has-error' : customField.IsNameError}">
+                            <input type="text" ng-model="customField.Name" class="form-control" ngRequired="true" ngTrim="true"/>
+                            <span class="text-danger">{{ customField.NameError }}</span>
+                        </td>
+                        <td ng-if="customField.IsEditingMode" ng-class="{'has-error' : customField.IsValueError}">
+                            <input type="text" ng-model="customField.Value" class="form-control" required ngTrim="true"/>
+                            <span class="text-danger">{{ customField.ValueError }}</span>
+                        </td>
+                        <td ng-if="customField.IsEditingMode" class="text-right">
+                            <a class="label label-default" ng-click="saveCustomField($index)"><i class="fa fa-save"></i></a>
+                            <a class="label label-danger" ng-click="removeCustomField($index)"><i
+                                    class="fa fa-times"></i></a></td>
+                    </tr>
+                    </tbody>
+                </table>
 
-                    <div class="clearfix"></div>
-                     </form>
-                </div>
-                <div class="tab-pane content" id="customFields">
-                    <button class="btn btn-default" ng-click="createCustomField()">Create</button>
-                    <table class="no-border">
-                        <thead class="no-border">
-                        <tr>
-                            <th style="width:45%;">Name</th>
-                            <th>Value</th>
-                            <th class="text-right">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody class="no-border-x no-border-y">
-                        <tr ng-repeat="customField in product.CustomFields">
-                            <!-- Normal mode -->
-                            <td ng-if="customField.IsEditingMode == false">{{ customField.Name }}</td>
-                            <td ng-if="customField.IsEditingMode == false">{{ customField.Value }}</td>
-                            <td ng-if="customField.IsEditingMode == false" class="text-right" ><a class="label label-default" ng-click="customField.IsEditingMode = true"><i class="fa fa-pencil"></i></a> <a class="label label-danger" ng-click="removeCustomField($index)"><i class="fa fa-times"></i></a></td>
-                            <!-- Editing mode -->
-                            <td ng-if="customField.IsEditingMode"><input type="text" ng-model="customField.Name" ngRequired="true" ngTrim="true"/> </td>
-                            <td ng-if="customField.IsEditingMode"><input type="text" ng-model="customField.Value" required ngTrim="true"/></td>
-                            <td ng-if="customField.IsEditingMode" class="text-right"><a class="label label-default" ng-click="saveCustomField($index)"><i class="fa fa-save"></i></a> <a class="label label-danger" ng-click="removeCustomField($index)"><i class="fa fa-times"></i></a></td>
-                        </tr>
-                        </tbody>
-                    </table>
+            </div>
+            <div class="tab-pane" id="products">
+                <select id='selCollections' multiple='multiple'>
+                </select>
+            </div>
+            <div class="tab-pane cont" id="seo">
+                <div class="form-group">
+                    <label>*Url</label>
 
-                </div>
-                <div class="tab-pane" id="products">
-                    <select id='selCollections' multiple='multiple'>
-                    </select>
-                </div>
-                <div class="tab-pane cont" id="seo">
-                    <div class="form-group has-error">
-                        <label>*Url</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">http://www.jasonstore.com/collections/</span>
-                            <input type="text" class="form-control" ng-model="product.ResourceId">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">Reset</button>
-                            </span>
-                        </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">http://www.jasonstore.com/collections/</span>
+                        <input type="text" class="form-control" ng-model="collection.ResourceId">
                     </div>
-                    <div class="form-group">
-                        <label>Page Title</label>
-                        <div>
-                            <input type="text" class="form-control" ng-model="product.PageTitle"/>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label>Page Title</label>
+
+                    <div>
+                        <input type="text" class="form-control" ng-model="collection.PageTitle"/>
                     </div>
-                    <div class="form-group">
-                        <label>Meta Description</label>
-                        <div>
-                            <textarea class="form-control" rows="5" ng-model="product.MetaDescription"/>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label>Meta Description</label>
+
+                    <div>
+                        <textarea class="form-control" rows="5" ng-model="collection.MetaDescription"/>
                     </div>
                 </div>
             </div>
-            <button type="submit" ng-click="saveProduct()" class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-default">Preview</button>
+        </div>
+        <button type="submit" ng-click="saveCollection()" class="btn btn-primary">Save</button>
     </div>
 
 </div>
@@ -110,17 +146,29 @@
 
     var _selectedCollections = [];
 
-    $(document).ready(function(){
+    $(document).ready(function () {
 
         $('#selCollections').multiSelect({
             selectableHeader: "<div class='custom-header'>Selectable collections</div>",
             selectionHeader: "<div class='custom-header'>Selection collections</div>",
-            afterSelect: function(values){
+            afterSelect: function (values) {
                 _selectedCollections.push(values);
             },
-            afterDeselect: function(values){
+            afterDeselect: function (values) {
                 _selectedCollections.pop(values);
             }
+        });
+
+
+        $('#imageUpload').fileupload({
+            url: "/upload",
+            dataType: 'json',
+            autoUpload: true,
+            disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+            previewMaxWidth: 200,
+            previewMaxHeight: 200,
+            previewCrop: true
         });
 
     });

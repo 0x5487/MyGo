@@ -280,6 +280,7 @@ class Product {
     }
 
     constructor() {
+        this.CustomFields = [];
         this.ManageInventoryMethod = ManageInventoryMethod.NoTrack;
         this.WeightUnit = WeightUnit.KG;
     }
@@ -308,6 +309,26 @@ class CustomField {
         this._name = value;
     }
 
+    private _isNameError:boolean;
+
+    public get IsNameError():boolean {
+        return this._isNameError;
+    }
+
+    public set IsNameError(value:boolean) {
+        this._isNameError = value;
+    }
+
+    private _nameError:string;
+
+    public get NameError():string {
+        return this._nameError;
+    }
+
+    public set NameError(value:string) {
+        this._nameError = value;
+    }
+
 
     private _value:string;
 
@@ -317,6 +338,27 @@ class CustomField {
 
     public set Value(value:string) {
         this._value = value;
+    }
+
+
+    private _isValueError:boolean;
+
+    public get IsValueError():boolean {
+        return this._isValueError;
+    }
+
+    public set IsValueError(value:boolean) {
+        this._isValueError = value;
+    }
+
+    private _valueError:string;
+
+    public get ValueError():string {
+        return this._valueError;
+    }
+
+    public set ValueError(value:string) {
+        this._valueError = value;
     }
 
 
@@ -334,6 +376,32 @@ class CustomField {
         this._isEditingMode = false;
     }
 
+    public Validate():boolean {
+        var result = false;
+
+        if(this.Name == undefined || this.Name.length == 0){
+            this.IsNameError = true;
+            this.NameError = "the value can't be empty";
+        }else{
+            this.IsNameError = false;
+            this.NameError = "";
+        }
+
+        if(this.Value == undefined || this.Value.length == 0){
+            this.IsValueError = true;
+            this.ValueError = "the value can't be empty";
+        }else{
+            this.IsValueError = false;
+            this.ValueError = "";
+        }
+
+
+        if(this.IsNameError == false && this.IsValueError == false){
+            result = true;
+        }
+
+        return result;
+    }
 }
 
 class Variation {
@@ -491,6 +559,16 @@ class Collection {
         this._resourceId = value;
     }
 
+    private _tags: string;
+
+    public get Tags(): string {
+        return this._tags;
+    }
+
+    public set Tags(value: string) {
+        this._tags = value;
+    }
+
 
     private _pageTitle: string;
 
@@ -511,6 +589,31 @@ class Collection {
 
     public set MetaDescription(value: string) {
         this._metaDescription = value;
+    }
+
+    private _isVisible: boolean;
+
+    public get IsVisible(): boolean {
+        return this._isVisible;
+    }
+
+    public set IsVisible(value: boolean) {
+        this._isVisible = value;
+    }
+
+    //navigation
+    private _customFields: CustomField[];
+
+    public get CustomFields(): CustomField[] {
+        return this._customFields;
+    }
+
+    public set CustomFields(value: CustomField[]) {
+        this._customFields = value;
+    }
+
+    constructor(){
+        this.CustomFields = [];
     }
 }
 

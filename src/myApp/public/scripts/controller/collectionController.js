@@ -64,8 +64,59 @@ function displayCollectionsController($scope, $http) {
     }, 300);
 }
 
-function collectionAddController($scope) {
+function collectionAddController($scope, $http) {
+    var collection = new Collection();
+
+    $('#imageUpload').on('fileuploaddone', function (e, data) {
+        console.log("fileuploaddone fired");
+        console.log(data);
+    }).on('fileuploadfail', function (e, data) {
+        $.each(data.files, function (index, file) {
+            var error = $('<span class="text-danger"/>').text('File upload failed.');
+            $(data.context.children()[index]).append('<br>').append(error);
+        });
+    }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+    //page properties
     $scope.viewClass = "cl-mcont";
+    $scope.isSubmitted = false;
+    $scope.collection = collection;
+
+    //page events
+    $scope.saveCollection = function () {
+        $scope.isSubmitted = true;
+        console.log(collection);
+    };
+
+    $scope.createCustomField = function () {
+        var newCustomField = new CustomField();
+        newCustomField.IsEditingMode = true;
+        collection.CustomFields.push(newCustomField);
+    };
+
+    $scope.saveCustomField = function (index) {
+        var customField = collection.CustomFields[index];
+
+        if (customField.Validate()) {
+            var isExisting = false;
+            _.each(collection.CustomFields, function (element, index) {
+                if (element.IsEditingMode == false && element.Name == customField.Name) {
+                    isExisting = true;
+                }
+            });
+
+            if (isExisting) {
+                customField.IsNameError = true;
+                customField.NameError = "the name has already existed";
+            } else {
+                customField.IsEditingMode = false;
+            }
+        }
+    };
+
+    $scope.removeCustomField = function (index) {
+        collection.CustomFields.splice(index, 1);
+    };
 }
 
 function displayCollectionController($scope, $routeParams) {

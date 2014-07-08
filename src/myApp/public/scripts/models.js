@@ -12,6 +12,7 @@ var WeightUnit;
 
 var Product = (function () {
     function Product() {
+        this.CustomFields = [];
         this.ManageInventoryMethod = 1 /* NoTrack */;
         this.WeightUnit = 1 /* KG */;
     }
@@ -357,12 +358,60 @@ var CustomField = (function () {
     });
 
 
+    Object.defineProperty(CustomField.prototype, "IsNameError", {
+        get: function () {
+            return this._isNameError;
+        },
+        set: function (value) {
+            this._isNameError = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(CustomField.prototype, "NameError", {
+        get: function () {
+            return this._nameError;
+        },
+        set: function (value) {
+            this._nameError = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
     Object.defineProperty(CustomField.prototype, "Value", {
         get: function () {
             return this._value;
         },
         set: function (value) {
             this._value = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(CustomField.prototype, "IsValueError", {
+        get: function () {
+            return this._isValueError;
+        },
+        set: function (value) {
+            this._isValueError = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(CustomField.prototype, "ValueError", {
+        get: function () {
+            return this._valueError;
+        },
+        set: function (value) {
+            this._valueError = value;
         },
         enumerable: true,
         configurable: true
@@ -380,6 +429,32 @@ var CustomField = (function () {
         configurable: true
     });
 
+
+    CustomField.prototype.Validate = function () {
+        var result = false;
+
+        if (this.Name == undefined || this.Name.length == 0) {
+            this.IsNameError = true;
+            this.NameError = "the value can't be empty";
+        } else {
+            this.IsNameError = false;
+            this.NameError = "";
+        }
+
+        if (this.Value == undefined || this.Value.length == 0) {
+            this.IsValueError = true;
+            this.ValueError = "the value can't be empty";
+        } else {
+            this.IsValueError = false;
+            this.ValueError = "";
+        }
+
+        if (this.IsNameError == false && this.IsValueError == false) {
+            result = true;
+        }
+
+        return result;
+    };
     return CustomField;
 })();
 
@@ -515,6 +590,7 @@ var Option = (function () {
 
 var Collection = (function () {
     function Collection() {
+        this.CustomFields = [];
     }
     Object.defineProperty(Collection.prototype, "Id", {
         get: function () {
@@ -564,6 +640,18 @@ var Collection = (function () {
     });
 
 
+    Object.defineProperty(Collection.prototype, "Tags", {
+        get: function () {
+            return this._tags;
+        },
+        set: function (value) {
+            this._tags = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
     Object.defineProperty(Collection.prototype, "PageTitle", {
         get: function () {
             return this._pageTitle;
@@ -582,6 +670,30 @@ var Collection = (function () {
         },
         set: function (value) {
             this._metaDescription = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Collection.prototype, "IsVisible", {
+        get: function () {
+            return this._isVisible;
+        },
+        set: function (value) {
+            this._isVisible = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Collection.prototype, "CustomFields", {
+        get: function () {
+            return this._customFields;
+        },
+        set: function (value) {
+            this._customFields = value;
         },
         enumerable: true,
         configurable: true

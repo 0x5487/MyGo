@@ -53,7 +53,7 @@ type Collection struct {
 	ResourceId   string `xorm:"not null unique(resourceId)"`
 	DisplayName  string `xorm:"not null unique(name)"`
 	IsVisible    bool
-	Description  string
+	Content      string
 	Image        Image `xorm:"-"`
 	Tags         string
 	CustomFields LinkModel `xorm:"-"`

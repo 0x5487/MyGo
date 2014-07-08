@@ -85,6 +85,7 @@ function productAddController($scope, $http) {
     product.CustomFields = [field1, field2, field3];
 
     //page properties
+    $scope.isSubmitted = false;
     $scope.viewClass = "cl-mcont";
     $scope.optionNumber = 1;
     $scope.checkAllVariations = false;

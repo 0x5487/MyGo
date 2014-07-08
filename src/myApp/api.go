@@ -28,6 +28,23 @@ func (m *myClassic) UseApi(option ApiOption) error {
 		r.JSON(200, themes)
 	})
 
+	m.Post("/api/v1/collections", binding.Json(Collection{}), binding.ErrorHandler, func(collection Collection, res http.ResponseWriter) string {
+		collection.StoreId = option.Store.Id
+		err := collection.create()
+
+		if err != nil {
+			if aE, ok := err.(*appError); ok {
+				res.WriteHeader(500)
+				return aE.Message
+			}
+		}
+
+		location := fmt.Sprintf("/api/v1/collections/%d", collection.Id)
+		res.Header().Add("location", location)
+		res.WriteHeader(201)
+		return ""
+	})
+
 	m.Get("/api/v1/themes/:themeName", func(r render.Render) {
 		themes := getThemes(option.Store.Id)
 		r.JSON(200, themes)
