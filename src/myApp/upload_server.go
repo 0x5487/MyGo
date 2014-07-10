@@ -23,7 +23,15 @@ type UploadServerOption struct {
 	Store       *Store
 }
 
-func (m *myClassic) UseUploadServer(option ...ApiOption) error {
+type File struct {
+	Url string
+}
+
+type Result struct {
+	Files []File
+}
+
+func (m *myClassic) UseUploadServer(option ...UploadServerOption) error {
 
 	m.Post("/upload", func(render render.Render, r *http.Request, w http.ResponseWriter) {
 		w.Header().Add("Access-Control-Allow-Origin", "*")
@@ -39,6 +47,8 @@ func (m *myClassic) UseUploadServer(option ...ApiOption) error {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		result := Result{}
 
 		//copy each part to destination.
 		for {
@@ -63,9 +73,14 @@ func (m *myClassic) UseUploadServer(option ...ApiOption) error {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
+
+			url := r.Host + "/" + part.FileName()
+			file := File{Url: url}
+
+			result.Files = append(result.Files, file)
 		}
 
-		render.JSON(200, "done")
+		render.JSON(200, result)
 	})
 
 	return nil

@@ -10,6 +10,23 @@ var WeightUnit;
     WeightUnit[WeightUnit["LBL"] = 2] = "LBL";
 })(WeightUnit || (WeightUnit = {}));
 
+var Image = (function () {
+    function Image() {
+    }
+    Object.defineProperty(Image.prototype, "Url", {
+        get: function () {
+            return this._url;
+        },
+        set: function (value) {
+            this._url = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    return Image;
+})();
+
 var Product = (function () {
     function Product() {
         this.CustomFields = [];
@@ -682,6 +699,18 @@ var Collection = (function () {
         },
         set: function (value) {
             this._isVisible = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    Object.defineProperty(Collection.prototype, "Image", {
+        get: function () {
+            return this._image;
+        },
+        set: function (value) {
+            this._image = value;
         },
         enumerable: true,
         configurable: true

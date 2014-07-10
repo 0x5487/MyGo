@@ -9,6 +9,20 @@ enum WeightUnit {
 }
 
 
+class Image {
+
+    private _url:string;
+
+    public get Url(): string {
+        return this._url;
+    }
+
+    public set Url(value: string){
+        this._url = value;
+    }
+
+}
+
 class Product {
 
     private _id: number;
@@ -599,6 +613,16 @@ class Collection {
 
     public set IsVisible(value: boolean) {
         this._isVisible = value;
+    }
+
+    private _image: Image;
+
+    public get Image(): Image {
+        return this._image;
+    }
+
+    public set Image(value: Image){
+        this._image = value;
     }
 
     //navigation

@@ -68,8 +68,13 @@ function collectionAddController($scope, $http) {
     var collection = new Collection();
 
     $('#imageUpload').on('fileuploaddone', function (e, data) {
-        console.log("fileuploaddone fired");
-        console.log(data);
+        if (data.textStatus == "success") {
+            console.log(data);
+
+            var image = new Image();
+            image.Url = data.result.Files[0].Url;
+            collection.Image = image;
+        }
     }).on('fileuploadfail', function (e, data) {
         $.each(data.files, function (index, file) {
             var error = $('<span class="text-danger"/>').text('File upload failed.');
@@ -117,6 +122,11 @@ function collectionAddController($scope, $http) {
     $scope.removeCustomField = function (index) {
         collection.CustomFields.splice(index, 1);
     };
+
+    //page loaded
+    $('#lnkRemove').click(function () {
+        collection.Image = null;
+    });
 }
 
 function displayCollectionController($scope, $routeParams) {
