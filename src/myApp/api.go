@@ -11,8 +11,8 @@ import (
 	//"os"
 	//"html/template"
 	//"path/filepath"
-	//"strconv"
 	"fmt"
+	"strconv"
 	//"time"
 	"encoding/json"
 )
@@ -23,9 +23,49 @@ type ApiOption struct {
 
 func (m *myClassic) UseApi(option ApiOption) error {
 
+	m.Get("/api/v1/collections/:collectionId", func(r render.Render, params martini.Params) {
+		collectionId, err := strconv.Atoi(params["collectionId"])
+
+		if err != nil {
+			r.JSON(500, "collectionId is invalid")
+			return
+		}
+
+		collection, err := GetCollection(option.Store.Id, collectionId)
+
+		if err != nil {
+			r.JSON(500, "error")
+			return
+		}
+
+		if collection == nil {
+			r.JSON(404, "collection is not found")
+			return
+		}
+
+		collection.ToJsonForm()
+		r.JSON(200, collection)
+	})
+
 	m.Get("/api/v1/collections", func(r render.Render) {
-		themes := getThemes(option.Store.Id)
-		r.JSON(200, themes)
+		collections, err := GetCollections(option.Store.Id)
+
+		if err != nil {
+			r.JSON(500, "error")
+			return
+		}
+
+		if collections == nil {
+			r.JSON(200, "")
+			return
+		}
+
+		for i := range collections {
+			collection := &collections[i]
+			collection.ToJsonForm()
+		}
+
+		r.JSON(200, collections)
 	})
 
 	m.Post("/api/v1/collections", binding.Json(Collection{}), binding.ErrorHandler, func(collection Collection, res http.ResponseWriter) string {

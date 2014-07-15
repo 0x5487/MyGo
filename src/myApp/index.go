@@ -34,6 +34,7 @@ func init() {
 	_engine, err = xorm.NewEngine("sqlite3", "./database/test.db")
 	// ToDo: we need to close the database connection
 	//defer _engine.Close()
+	_engine.ShowSQL = false
 	_engine.SetMapper(core.SameMapper{})
 	_engine.Sync(new(Host), new(Store), new(User), new(Theme), new(Template), new(Page), new(Image), new(Collection), new(Product), new(CustomField), new(Variation), new(collection_product), new(image_any))
 
@@ -42,6 +43,7 @@ func init() {
 	getHostMappings()
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
+	//runtime.GOMAXPROCS(1)
 }
 
 func main() {

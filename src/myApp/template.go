@@ -22,7 +22,8 @@ type TemplateContext struct {
 }
 
 func (context TemplateContext) Collections() []Collection {
-	return GetCollections(context.Store.Id)
+	collections, _ := GetCollections(context.Store.Id)
+	return collections
 }
 
 func (template *Template) create() error {

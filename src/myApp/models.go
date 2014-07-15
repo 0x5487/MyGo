@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"strings"
@@ -27,38 +28,34 @@ type Host struct {
 }
 
 type Image struct {
-	Id           int `xorm:"PK SERIAL index"`
-	StoreId      int `xorm:"INT not null index" form:"-" json:"-"`
-	Url          string
-	Position     int
-	FileName     string
-	Attachment   string
-	CustomFields LinkModel `xorm:"-"`
+	Id         int `xorm:"PK SERIAL index"`
+	StoreId    int `xorm:"INT not null index" form:"-" json:"-"`
+	Url        string
+	Position   int
+	FileName   string
+	Attachment string
 }
 
 type CustomField struct {
-	Id        int    `xorm:"PK SERIAL index"`
-	StoreId   int    `xorm:"INT not null unique(custom_field)" form:"-" json:"-"`
-	TypeId    int    `xorm:"INT not null unique(custom_field)"`
-	ParentId  int    `xorm:"INT not null unique(custom_field)"`
-	Key       string `xorm:"not null unique(custom_field)"`
-	Value     string
-	CreatedAt time.Time
-	UpdatedAt time.Time `xorm:"index"`
+	Name  string
+	Value string
 }
 
 type Collection struct {
-	Id           int    `xorm:"PK SERIAL index"`
-	StoreId      int    `xorm:"INT not null unique(resourceId) unique(name)" form:"-" json:"-"`
-	ResourceId   string `xorm:"not null unique(resourceId)"`
-	DisplayName  string `xorm:"not null unique(name)"`
-	IsVisible    bool
-	Content      string
-	Image        Image `xorm:"-"`
-	Tags         string
-	CustomFields LinkModel `xorm:"-"`
-	CreatedAt    time.Time
-	UpdatedAt    time.Time `xorm:"index"`
+	Id             int    `xorm:"PK SERIAL index"`
+	StoreId        int    `xorm:"INT not null unique(resourceId) unique(name)" form:"-" json:"-"`
+	ResourceId     string `xorm:"not null unique(resourceId)"`
+	DisplayName    string `xorm:"not null unique(name)"`
+	IsVisible      bool
+	Content        string
+	Image          Image `xorm:"-"`
+	Tags           string
+	ProductIds     []int         `xorm:"-"`
+	CustomFieldsDB string        `json:"-"`
+	CustomFields   []CustomField `xorm:"-"`
+	CreatedAt      time.Time     `json:"-"`
+	UpdatedAt      time.Time     `xorm:"index" json:"-"`
+	DeletedAt      time.Time     `json:"-"`
 }
 
 type Product struct {
@@ -90,6 +87,7 @@ type Product struct {
 	All                       interface{} `xorm:"-"`
 	CreatedAt                 time.Time
 	UpdatedAt                 time.Time `xorm:"index"`
+	DeletedAt                 time.Time
 }
 
 type Variation struct {
@@ -112,6 +110,7 @@ type Variation struct {
 	Weight                    int
 	CreatedAt                 time.Time
 	UpdatedAt                 time.Time `xorm:"index"`
+	DeletedAt                 time.Time
 }
 
 type OptionSet struct {
@@ -159,6 +158,7 @@ type collection_product struct {
 	ProductId    int
 	CreatedAt    time.Time
 	UpdatedAt    time.Time `xorm:"index"`
+	DeletedAt    time.Time
 }
 
 type image_any struct {
@@ -220,9 +220,51 @@ func getHostMappings() *[]Host {
 	return &results
 }
 
+func (source *Collection) ToDatabaseForm() error {
+
+	if source == nil {
+		myErr := appError{Message: "entity can't be nil"}
+		return &myErr
+	}
+
+	if source.CustomFields == nil || len(source.CustomFields) == 0 {
+		source.CustomFieldsDB = ""
+	} else {
+		ba, err := json.Marshal(source.CustomFields)
+		if err != nil {
+			return err
+		}
+		source.CustomFieldsDB = string(ba[:])
+	}
+
+	return nil
+}
+
+func (source *Collection) ToJsonForm() error {
+
+	if source == nil {
+		myErr := appError{Message: "entity can't be nil"}
+		return &myErr
+	}
+
+	if len(source.CustomFieldsDB) > 0 {
+		ba := []byte(source.CustomFieldsDB)
+		var customfields []CustomField
+		err := json.Unmarshal(ba, &customfields)
+		if err != nil {
+			return err
+		}
+		source.CustomFields = customfields
+	}
+
+	return nil
+}
+
 func (source *Collection) create() error {
 	source.CreatedAt = time.Now().UTC()
 	source.UpdatedAt = time.Now().UTC()
+	source.ToDatabaseForm()
+
 	_, err := _engine.Insert(source)
 	if err != nil {
 		errMsg := err.Error()
@@ -231,25 +273,22 @@ func (source *Collection) create() error {
 			return &myErr
 		}
 		return err
-	} else {
-		return nil
 	}
+
+	return nil
 }
 
-func (source *CustomField) create() error {
-	source.CreatedAt = time.Now().UTC()
+func (source *Collection) update() error {
 	source.UpdatedAt = time.Now().UTC()
-	_, err := _engine.Insert(source)
+	source.ToDatabaseForm()
+
+	_, err := _engine.Id(source.Id).Update(source)
+
 	if err != nil {
-		errMsg := err.Error()
-		if strings.Contains(errMsg, "UNIQUE constraint failed:") {
-			myErr := appError{Ex: err, Message: "The custom Field was already existing.", Code: 4001}
-			return &myErr
-		}
 		return err
-	} else {
-		return nil
 	}
+
+	return nil
 }
 
 func (source *Product) create() error {
@@ -263,13 +302,38 @@ func (source *Product) create() error {
 			return &myErr
 		}
 		return err
-	} else {
-		return nil
 	}
+
+	return nil
 }
 
-func GetCollections(storeId int) []Collection {
-	return []Collection{}
+func GetCollection(storeId int, collectionId int) (*Collection, error) {
+	collection := Collection{Id: collectionId, StoreId: storeId}
+
+	has, err := _engine.Get(&collection)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if has {
+
+		return &collection, nil
+	}
+
+	return nil, nil
+
+}
+
+func GetCollections(storeId int) ([]Collection, error) {
+	var collections []Collection
+	err := _engine.Where("storeId == ?", storeId).Find(&collections)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return collections, nil
 }
 
 func (source *Collection) GetTags() []string {

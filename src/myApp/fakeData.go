@@ -55,7 +55,15 @@ func createFakeData() {
 	product_list_Page.create()
 
 	//create collections
-	menCollection := Collection{StoreId: jasonStore.Id, DisplayName: "DisplayName_Men", ResourceId: "Men", Tags: "shirt_tee, long_tee, polo, jeans, underwear, 領帶"}
+	menCollection := Collection{
+		StoreId:     jasonStore.Id,
+		DisplayName: "DisplayName_Men",
+		ResourceId:  "Men",
+		Tags:        "shirt_tee, long_tee, polo, jeans, underwear, 領帶",
+		CustomFields: []CustomField{
+			{"JasonKey", "JasonValue"},
+		},
+	}
 	if err := menCollection.create(); err != nil {
 		println(err.Error())
 	}
@@ -63,10 +71,4 @@ func createFakeData() {
 	//create products
 	menWatch := Product{StoreId: jasonStore.Id, Sku: "sku123", Name: "SIRIUS"}
 	menWatch.create()
-
-	//create CustomField
-	customField := CustomField{StoreId: jasonStore.Id, TypeId: 1, ParentId: menCollection.Id, Key: "Jason.ABC", Value: "Hello World"}
-	if err := customField.create(); err != nil {
-		println(err.Error())
-	}
 }
