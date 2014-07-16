@@ -27,8 +27,11 @@ func getCollectionsHandler(r render.Render) {
 	collections, err := GetCollections(aipOption.Store.Id)
 
 	if err != nil {
-		r.JSON(500, "error")
-		return
+		if appErr, ok := err.(*appError); ok {
+			r.JSON(500, appErr.Error())
+		} else {
+			r.JSON(500, "error")
+		}
 	}
 
 	if collections == nil {
@@ -48,7 +51,7 @@ func getCollectionHandler(r render.Render, params martini.Params) {
 	collectionId, err := strconv.Atoi(params["collectionId"])
 
 	if err != nil {
-		r.JSON(500, "collectionId is invalid")
+		r.JSON(500, "bad request")
 		return
 	}
 
@@ -68,7 +71,24 @@ func getCollectionHandler(r render.Render, params martini.Params) {
 	r.JSON(200, collection)
 }
 
-func createCollectionHandler(collection Collection, res http.ResponseWriter) string {
+func createCollectionHandler(r render.Render, collection Collection, res http.ResponseWriter) {
+	collection.StoreId = aipOption.Store.Id
+	err := collection.create()
+
+	if err != nil {
+		if appErr, ok := err.(*appError); ok {
+			r.JSON(500, appErr.Error())
+		} else {
+			r.JSON(500, "error")
+		}
+	}
+
+	location := fmt.Sprintf("/api/v1/collections/%d", collection.Id)
+	res.Header().Add("location", location)
+	r.JSON(201, "")
+}
+
+func deleteCollectionHandler(collection Collection, res http.ResponseWriter) string {
 	collection.StoreId = aipOption.Store.Id
 	err := collection.create()
 
@@ -268,8 +288,12 @@ func (m *myClassic) UseApi(option ApiOption) error {
 	aipOption = option
 
 	m.Get("/api/v1/collections/:collectionId", getCollectionHandler)
+	m.Delete("/api/v1/collections/:collectionId", deleteCollectionHandler)
 	m.Get("/api/v1/collections", getCollectionsHandler)
 	m.Post("/api/v1/collections", binding.Json(Collection{}), binding.ErrorHandler, createCollectionHandler)
+
+	m.Get("/api/v1/products/:productId", getProductHandler)
+	m.Post("/api/v1/products", binding.Json(Product{}), binding.ErrorHandler, createProductHandler)
 
 	m.Get("/api/v1/themes/:themeName", getThemeHandler)
 	m.Get("/api/v1/themes", getThemesHandler)
@@ -281,9 +305,6 @@ func (m *myClassic) UseApi(option ApiOption) error {
 	m.Get("/api/v1/templates/:templateName", getTemplateHandler)
 	m.Get("/api/v1/templates", getTemplatesHandler)
 	m.Post("/api/v1/templates", binding.Json(Template{}), binding.ErrorHandler, createTemplateHandler)
-
-	m.Get("/api/v1/products/:productId", getProductHandler)
-	m.Post("/api/v1/products", binding.Json(Product{}), binding.ErrorHandler, createProductHandler)
 
 	return nil
 }
