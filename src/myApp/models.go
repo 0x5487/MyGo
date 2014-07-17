@@ -178,13 +178,6 @@ func getHostApp() map[string]*myClassic {
 	return _hostApp
 }
 
-func (source *Image) IsValid() bool {
-	if len(source.ResourceId) == 0 {
-		return false
-	}
-	return true
-}
-
 func updateHostApp() {
 	hostMappings := make([]Host, 0)
 	err := _engine.Find(&hostMappings)

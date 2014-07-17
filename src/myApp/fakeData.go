@@ -1,5 +1,9 @@
 package main
 
+import (
+	"code.google.com/p/go-uuid/uuid"
+)
+
 func createFakeData() {
 
 	jasonStore := Store{Name: "jason", DefaultTheme: "simple"}
@@ -75,11 +79,12 @@ func createFakeData() {
 		ResourceId:  "Women",
 		Content:     "it's women collection",
 		Tags:        []string{"shirt_tee", "long_tee", "polo", "jeans", "underwear", "領帶"},
+		Image:       &Image{FileName: uuid.New() + ".jpg"},
 		CustomFields: []CustomField{
 			{"JasonKey1", "JasonValue1"},
 		},
 	}
-	if err := menCollection.create(); err != nil {
+	if err := womenCollection.create(); err != nil {
 		println(err.Error())
 	}
 
