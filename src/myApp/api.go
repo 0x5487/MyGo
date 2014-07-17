@@ -41,7 +41,7 @@ func getCollectionsHandler(r render.Render) {
 
 	for i := range collections {
 		collection := &collections[i]
-		collection.ToJsonForm()
+		collection.toJsonForm()
 	}
 
 	r.JSON(200, collections)
@@ -67,7 +67,7 @@ func getCollectionHandler(r render.Render, params martini.Params) {
 		return
 	}
 
-	collection.ToJsonForm()
+	collection.toJsonForm()
 	r.JSON(200, collection)
 }
 

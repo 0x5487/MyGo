@@ -28,8 +28,7 @@ type Host struct {
 }
 
 type Image struct {
-	Id         int `xorm:"PK SERIAL index"`
-	StoreId    int `xorm:"INT not null index" form:"-" json:"-"`
+	Path       string
 	Url        string
 	Position   int
 	FileName   string
@@ -45,11 +44,14 @@ type Collection struct {
 	Id             int    `xorm:"PK SERIAL index"`
 	StoreId        int    `xorm:"INT not null unique(resourceId) unique(name)" form:"-" json:"-"`
 	ResourceId     string `xorm:"not null unique(resourceId)"`
+	Path           string
 	DisplayName    string `xorm:"not null unique(name)"`
 	IsVisible      bool
 	Content        string
-	Image          Image `xorm:"-"`
-	Tags           string
+	Image          *Image        `xorm:"-"`
+	ImageDB        string        `json:"-"`
+	Tags           []string      `xorm:"-"`
+	TagsDB         string        `json:"-"`
 	ProductIds     []int         `xorm:"-"`
 	CustomFieldsDB string        `json:"-"`
 	CustomFields   []CustomField `xorm:"-"`
@@ -176,6 +178,13 @@ func getHostApp() map[string]*myClassic {
 	return _hostApp
 }
 
+func (source *Image) IsValid() bool {
+	if len(source.ResourceId) == 0 {
+		return false
+	}
+	return true
+}
+
 func updateHostApp() {
 	hostMappings := make([]Host, 0)
 	err := _engine.Find(&hostMappings)
@@ -220,41 +229,79 @@ func getHostMappings() *[]Host {
 	return &results
 }
 
-func (source *Collection) ToDatabaseForm() error {
+func (source *Collection) toDatabaseForm() error {
 
 	if source == nil {
 		myErr := appError{Message: "entity can't be nil"}
 		return &myErr
 	}
 
-	if source.CustomFields == nil || len(source.CustomFields) == 0 {
+	if len(source.CustomFields) == 0 {
 		source.CustomFieldsDB = ""
 	} else {
-		ba, err := json.Marshal(source.CustomFields)
+		ba, err := json.Marshal(&source.CustomFields)
 		if err != nil {
 			return err
 		}
 		source.CustomFieldsDB = string(ba[:])
 	}
 
+	if len(source.Tags) == 0 {
+		source.TagsDB = ""
+	} else {
+		ba, err := json.Marshal(&source.Tags)
+		if err != nil {
+			return err
+		}
+		source.TagsDB = string(ba[:])
+	}
+
+	if source.Image == nil {
+		source.ImageDB = ""
+	} else {
+		ba, err := json.Marshal(&source.Image)
+		if err != nil {
+			return err
+		}
+		source.ImageDB = string(ba[:])
+	}
+
 	return nil
 }
 
-func (source *Collection) ToJsonForm() error {
+func (source *Collection) toJsonForm() error {
 
 	if source == nil {
 		myErr := appError{Message: "entity can't be nil"}
 		return &myErr
 	}
 
+	source.Path = "/collections/" + source.ResourceId
+
 	if len(source.CustomFieldsDB) > 0 {
-		ba := []byte(source.CustomFieldsDB)
-		var customfields []CustomField
-		err := json.Unmarshal(ba, &customfields)
+		byteArray := []byte(source.CustomFieldsDB)
+		err := json.Unmarshal(byteArray, &source.CustomFields)
 		if err != nil {
 			return err
 		}
-		source.CustomFields = customfields
+	}
+
+	if len(source.TagsDB) > 0 {
+		byteArray := []byte(source.TagsDB)
+		err := json.Unmarshal(byteArray, &source.Tags)
+		if err != nil {
+			return err
+		}
+	}
+
+	if len(source.ImageDB) > 0 {
+		ba := []byte(source.ImageDB)
+		err := json.Unmarshal(ba, &source.Image)
+		if err != nil {
+			return err
+		}
+	} else {
+		source.Image = nil
 	}
 
 	return nil
@@ -263,7 +310,7 @@ func (source *Collection) ToJsonForm() error {
 func (source *Collection) create() error {
 	source.CreatedAt = time.Now().UTC()
 	source.UpdatedAt = time.Now().UTC()
-	source.ToDatabaseForm()
+	source.toDatabaseForm()
 
 	_, err := _engine.Insert(source)
 	if err != nil {
@@ -275,12 +322,37 @@ func (source *Collection) create() error {
 		return err
 	}
 
+	//insert collection and product relationships
+	_, err = _engine.Delete(&collection_product{CollectionId: source.Id})
+	if err != nil {
+		return err
+	}
+
+	if len(source.ProductIds) > 0 {
+		productIds := make([]int, 0)
+
+		for _, element := range source.ProductIds {
+			AppendIfMissing(productIds, element)
+		}
+
+		col_prods := make([]collection_product, 0)
+
+		for _, element := range productIds {
+			col_prod := collection_product{CollectionId: source.Id, ProductId: element}
+			col_prods = append(col_prods, col_prod)
+		}
+		_, err = _engine.Insert(&col_prods)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
 func (source *Collection) update() error {
 	source.UpdatedAt = time.Now().UTC()
-	source.ToDatabaseForm()
+	source.toDatabaseForm()
 
 	_, err := _engine.Id(source.Id).Update(source)
 

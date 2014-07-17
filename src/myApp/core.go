@@ -62,3 +62,12 @@ func MarshalToType(source interface{}, target interface{}) bool {
 	result = true
 	return result
 }
+
+func AppendIfMissing(slice []int, i int) []int {
+	for _, ele := range slice {
+		if ele == i {
+			return slice
+		}
+	}
+	return append(slice, i)
+}

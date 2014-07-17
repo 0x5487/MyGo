@@ -59,9 +59,24 @@ func createFakeData() {
 		StoreId:     jasonStore.Id,
 		DisplayName: "DisplayName_Men",
 		ResourceId:  "Men",
-		Tags:        "shirt_tee, long_tee, polo, jeans, underwear, 領帶",
+		Content:     "it's men collection",
+		Tags:        []string{"shirt_tee", "long_tee", "polo", "jeans", "underwear", "領帶"},
 		CustomFields: []CustomField{
 			{"JasonKey", "JasonValue"},
+		},
+	}
+	if err := menCollection.create(); err != nil {
+		println(err.Error())
+	}
+
+	womenCollection := Collection{
+		StoreId:     jasonStore.Id,
+		DisplayName: "DisplayName_women",
+		ResourceId:  "Women",
+		Content:     "it's women collection",
+		Tags:        []string{"shirt_tee", "long_tee", "polo", "jeans", "underwear", "領帶"},
+		CustomFields: []CustomField{
+			{"JasonKey1", "JasonValue1"},
 		},
 	}
 	if err := menCollection.create(); err != nil {
