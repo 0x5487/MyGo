@@ -31,7 +31,10 @@ func init() {
 	}
 	//define global variables *
 
-	_engine, err = xorm.NewEngine("sqlite3", "./database/test.db")
+	_engine, err = xorm.NewEngine("sqlite3", "test.db")
+	if err != nil {
+		panic(err)
+	}
 	// ToDo: we need to close the database connection
 	//defer _engine.Close()
 	_engine.ShowSQL = false
@@ -48,7 +51,7 @@ func init() {
 
 func main() {
 	m := withoutLogging()
-	martini.Env = martini.Prod
+	martini.Env = martini.Dev
 
 	//m.Use(render.Renderer())
 
@@ -56,6 +59,7 @@ func main() {
 	publicOption := martini.StaticOptions{SkipLogging: true}
 	m.Use(martini.Static("public", publicOption))
 
+	//find store app instance
 	m.Use(func(res http.ResponseWriter, req *http.Request, c martini.Context) {
 
 		var isHostMatch = false
