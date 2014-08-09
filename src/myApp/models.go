@@ -347,6 +347,7 @@ func (source *Collection) create() error {
 		errMsg := err.Error()
 		if strings.Contains(errMsg, "UNIQUE constraint failed:") {
 			myErr := appError{Ex: err, Message: "The collection was already existing.", Code: 4001}
+			session.Rollback()
 			return &myErr
 		}
 		session.Rollback()
@@ -398,6 +399,14 @@ func (source *Collection) update() error {
 		return err
 	}
 
+	return nil
+}
+
+func (source *Collection) delete() error {
+	_, err := _engine.Delete(source)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

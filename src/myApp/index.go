@@ -24,14 +24,14 @@ func init() {
 		log.Fatal(err)
 	}
 
-	databasePath := "./database/test.db"
+	databasePath := "test.db"
 	if _, err := os.Stat(databasePath); err == nil {
 		os.Remove(databasePath)
 		log.Println("database file was removed")
 	}
 	//define global variables *
 
-	_engine, err = xorm.NewEngine("sqlite3", "test.db")
+	_engine, err = xorm.NewEngine("sqlite3", databasePath)
 	if err != nil {
 		panic(err)
 	}

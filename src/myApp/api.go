@@ -6,7 +6,6 @@ import (
 	"github.com/martini-contrib/binding"
 	//"github.com/martini-contrib/sessions"
 	//"io/ioutil"
-	//"log"
 	"net/http"
 	//"os"
 	//"html/template"
@@ -21,6 +20,33 @@ var aipOption ApiOption
 
 type ApiOption struct {
 	Store *Store
+}
+
+func (m *myClassic) UseApi(option ApiOption) error {
+
+	aipOption = option
+
+	m.Get("/api/v1/collections/:collectionId", getCollectionHandler)
+	m.Put("/api/v1/collections/:collectionId", updateCollectionHandler)
+	m.Delete("/api/v1/collections/:collectionId", deleteCollectionHandler)
+	m.Get("/api/v1/collections", getCollectionsHandler)
+	m.Post("/api/v1/collections", binding.Json(Collection{}), binding.ErrorHandler, createCollectionHandler)
+
+	m.Get("/api/v1/products/:productId", getProductHandler)
+	m.Post("/api/v1/products", binding.Json(Product{}), binding.ErrorHandler, createProductHandler)
+
+	m.Get("/api/v1/themes/:themeName", getThemeHandler)
+	m.Get("/api/v1/themes", getThemesHandler)
+	m.Post("/api/v1/themes", binding.Json(Theme{}), binding.ErrorHandler, createThemeHandler)
+
+	m.Get("/api/v1/pages", getPageHandler)
+	m.Post("/api/v1/pages", binding.Json(Page{}), binding.ErrorHandler, createPageHandler)
+
+	m.Get("/api/v1/templates/:templateName", getTemplateHandler)
+	m.Get("/api/v1/templates", getTemplatesHandler)
+	m.Post("/api/v1/templates", binding.Json(Template{}), binding.ErrorHandler, createTemplateHandler)
+
+	return nil
 }
 
 func getCollectionsHandler(r render.Render) {
@@ -71,38 +97,53 @@ func getCollectionHandler(r render.Render, params martini.Params) {
 	r.JSON(200, collection)
 }
 
-func createCollectionHandler(r render.Render, collection Collection, res http.ResponseWriter) {
+func createCollectionHandler(r render.Render, collection Collection) {
 	collection.StoreId = aipOption.Store.Id
 	err := collection.create()
 
 	if err != nil {
 		if appErr, ok := err.(*appError); ok {
 			r.JSON(500, appErr.Error())
+			return
 		} else {
+			logError(err.Error())
 			r.JSON(500, "error")
+			return
 		}
 	}
 
 	location := fmt.Sprintf("/api/v1/collections/%d", collection.Id)
-	res.Header().Add("location", location)
-	r.JSON(201, "")
+	r.Header().Add("location", location)
+	r.Status(201)
 }
 
-func deleteCollectionHandler(collection Collection, res http.ResponseWriter) string {
+func updateCollectionHandler(r render.Render, collection Collection, params martini.Params) {
 	collection.StoreId = aipOption.Store.Id
-	err := collection.create()
+	err := collection.update()
 
 	if err != nil {
-		if aE, ok := err.(*appError); ok {
-			res.WriteHeader(500)
-			return aE.Message
+		if appErr, ok := err.(*appError); ok {
+			r.JSON(500, appErr.Error())
+			return
+		} else {
+			logError(err.Error())
+			r.JSON(500, "error")
+			return
 		}
 	}
+	r.Status(200)
+}
 
-	location := fmt.Sprintf("/api/v1/collections/%d", collection.Id)
-	res.Header().Add("location", location)
-	res.WriteHeader(201)
-	return ""
+func deleteCollectionHandler(r render.Render, params martini.Params) {
+	collectionId, _ := strconv.Atoi(params["collectionId"])
+	collection := Collection{Id: collectionId, StoreId: aipOption.Store.Id}
+	err := collection.delete()
+	if err != nil {
+		logError(err.Error())
+		r.JSON(500, "error")
+		return
+	}
+	r.Status(200)
 }
 
 func getThemeHandler(r render.Render) {
@@ -281,30 +322,4 @@ func createProductHandler(product Product, res http.ResponseWriter, r render.Ren
 	default:
 		fmt.Printf("unexpected type %T,", v)
 	}
-}
-
-func (m *myClassic) UseApi(option ApiOption) error {
-
-	aipOption = option
-
-	m.Get("/api/v1/collections/:collectionId", getCollectionHandler)
-	m.Delete("/api/v1/collections/:collectionId", deleteCollectionHandler)
-	m.Get("/api/v1/collections", getCollectionsHandler)
-	m.Post("/api/v1/collections", binding.Json(Collection{}), binding.ErrorHandler, createCollectionHandler)
-
-	m.Get("/api/v1/products/:productId", getProductHandler)
-	m.Post("/api/v1/products", binding.Json(Product{}), binding.ErrorHandler, createProductHandler)
-
-	m.Get("/api/v1/themes/:themeName", getThemeHandler)
-	m.Get("/api/v1/themes", getThemesHandler)
-	m.Post("/api/v1/themes", binding.Json(Theme{}), binding.ErrorHandler, createThemeHandler)
-
-	m.Get("/api/v1/pages", getPageHandler)
-	m.Post("/api/v1/pages", binding.Json(Page{}), binding.ErrorHandler, createPageHandler)
-
-	m.Get("/api/v1/templates/:templateName", getTemplateHandler)
-	m.Get("/api/v1/templates", getTemplatesHandler)
-	m.Post("/api/v1/templates", binding.Json(Template{}), binding.ErrorHandler, createTemplateHandler)
-
-	return nil
 }

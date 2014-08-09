@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	//"log"
+	"log"
 	//"os"
 	"fmt"
 	"github.com/go-martini/martini"
@@ -70,4 +70,8 @@ func AppendIfMissing(slice []int, i int) []int {
 		}
 	}
 	return append(slice, i)
+}
+
+func logError(errMessage string) {
+	log.Print("[EC]" + errMessage)
 }
