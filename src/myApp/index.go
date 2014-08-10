@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"time"
 )
 
 var _appDir string
@@ -37,7 +38,8 @@ func init() {
 	}
 	// ToDo: we need to close the database connection
 	//defer _engine.Close()
-	_engine.ShowSQL = false
+	_engine.ShowSQL = true
+	_engine.TZLocation = time.UTC
 	_engine.SetMapper(core.SameMapper{})
 	_engine.Sync(new(Host), new(Store), new(User), new(Theme), new(Template), new(Page), new(Image), new(Collection), new(Product), new(CustomField), new(Variation), new(collection_product), new(image_any))
 
@@ -83,4 +85,5 @@ func main() {
 	})
 
 	m.Run()
+	log.Println("done")
 }

@@ -87,9 +87,9 @@ type Collection struct {
 	ProductIds     []int         `xorm:"-"`
 	CustomFieldsDB string        `json:"-"`
 	CustomFields   []CustomField `xorm:"-"`
-	CreatedAt      time.Time     `json:"-"`
-	UpdatedAt      time.Time     `xorm:"index" json:"-"`
-	DeletedAt      time.Time     `json:"-"`
+	CreatedAt      time.Time     `xorm:"created" json:"-"`
+	UpdatedAt      time.Time     `xorm:"updated index" json:"-"`
+	DeletedAt      *time.Time    `xorm:"unique(name) unique(resourceId)" json:"-"`
 }
 
 type Product struct {
@@ -333,8 +333,8 @@ func (source *Collection) toJsonForm() error {
 }
 
 func (source *Collection) create() error {
-	source.CreatedAt = time.Now().UTC()
-	source.UpdatedAt = time.Now().UTC()
+	//source.CreatedAt = time.Now().UTC()
+	//log.Println(source.CreatedAt)
 	source.toDatabaseForm()
 
 	session := _engine.NewSession()
@@ -398,16 +398,20 @@ func (source *Collection) update() error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
 func (source *Collection) delete() error {
-	_, err := _engine.Delete(source)
+	collection, err := GetCollection(source.StoreId, source.Id)
 	if err != nil {
 		return err
 	}
-	return nil
+	if collection == nil {
+		return nil
+	}
+	deletedAt := time.Now().UTC()
+	collection.DeletedAt = &deletedAt
+	return collection.update()
 }
 
 func (source *Product) create() error {
@@ -422,36 +426,27 @@ func (source *Product) create() error {
 		}
 		return err
 	}
-
 	return nil
 }
 
 func GetCollection(storeId int, collectionId int) (*Collection, error) {
 	collection := Collection{Id: collectionId, StoreId: storeId}
-
 	has, err := _engine.Get(&collection)
-
 	if err != nil {
 		return nil, err
 	}
-
 	if has {
-
 		return &collection, nil
 	}
-
 	return nil, nil
-
 }
 
 func GetCollections(storeId int) ([]Collection, error) {
 	var collections []Collection
-	err := _engine.Where("storeId == ?", storeId).Find(&collections)
-
+	err := _engine.Where("storeId == ?", storeId).And("DeletedAt is null").Find(&collections)
 	if err != nil {
 		return nil, err
 	}
-
 	return collections, nil
 }
 
