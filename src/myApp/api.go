@@ -5,12 +5,12 @@ import (
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	//"github.com/martini-contrib/sessions"
-	//"io/ioutil"
+	//"io"
 	"net/http"
 	//"os"
 	//"html/template"
-	//"path/filepath"
 	"fmt"
+	//"path/filepath"
 	"strconv"
 	//"time"
 	"encoding/json"
@@ -51,25 +51,23 @@ func (m *myClassic) UseApi(option ApiOption) error {
 
 func getCollectionsHandler(r render.Render) {
 	collections, err := GetCollections(aipOption.Store.Id)
-
 	if err != nil {
 		if appErr, ok := err.(*appError); ok {
 			r.JSON(500, appErr.Error())
+			return
 		} else {
 			r.JSON(500, "error")
+			return
 		}
 	}
-
 	if collections == nil {
-		r.JSON(200, "")
+		r.Status(200)
 		return
 	}
-
 	for i := range collections {
 		collection := &collections[i]
 		collection.toJsonForm()
 	}
-
 	r.JSON(200, collections)
 }
 
@@ -99,8 +97,8 @@ func getCollectionHandler(r render.Render, params martini.Params) {
 
 func createCollectionHandler(r render.Render, collection Collection) {
 	collection.StoreId = aipOption.Store.Id
-	err := collection.create()
 
+	err := collection.create()
 	if err != nil {
 		if appErr, ok := err.(*appError); ok {
 			r.JSON(500, appErr.Error())

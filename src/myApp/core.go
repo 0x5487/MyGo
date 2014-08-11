@@ -72,6 +72,14 @@ func AppendIfMissing(slice []int, i int) []int {
 	return append(slice, i)
 }
 
-func logError(errMessage string) {
-	log.Print("[EC]" + errMessage)
+func logError(message string) {
+	log.Println("[Error] " + message)
+}
+
+func logInfo(message string) {
+	log.Println("[Info] " + message)
+}
+
+func logDebug(message string) {
+	log.Println("[Debug] " + message)
 }

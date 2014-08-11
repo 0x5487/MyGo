@@ -1,14 +1,18 @@
 package main
 
 import (
+	"code.google.com/p/go-uuid/uuid"
 	"encoding/json"
+	"fmt"
 	"github.com/JasonSoft/render"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/sessions"
 	_ "github.com/mattn/go-sqlite3"
 	"html/template"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -59,6 +63,11 @@ type FileInfo struct {
 	DeleteType   string `json:"delete_type,omitempty"`
 }
 
+type IdGenertator struct {
+	Id   int `xorm:"PK SERIAL"`
+	Name string
+}
+
 type Store struct {
 	Id               int    `xorm:"SERIAL index"`
 	Name             string `xorm:"not null unique"`
@@ -73,7 +82,7 @@ type Store struct {
 }
 
 type Collection struct {
-	Id             int    `xorm:"PK SERIAL index"`
+	Id             int    `xorm:"INT index"`
 	StoreId        int    `xorm:"INT not null unique(resourceId) unique(name)" form:"-" json:"-"`
 	ResourceId     string `xorm:"not null unique(resourceId)"`
 	Path           string
@@ -89,7 +98,7 @@ type Collection struct {
 	CustomFields   []CustomField `xorm:"-"`
 	CreatedAt      time.Time     `xorm:"created" json:"-"`
 	UpdatedAt      time.Time     `xorm:"updated index" json:"-"`
-	DeletedAt      *time.Time    `xorm:"unique(name) unique(resourceId)" json:"-"`
+	DeletedAt      time.Time     `xorm:"unique(name) unique(resourceId)" json:"-"`
 }
 
 type Product struct {
@@ -333,15 +342,66 @@ func (source *Collection) toJsonForm() error {
 }
 
 func (source *Collection) create() error {
-	//source.CreatedAt = time.Now().UTC()
-	//log.Println(source.CreatedAt)
-	source.toDatabaseForm()
+	//download image
+	var resp *http.Response
+	var err error
+	if source.Image != nil {
+		if len(source.Image.Url) > 0 {
+			resp, err = http.Get(source.Image.Url)
+			if err != nil {
+				logError(err.Error())
+				return err
+			}
+			defer resp.Body.Close()
+			if resp.StatusCode != 200 {
+				downloadErr := appError{Message: "image can't be downloaded"}
+				return &downloadErr
+			}
+		}
+		logInfo("got resp of downloaded image")
+	}
 
+	//create new transaction
 	session := _engine.NewSession()
 	defer session.Close()
 
-	err := session.Begin()
+	err = session.Begin()
+	if err != nil {
+		logError(err.Error())
+		session.Rollback()
+		return err
+	}
 
+	//get new id
+	idGenerator := new(IdGenertator)
+	_, err = session.Insert(idGenerator)
+	if err != nil {
+		logError(err.Error())
+		session.Rollback()
+		return err
+	}
+	source.Id = idGenerator.Id
+
+	//save image
+	if resp != nil {
+		logDebug("saving image")
+		fileName := uuid.New() + ".jpg"
+		imagePath := filepath.Join(_appDir, fileName)
+		out, err := os.Create(imagePath)
+		defer out.Close()
+		_, err = io.Copy(out, resp.Body)
+		if err != nil {
+			logError(err.Error())
+			session.Rollback()
+			return err
+		}
+		source.Image.FileName = fileName
+		source.Image.Url = ""
+		source.Image.Path = fmt.Sprintf("/collections/images/%d/%s", idGenerator.Id, fileName)
+	}
+
+	//insert collection into database
+	source.toDatabaseForm()
 	_, err = session.Insert(source)
 	if err != nil {
 		errMsg := err.Error()
@@ -409,8 +469,7 @@ func (source *Collection) delete() error {
 	if collection == nil {
 		return nil
 	}
-	deletedAt := time.Now().UTC()
-	collection.DeletedAt = &deletedAt
+	collection.DeletedAt = time.Now().UTC()
 	return collection.update()
 }
 
@@ -443,7 +502,7 @@ func GetCollection(storeId int, collectionId int) (*Collection, error) {
 
 func GetCollections(storeId int) ([]Collection, error) {
 	var collections []Collection
-	err := _engine.Where("storeId == ?", storeId).And("DeletedAt is null").Find(&collections)
+	err := _engine.Where("storeId == ?", storeId).And("DeletedAt < ?", _defaultDatabaseTime).OrderBy("Id").Find(&collections)
 	if err != nil {
 		return nil, err
 	}
