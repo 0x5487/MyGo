@@ -1,0 +1,24 @@
+{
+        "ResourceId": "Men7",
+        "DisplayName": "DisplayName_Men4",
+        "IsVisible": false,
+        "Content": "it's men collection",
+        "Image": {
+	"Url": "http://communicatebetterblog.com/wp-content/uploads/2013/12/thanks.jpg"
+},
+        "Tags": [
+            "shirt_tee",
+            "long_tee",
+            "polo",
+            "jeans",
+            "underwear",
+            "»â±a"
+        ],
+        "ProductIds": null,
+        "CustomFields": [
+            {
+                "Name": "JasonKey",
+                "Value": "JasonValue"
+            }
+        ]
+    }

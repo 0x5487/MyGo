@@ -341,7 +341,7 @@ func (source *Collection) toJsonForm() error {
 	return nil
 }
 
-func (source *Collection) create() error {
+func (source Collection) create() error {
 	//download image
 	var resp *http.Response
 	var err error
@@ -385,19 +385,37 @@ func (source *Collection) create() error {
 	//save image
 	if resp != nil {
 		logDebug("saving image")
+
+		var storeName = getStoreName(source.StoreId)
+		imageDir := filepath.Join(_appDir, "storage", storeName, "collections", toString(source.Id))
+		logDebug("image save to " + imageDir)
+		err = os.MkdirAll(imageDir, 0666)
+		if err != nil {
+			logError("fail to create directories. " + err.Error())
+		}
+
 		fileName := uuid.New() + ".jpg"
-		imagePath := filepath.Join(_appDir, fileName)
+		imagePath := filepath.Join(imageDir, fileName)
 		out, err := os.Create(imagePath)
 		defer out.Close()
-		_, err = io.Copy(out, resp.Body)
 		if err != nil {
-			logError(err.Error())
+			logError("failed to save the image.  " + err.Error())
 			session.Rollback()
 			return err
 		}
+
+		_, err = io.Copy(out, resp.Body)
+		if err != nil {
+			logError("failed to copy the image from response.  " + err.Error())
+			session.Rollback()
+			return err
+		}
+
 		source.Image.FileName = fileName
 		source.Image.Url = ""
 		source.Image.Path = fmt.Sprintf("/collections/images/%d/%s", idGenerator.Id, fileName)
+
+		logDebug("image is saved")
 	}
 
 	//insert collection into database
@@ -616,6 +634,12 @@ func (store *Store) CreateApp() *myClassic {
 
 	m.Get("/products", func(r render.Render, params martini.Params) {
 		displayPage(r, store, "product_list")
+	})
+
+	m.Get("/collections/:collectionId/images/:fileName", func(res http.ResponseWriter, req *http.Request, params martini.Params) {
+		var collectionId = params["collectionId"]
+		var fileName = params["fileName"]
+		logInfo("get image " + collectionId + fileName)
 	})
 
 	m.Get("/collections/:collectionName", func(r render.Render, params martini.Params) {
