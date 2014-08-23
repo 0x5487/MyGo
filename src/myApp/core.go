@@ -2,12 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
-	"log"
-	//"os"
 	"fmt"
 	"github.com/go-martini/martini"
+	"io/ioutil"
+	"log"
+	"os"
 	"path/filepath"
+	"strconv"
 )
 
 type appError struct {
@@ -72,6 +73,22 @@ func AppendIfMissing(slice []int, i int) []int {
 	return append(slice, i)
 }
 
+// exists returns whether the given file or directory exists or not
+func isExisting(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
+}
+
+func getStoreName(storeId int) string {
+	return "jason"
+}
+
 func logError(message string) {
 	log.Println("[Error] " + message)
 }
@@ -82,4 +99,8 @@ func logInfo(message string) {
 
 func logDebug(message string) {
 	log.Println("[Debug] " + message)
+}
+
+func toString(number int) string {
+	return strconv.Itoa(number)
 }

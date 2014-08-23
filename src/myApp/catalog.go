@@ -26,20 +26,6 @@ type LinkModel struct {
 	Url string
 }
 
-type Host struct {
-	Id      int `xorm:"PK SERIAL index"`
-	StoreId int `xorm:"INT index"`
-	Name    string
-}
-
-type Image struct {
-	Path       string
-	Url        string
-	Position   int
-	FileName   string
-	Attachment string
-}
-
 type CustomField struct {
 	Name  string
 	Value string
@@ -259,7 +245,7 @@ func (source *Collection) toJsonForm() error {
 	return nil
 }
 
-func (source *Collection) create() error {
+func (source Collection) create() error {
 	//download image
 	var resp *http.Response
 	var err error
@@ -303,19 +289,37 @@ func (source *Collection) create() error {
 	//save image
 	if resp != nil {
 		logDebug("saving image")
+
+		var storeName = getStoreName(source.StoreId)
+		imageDir := filepath.Join(_appDir, "storage", storeName, "collections", toString(source.Id))
+		logDebug("image save to " + imageDir)
+		err = os.MkdirAll(imageDir, 0666)
+		if err != nil {
+			logError("fail to create directories. " + err.Error())
+		}
+
 		fileName := uuid.New() + ".jpg"
-		imagePath := filepath.Join(_appDir, fileName)
+		imagePath := filepath.Join(imageDir, fileName)
 		out, err := os.Create(imagePath)
 		defer out.Close()
-		_, err = io.Copy(out, resp.Body)
 		if err != nil {
-			logError(err.Error())
+			logError("failed to save the image.  " + err.Error())
 			session.Rollback()
 			return err
 		}
+
+		_, err = io.Copy(out, resp.Body)
+		if err != nil {
+			logError("failed to copy the image from response.  " + err.Error())
+			session.Rollback()
+			return err
+		}
+
 		source.Image.FileName = fileName
 		source.Image.Url = ""
 		source.Image.Path = fmt.Sprintf("/collections/images/%d/%s", idGenerator.Id, fileName)
+
+		logDebug("image is saved")
 	}
 
 	//insert collection into database

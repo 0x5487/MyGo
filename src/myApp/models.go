@@ -12,6 +12,20 @@ import (
 	"time"
 )
 
+type Host struct {
+	Id      int `xorm:"PK SERIAL index"`
+	StoreId int `xorm:"INT index"`
+	Name    string
+}
+
+type Image struct {
+	Path       string
+	Url        string
+	Position   int
+	FileName   string
+	Attachment string
+}
+
 // FileInfo describes a file that has been uploaded.
 type FileInfo struct {
 	Key          string `json:"-"`
@@ -188,6 +202,12 @@ func (store *Store) CreateApp() *myClassic {
 
 	m.Get("/products", func(r render.Render, params martini.Params) {
 		displayPage(r, store, "product_list")
+	})
+
+	m.Get("/collections/:collectionId/images/:fileName", func(res http.ResponseWriter, req *http.Request, params martini.Params) {
+		var collectionId = params["collectionId"]
+		var fileName = params["fileName"]
+		logInfo("get image " + collectionId + fileName)
 	})
 
 	m.Get("/collections/:collectionName", func(r render.Render, params martini.Params) {
