@@ -40,7 +40,7 @@ type FileInfo struct {
 }
 
 type Store struct {
-	Id               int    `xorm:"SERIAL index"`
+	Id               int    `xorm:"PK SERIAL index"`
 	Name             string `xorm:"not null unique"`
 	DefaultTheme     string
 	CreatedAt        time.Time

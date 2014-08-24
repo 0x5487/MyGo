@@ -89,6 +89,7 @@ func getStoreName(storeId int) string {
 	return "jason"
 }
 
+// logging
 func logError(message string) {
 	log.Println("[Error] " + message)
 }
@@ -103,4 +104,11 @@ func logDebug(message string) {
 
 func toString(number int) string {
 	return strconv.Itoa(number)
+}
+
+// error handling
+func PanicIf(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

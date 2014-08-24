@@ -9,7 +9,7 @@ import (
 )
 
 type Theme struct {
-	Id        int    `xorm:"SERIAL index"`
+	Id        int    `xorm:"PK SERIAL index"`
 	StoreId   int    `xorm:"INT not null unique(theme)" form:"-" json:"-"`
 	Name      string `xorm:"not null unique(theme)" binding:"required"`
 	IsDefault bool
@@ -47,21 +47,16 @@ func (theme *Theme) create() error {
 
 func getThemes(storeId int) *[]Theme {
 	themes := make([]Theme, 0)
-	err := _engine.Where("StoreId = ?", storeId).Find(&themes)
-
-	if err != nil {
-		panic(err)
-	}
-
+	err := _engine.Where("\"StoreId\" = ?", storeId).Find(&themes)
+	PanicIf(err)
 	return &themes
 }
 
 func getThemeByName(storeId int, themeName string) *Theme {
 	theme := Theme{}
-	err := _engine.Where("storeId = ? and name = ?", storeId, themeName).Find(&theme)
+	logInfo(toString(storeId))
+	err := _engine.Where("\"StoreId\" = ? and \"name\" = ?", storeId, themeName).Find(&theme)
 
-	if err != nil {
-		panic(err)
-	}
+	PanicIf(err)
 	return &theme
 }

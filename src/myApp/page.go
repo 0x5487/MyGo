@@ -56,11 +56,7 @@ func (page *Page) create() error {
 
 func getPages(storeId int) *[]Page {
 	pages := make([]Page, 0)
-	err := _engine.Where("StoreId = ?", storeId).Find(&pages)
-
-	if err != nil {
-		panic(err)
-	}
-
+	err := _engine.Where("\"StoreId\" = ?", storeId).Find(&pages)
+	PanicIf(err)
 	return &pages
 }
